@@ -1,1 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+            <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDanielsen's Githup Site</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
 
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        footer {
+            background-color: #003f7f;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .media-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        iframe {
+            border: 2px solid #0056b3;
+            border-radius: 10px;
+            display: block;
+            margin: auto;
+        }
+    </style>
+        <head>     
+   
+        <nav>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="subpage.html">Subpage</a></li>
+        <li><a href="trackerdecldefault.html">TrackerDeclarationDefault</a></li>
+       <li><a href="trackerdeclmatrix.html">TrackerDeclarationMatrix</a></li>
+       <li><a href="trackerdeclcontainer.html">TrackerDeclarationContainer</a></li>
+    </ul>
+</nav>
+                    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5TFL5GG5');</script>
+<!-- End Google Tag Manager -->
+<!--<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=gtm2";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","qtochu4h1u");</script>-->
+    
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5TFL5GG5"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    </head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to the Subpage</h1>
+        
+        <p>Here are some embedded third-party visual elements.</p>
+<!-- End Google Tag Manager -->
+        <!-- YouTube Video Embed -->
+        <div class="video">
+            <h2>Watch This Video</h2>
+           <!-- <iframe 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                title="YouTube video player" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>-->
+        </div>
+
+        <!-- Facebook Page Plugin -->
+        <div class="facebook">
+            <h2>Follow Us on Facebook</h2>
+            <div id="fb-root"></div>
+           <!-- <script async defer crossorigin="anonymous" 
+                src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0" 
+                nonce="XYZ123">
+            </script>-->
+            <div class="fb-page" 
+                data-href="https://www.facebook.com/facebook" 
+                data-tabs="timeline" 
+                data-width="" 
+                data-height="300" 
+                data-small-header="false" 
+                data-adapt-container-width="true" 
+                data-hide-cover="false" 
+                data-show-facepile="true">
+            </div>
+        </div>
+
+        <!-- Back to Home Link -->
+        <p><a href="index.html">Back to Home</a></p>
+    </div>
+</body>
+</html>
