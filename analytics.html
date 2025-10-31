@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+            <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDanielsen's Githup Site</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        footer {
+            background-color: #003f7f;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .media-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        iframe {
+            border: 2px solid #0056b3;
+            border-radius: 10px;
+            display: block;
+            margin: auto;
+        }
+    </style>
+        <head>     
+   
+        <nav>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="subpage.html">Subpage</a></li>
+        <li><a href="trackerdecldefault.html">TrackerDeclarationDefault</a></li>
+       <li><a href="trackerdeclmatrix.html">TrackerDeclarationMatrix</a></li>
+       <li><a href="trackerdeclcontainer.html">TrackerDeclarationContainer</a></li>
+    </ul>
+</nav>
+                    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5TFL5GG5');</script>
+<!-- End Google Tag Manager -->
+<!--<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=gtm2";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","qtochu4h1u");</script>-->
+    
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5TFL5GG5"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    </head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to the Subpage</h1>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics Data Presentation Widget</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1217;
+      --card: #161b22;
+      --muted: #8b949e;
+      --text: #e6edf3;
+      --accent: #7c9cff;
+      --border: #262b36;
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: var(--bg); color: var(--text); }
+    a { color: var(--accent); }
+
+    .widget { padding: 24px; max-width: 1200px; margin: 0 auto; }
+
+    .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+    .btn { background: linear-gradient(180deg, #2a3243, #202738); color: #fff; border: 1px solid var(--border); padding: 10px 14px; border-radius: 12px; cursor: pointer; box-shadow: var(--shadow); font-weight: 600; }
+    .btn.secondary { background: #1a2030; }
+    .btn.ghost { background: transparent; border-color: var(--border); box-shadow: none; }
+
+    .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+    @media (min-width: 1024px) { .grid { grid-template-columns: 1fr 2fr; } }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .card-header { padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 700; letter-spacing: 0.2px; color: var(--muted); }
+    .card-body { padding: 16px; }
+
+    .textarea { width: 100%; min-height: 260px; border-radius: 12px; background: #0e1320; color: var(--text); border: 1px solid var(--border); padding: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; }
+    .error { color: #ff8585; margin-top: 8px; font-size: 13px; }
+
+    .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    @media (min-width: 768px) { .kpis { grid-template-columns: repeat(4, 1fr); } }
+    .kpi { background: #0f1524; border: 1px solid var(--border); border-radius: 14px; padding: 12px; }
+    .kpi .label { color: var(--muted); font-size: 12px; }
+    .kpi .value { font-size: 22px; font-weight: 700; margin-top: 4px; }
+
+    .tabs { display: flex; gap: 10px; border-bottom: 1px solid var(--border); }
+    .tab { padding: 10px 12px; cursor: pointer; border: 1px solid transparent; border-radius: 10px 10px 0 0; color: var(--muted); }
+    .tab.active { color: var(--text); border-color: var(--border); border-bottom-color: transparent; background: #131a2b; }
+
+    .table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .table th, .table td { border-top: 1px solid var(--border); padding: 8px; text-align: left; }
+    .table thead th { position: sticky; top: 0; background: #121827; z-index: 1; }
+    .scroll { max-height: 280px; overflow: auto; border: 1px solid var(--border); border-radius: 12px; }
+
+    .footer { margin-top: 14px; color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+<div class="widget">
+  <div class="toolbar">
+    <div style="display:flex; gap:8px; align-items:center;">
+      <h1 style="margin:0; font-size:18px;">Analytics Data Presentation</h1>
+      <span class="footer">Paste JSON → Render charts, KPIs & table</span>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn" id="renderBtn">Render</button>
+      <button class="btn secondary" id="csvBtn" disabled>Download CSV</button>
+      <button class="btn ghost" id="clearBtn">Clear</button>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:16px;">
+    <div class="card">
+      <div class="card-header">Raw JSON Input</div>
+      <div class="card-body">
+        <textarea id="jsonInput" class="textarea" placeholder="Paste { data: { getAnalyticsData: { data: { headers, rows }}}}"></textarea>
+        <div id="error" class="error" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Output</div>
+      <div class="card-body">
+        <div class="kpis" id="kpis"></div>
+
+        <div style="margin-top:16px;">
+          <div class="tabs">
+            <div class="tab active" data-tab="state">By state</div>
+            <div class="tab" data-tab="time">Over time</div>
+            <div class="tab" data-tab="table">Table</div>
+          </div>
+
+          <div id="tab-state" class="tab-pane" style="padding-top:10px;">
+            <canvas id="stateChart" height="220"></canvas>
+          </div>
+          <div id="tab-time" class="tab-pane" style="display:none; padding-top:10px;">
+            <canvas id="timeChart" height="220"></canvas>
+          </div>
+          <div id="tab-table" class="tab-pane" style="display:none; padding-top:10px;">
+            <div class="scroll"><table class="table" id="dataTable"></table></div>
+          </div>
+        </div>
+        <div class="footer">Tip: this widget is self‑contained. You can host it as <code>analytics-embed.html</code> and embed via <code>&lt;iframe&gt;</code>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const input = document.getElementById('jsonInput');
+  const renderBtn = document.getElementById('renderBtn');
+  const csvBtn = document.getElementById('csvBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const errorEl = document.getElementById('error');
+  const kpisEl = document.getElementById('kpis');
+
+  const tabs = document.querySelectorAll('.tab');
+  const panes = {
+    state: document.getElementById('tab-state'),
+    time: document.getElementById('tab-time'),
+    table: document.getElementById('tab-table')
+  };
+
+  tabs.forEach(t => t.addEventListener('click', ()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    const v = t.getAttribute('data-tab');
+    Object.keys(panes).forEach(k=> panes[k].style.display = (k===v)?'block':'none');
+  }));
+
+  let rows = [];
+  let headers = [];
+  let stateChart, timeChart;
+
+  function toNum(v){ const n = Number(v); return Number.isFinite(n)?n:0; }
+
+  function parseJSON(raw){
+    const d = raw?.data?.getAnalyticsData?.data;
+    if(!d?.headers || !Array.isArray(d?.rows)){
+      throw new Error('Unexpected JSON shape. Expect data.getAnalyticsData.data.headers & .rows');
+    }
+    headers = d.headers;
+    rows = d.rows.map(r=>{
+      const o={}; headers.forEach((h,i)=>o[h]=r[i]);
+      return {
+        CMP_ELIGIBLE: toNum(o.CMP_ELIGIBLE),
+        CMP_SHOWN: toNum(o.CMP_SHOWN),
+        country: String(o.country||''),
+        countrySubdivision: String(o.countrySubdivision||''),
+        date: String(o.date||''),
+        DENY_ALL: toNum(o.DENY_ALL),
+        DENY_ALL_EXPLICIT_PERCENTAGE: toNum(o.DENY_ALL_EXPLICIT_PERCENTAGE),
+        DENY_ALL_IMPLICIT_PERCENTAGE: toNum(o.DENY_ALL_IMPLICIT_PERCENTAGE),
+        DENY_ALL_RATE: toNum(o.DENY_ALL_RATE),
+        DENY_ALL_TOTAL: toNum(o.DENY_ALL_TOTAL),
+        devicetype: String(o.devicetype||'')
+      }
+    });
+  }
+
+  function renderKPIs(){
+    if(!rows.length){ kpisEl.innerHTML=''; return; }
+    const totalShown = rows.reduce((a,r)=>a+r.CMP_SHOWN,0);
+    const totalEligible = rows.reduce((a,r)=>a+r.CMP_ELIGIBLE,0);
+    const states = new Set(rows.map(r=>r.countrySubdivision)).size;
+    const dates = rows.map(r=>new Date(r.date)).filter(d=>!isNaN(d)).sort((a,b)=>+a-+b);
+    const range = dates.length? `${dates[0].toISOString().slice(0,10)} → ${dates[dates.length-1].toISOString().slice(0,10)}` : '—';
+    kpisEl.innerHTML = `
+      <div class="kpi"><div class="label">Total CMP_SHOWN</div><div class="value">${totalShown}</div></div>
+      <div class="kpi"><div class="label">Total CMP_ELIGIBLE</div><div class="value">${totalEligible}</div></div>
+      <div class="kpi"><div class="label">States</div><div class="value">${states}</div></div>
+      <div class="kpi"><div class="label">Date range</div><div class="value" style="font-size:14px;">${range}</div></div>`;
+  }
+
+  function groupByState(){
+    const map = new Map();
+    rows.forEach(r=> map.set(r.countrySubdivision, (map.get(r.countrySubdivision)||0)+r.CMP_SHOWN));
+    return Array.from(map.entries()).sort((a,b)=>b[1]-a[1]);
+  }
+
+  function groupByDate(){
+    const map = new Map();
+    rows.forEach(r=> map.set(r.date, (map.get(r.date)||0)+r.CMP_SHOWN));
+    return Array.from(map.entries()).sort((a,b)=> a[0].localeCompare(b[0]));
+  }
+
+  function renderCharts(){
+    const ctx1 = document.getElementById('stateChart');
+    const ctx2 = document.getElementById('timeChart');
+
+    const s = groupByState();
+    const d = groupByDate();
+
+    if(stateChart) stateChart.destroy();
+    if(timeChart) timeChart.destroy();
+
+    stateChart = new Chart(ctx1, {
+      type: 'bar',
+      data: { labels: s.map(x=>x[0]), datasets: [{ label: 'CMP_SHOWN', data: s.map(x=>x[1]) }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision:0 } } } }
+    });
+
+    timeChart = new Chart(ctx2, {
+      type: 'line',
+      data: { labels: d.map(x=>x[0]), datasets: [{ label: 'CMP_SHOWN', data: d.map(x=>x[1]), tension: .3 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision:0 } } } }
+    });
+  }
+
+  function renderTable(){
+    const tbl = document.getElementById('dataTable');
+    if(!rows.length){ tbl.innerHTML = '<tbody><tr><td style="padding:12px;color:var(--muted);">No rows rendered yet. Paste JSON and click Render.</td></tr></tbody>'; return; }
+    const head = `<thead><tr>
+      <th>CMP_ELIGIBLE</th><th>CMP_SHOWN</th><th>country</th><th>state</th><th>date</th>
+      <th>DENY_ALL</th><th>DENY_ALL_EXPLICIT_%</th><th>DENY_ALL_IMPLICIT_%</th>
+      <th>DENY_ALL_RATE</th><th>DENY_ALL_TOTAL</th><th>device</th>
+    </tr></thead>`;
+    const body = `<tbody>${rows.map(r=>`<tr>
+      <td>${r.CMP_ELIGIBLE}</td><td>${r.CMP_SHOWN}</td><td>${r.country}</td><td>${r.countrySubdivision}</td><td>${r.date}</td>
+      <td>${r.DENY_ALL}</td><td>${r.DENY_ALL_EXPLICIT_PERCENTAGE}</td><td>${r.DENY_ALL_IMPLICIT_PERCENTAGE}</td>
+      <td>${r.DENY_ALL_RATE}</td><td>${r.DENY_ALL_TOTAL}</td><td>${r.devicetype}</td>
+    </tr>`).join('')}</tbody>`;
+    tbl.innerHTML = head + body;
+  }
+
+  function toCsv(){
+    if(!rows.length) return '';
+    const cols = Object.keys(rows[0]);
+    const header = cols.join(',');
+    const body = rows.map(r=> cols.map(c=> String(r[c]).replaceAll('"','""')).map(v=> /,|\n|\"/.test(v)?`"${v}"`:v).join(',')).join('\n');
+    return header + '\n' + body;
+  }
+
+  function downloadCsv(){
+    const csv = toCsv();
+    if(!csv) return;
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'analytics_'+Date.now()+'.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handleRender(){
+    errorEl.style.display = 'none';
+    try{
+      const parsed = JSON.parse(input.value);
+      parseJSON(parsed);
+      renderKPIs();
+      renderCharts();
+      renderTable();
+      csvBtn.disabled = rows.length === 0;
+    }catch(e){
+      rows=[]; headers=[]; csvBtn.disabled = true;
+      errorEl.textContent = e.message || 'Failed to parse JSON';
+      errorEl.style.display = 'block';
+      renderKPIs(); renderTable();
+    }
+  }
+
+  function handleClear(){ input.value=''; rows=[]; headers=[]; csvBtn.disabled=true; errorEl.style.display='none'; renderKPIs(); renderTable(); if(stateChart) stateChart.destroy(); if(timeChart) timeChart.destroy(); }
+
+  renderBtn.addEventListener('click', handleRender);
+  csvBtn.addEventListener('click', downloadCsv);
+  clearBtn.addEventListener('click', handleClear);
+
+  // Seed with sample to show structure
+  input.value = JSON.stringify(SAMPLE, null, 2);
+  // Auto-render once
+  handleRender();
+
+  // Sample data (can be removed)
+  function sample(){ return {
+    data: { getAnalyticsData: { meta: { total: 0 }, data: { headers: [
+      'CMP_ELIGIBLE','CMP_SHOWN','country','countrySubdivision','date','DENY_ALL','DENY_ALL_EXPLICIT_PERCENTAGE','DENY_ALL_IMPLICIT_PERCENTAGE','DENY_ALL_RATE','DENY_ALL_TOTAL','devicetype'
+    ], rows: [
+      ['0','20','US','GA','2025-10-24','0','0','0','0','0','Desktop'],
+      ['0','8','US','VA','2025-10-24','0','0','0','0','0','Desktop'],
+      ['0','2','US','CA','2025-10-27','0','0','0','0','0','Desktop'],
+      ['0','2','US','CO','2025-10-25','0','0','0','0','0','Desktop'],
+      ['0','2','US','TX','2025-10-25','0','0','0','0','0','Desktop'],
+      ['12','2','US','ID','2025-10-25','0','0','0','0','0','Desktop']
+    ] } } }
+  };
+  const SAMPLE = sample();
+})();
+</script>
+</body>
+</html>
+
+
+
+
+        <!-- Back to Home Link -->
+        <p><a href="index.html">Back to Home</a></p>
+    </div>
+</body>
+</html>
