@@ -16,6 +16,8 @@
       --border: #262b36;
       --shadow: 0 10px 30px rgba(0,0,0,.45);
       --radius: 16px;
+      --danger: #ff8585;
+      --success: #4ade80;
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: var(--bg); color: var(--text); }
@@ -27,16 +29,26 @@
     .btn { background: linear-gradient(180deg, #2a3243, #202738); color: #fff; border: 1px solid var(--border); padding: 10px 14px; border-radius: 12px; cursor: pointer; box-shadow: var(--shadow); font-weight: 600; }
     .btn.secondary { background: #1a2030; }
     .btn.ghost { background: transparent; border-color: var(--border); box-shadow: none; }
+    .btn[disabled] { opacity: .6; cursor: not-allowed; }
 
     .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
     @media (min-width: 1024px) { .grid { grid-template-columns: 1fr 2fr; } }
 
     .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-    .card-header { padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 700; letter-spacing: 0.2px; color: var(--muted); }
+    .card-header { padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 700; letter-spacing: 0.2px; color: var(--muted); display:flex; align-items:center; justify-content:space-between; gap:8px; }
     .card-body { padding: 16px; }
 
     .textarea { width: 100%; min-height: 260px; border-radius: 12px; background: #0e1320; color: var(--text); border: 1px solid var(--border); padding: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; }
-    .error { color: #ff8585; margin-top: 8px; font-size: 13px; }
+
+    /* Error panel */
+    .error-panel { display:none; margin-top: 10px; padding: 10px 12px; border: 1px solid #5f1f28; background: #1a0f12; border-radius: 12px; color: var(--danger); }
+    .error-panel pre { white-space: pre-wrap; margin: 6px 0 0; color: #ffb5b5; font-size: 12px; }
+
+    /* Progress */
+    .progress { display:none; position: relative; height: 12px; background: #0f1524; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #5b8aff, #7c9cff); transition: width .2s ease; }
+    .progress-row { display:flex; align-items:center; gap:10px; margin: 8px 0 0; }
+    .progress-label { font-size: 12px; color: var(--muted); }
 
     .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     @media (min-width: 768px) { .kpis { grid-template-columns: repeat(4, 1fr); } }
@@ -67,15 +79,24 @@
       <button class="btn" id="renderBtn">Render</button>
       <button class="btn secondary" id="csvBtn" disabled>Download CSV</button>
       <button class="btn ghost" id="clearBtn">Clear</button>
+      <button class="btn ghost" id="testsBtn" title="Run built-in tests">Run Tests</button>
     </div>
   </div>
 
   <div class="grid" style="margin-top:16px;">
     <div class="card">
-      <div class="card-header">Raw JSON Input</div>
+      <div class="card-header">
+        <span>Raw JSON Input</span>
+        <div class="progress-row" style="flex:1;justify-content:flex-end;">
+          <div class="progress" id="progress" aria-valuemin="0" aria-valuemax="100" aria-label="Rendering progress" role="progressbar">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <span class="progress-label" id="progressLabel" aria-live="polite"></span>
+        </div>
+      </div>
       <div class="card-body">
         <textarea id="jsonInput" class="textarea" placeholder="Paste { data: { getAnalyticsData: { data: { headers, rows }}}}"></textarea>
-        <div id="error" class="error" style="display:none;"></div>
+        <div id="error" class="error-panel" role="alert" aria-live="assertive"></div>
       </div>
     </div>
 
@@ -113,8 +134,12 @@
   const renderBtn = document.getElementById('renderBtn');
   const csvBtn = document.getElementById('csvBtn');
   const clearBtn = document.getElementById('clearBtn');
+  const testsBtn = document.getElementById('testsBtn');
   const errorEl = document.getElementById('error');
   const kpisEl = document.getElementById('kpis');
+  const progress = document.getElementById('progress');
+  const progressBar = document.getElementById('progressBar');
+  const progressLabel = document.getElementById('progressLabel');
 
   const tabs = document.querySelectorAll('.tab');
   const panes = {
@@ -133,6 +158,7 @@
   let rows = [];
   let headers = [];
   let stateChart, timeChart;
+  let busy = false;
 
   function toNum(v){ const n = Number(v); return Number.isFinite(n)?n:0; }
 
@@ -165,7 +191,7 @@
     const totalShown = rows.reduce((a,r)=>a+r.CMP_SHOWN,0);
     const totalEligible = rows.reduce((a,r)=>a+r.CMP_ELIGIBLE,0);
     const states = new Set(rows.map(r=>r.countrySubdivision)).size;
-    const dates = rows.map(r=>new Date(r.date)).filter(d=>!isNaN(d)).sort((a,b)=>+a-+b);
+    const dates = rows.map(r=>new Date(r.date)).filter(d=>!isNaN(d.getTime())).sort((a,b)=>+a-+b);
     const range = dates.length? `${dates[0].toISOString().slice(0,10)} → ${dates[dates.length-1].toISOString().slice(0,10)}` : '—';
     kpisEl.innerHTML = `
       <div class="kpi"><div class="label">Total CMP_SHOWN</div><div class="value">${totalShown}</div></div>
@@ -229,7 +255,7 @@
     if(!rows.length) return '';
     const cols = Object.keys(rows[0]);
     const header = cols.join(',');
-    const body = rows.map(r=> cols.map(c=> String(r[c]).replaceAll('"','""')).map(v=> /,|\n|\"/.test(v)?`"${v}"`:v).join(',')).join('\n');
+    const body = rows.map(r=> cols.map(c=> String(r[c]).replace(/"/g,'""')).map(v=> /,|\n|\"/.test(v)?`"${v}"`:v).join(',')).join('\n');
     return header + '\n' + body;
   }
 
@@ -243,35 +269,100 @@
     URL.revokeObjectURL(url);
   }
 
-  function handleRender(){
-    errorEl.style.display = 'none';
+  function setProgress(pct, label){
+    progress.style.display = 'block';
+    progressBar.style.width = Math.max(0, Math.min(100, pct)) + '%';
+    progress.setAttribute('aria-valuenow', String(pct));
+    progressLabel.textContent = label ? `${pct}% · ${label}` : `${pct}%`;
+  }
+  function resetProgress(){
+    progress.style.display = 'none';
+    progressBar.style.width = '0%';
+    progress.removeAttribute('aria-valuenow');
+    progressLabel.textContent = '';
+  }
+  function showError(err){
+    const msg = (err && err.message) ? err.message : String(err);
+    const stack = (err && err.stack) ? `\n\nStack:\n${err.stack}` : '';
+    errorEl.innerHTML = `<strong>Error:</strong> ${msg}<pre>${stack}</pre>`;
+    errorEl.style.display = 'block';
+  }
+  function hideError(){ errorEl.style.display = 'none'; errorEl.textContent = ''; }
+  const tick = () => new Promise(r => setTimeout(r));
+
+  async function handleRender(){
+    if(busy) return; busy = true;
+    hideError(); setProgress(5,'Starting');
+    csvBtn.disabled = true; renderBtn.disabled = true; clearBtn.disabled = true; testsBtn.disabled = true;
     try{
+      setProgress(15,'Parsing JSON'); await tick();
       const parsed = JSON.parse(input.value);
+
+      setProgress(40,'Validating & normalizing'); await tick();
       parseJSON(parsed);
-      renderKPIs();
-      renderCharts();
+
+      setProgress(70,'Rendering charts'); await tick();
+      renderKPIs(); renderCharts();
+
+      setProgress(90,'Rendering table'); await tick();
       renderTable();
+
+      setProgress(100,'Done');
       csvBtn.disabled = rows.length === 0;
     }catch(e){
       rows=[]; headers=[]; csvBtn.disabled = true;
-      errorEl.textContent = e.message || 'Failed to parse JSON';
-      errorEl.style.display = 'block';
+      showError(e);
       renderKPIs(); renderTable();
+    } finally {
+      setTimeout(()=>{ resetProgress(); renderBtn.disabled = false; clearBtn.disabled = false; testsBtn.disabled = false; busy = false; }, 250);
     }
   }
 
-  function handleClear(){ input.value=''; rows=[]; headers=[]; csvBtn.disabled=true; errorEl.style.display='none'; renderKPIs(); renderTable(); if(stateChart) stateChart.destroy(); if(timeChart) timeChart.destroy(); }
+  function handleClear(){ input.value=''; rows=[]; headers=[]; csvBtn.disabled=true; hideError(); resetProgress(); renderKPIs(); renderTable(); if(stateChart) stateChart.destroy(); if(timeChart) timeChart.destroy(); }
+
+  function runTests(){
+    const results = [];
+    function assert(name, fn){
+      try { fn(); results.push('✅ '+name); }
+      catch(err){ results.push('❌ '+name+': '+(err && err.message ? err.message : err)); }
+    }
+
+    // Test 1: SAMPLE parses and yields rows
+    assert('SAMPLE parses', ()=>{
+      parseJSON(SAMPLE);
+      if(!(rows && rows.length>0)) throw new Error('No rows from SAMPLE');
+    });
+
+    // Test 2: invalid shape throws
+    assert('Invalid shape throws', ()=>{
+      let threw=false; try{ parseJSON({}); }catch(e){ threw=true; }
+      if(!threw) throw new Error('Expected error not thrown');
+    });
+
+    // Test 3: CSV has header & CMP_SHOWN values
+    assert('CSV generation', ()=>{
+      const csv = toCsv();
+      if(!(csv.includes('CMP_SHOWN') && /\n/.test(csv))) throw new Error('CSV missing expected content');
+    });
+
+    // Test 4: Clear resets UI
+    assert('Clear resets UI', ()=>{
+      handleClear();
+      if(errorEl.style.display !== 'none') throw new Error('Error panel still visible');
+      if(!csvBtn.disabled) throw new Error('CSV button should be disabled');
+    });
+
+    console.log('\nTest results:\n'+results.join('\n'));
+    errorEl.style.display='block';
+    errorEl.innerHTML = '<strong>Test results</strong><pre>'+results.join('\n')+'</pre>';
+  }
 
   renderBtn.addEventListener('click', handleRender);
   csvBtn.addEventListener('click', downloadCsv);
   clearBtn.addEventListener('click', handleClear);
+  testsBtn.addEventListener('click', runTests);
 
-  // Seed with sample to show structure
-  input.value = JSON.stringify(SAMPLE, null, 2);
-  // Auto-render once
-  handleRender();
-
-  // Sample data (can be removed)
+  // -------------------- Sample data (must be defined BEFORE seeding) --------------------
   function sample(){ return {
     data: { getAnalyticsData: { meta: { total: 0 }, data: { headers: [
       'CMP_ELIGIBLE','CMP_SHOWN','country','countrySubdivision','date','DENY_ALL','DENY_ALL_EXPLICIT_PERCENTAGE','DENY_ALL_IMPLICIT_PERCENTAGE','DENY_ALL_RATE','DENY_ALL_TOTAL','devicetype'
@@ -285,6 +376,12 @@
     ] } } }
   };
   const SAMPLE = sample();
+  // -------------------------------------------------------------------------------------
+
+  // Seed with sample to show structure (SAMPLE is defined above)
+  input.value = JSON.stringify(SAMPLE, null, 2);
+  // Auto-render once
+  handleRender();
 })();
 </script>
 </body>
