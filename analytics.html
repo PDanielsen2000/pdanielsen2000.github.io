@@ -9,31 +9,9 @@
     th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; }
     th { background: #eee; }
   </style>
+  <!-- TWIPLA Tracking Code for pdanielsen2000.github.io --><script>(function(v,i,s,a,t){v[t]=v[t]||function(){(v[t].v=v[t].v||[]).push(arguments)};if(!v._visaSettings){v._visaSettings={}}v._visaSettings[a]={v:'1.0',s:a,a:'1',t:t};var b=i.getElementsByTagName('body')[0];var p=i.createElement('script');p.defer=1;p.async=1;p.src=s+'?s='+a;b.appendChild(p)})(window,document,'//app-worker.visitor-analytics.io/main.js','792ef646-bf0c-11f0-84e1-960004340fd3','va')</script><!-- TWIPLA Tracking Code for pdanielsen2000.github.io -->
 </head>
 <body>
-
-<h2>JSON → Table</h2>
-<textarea id="input" style="width:100%;height:200px;">
-{
-  "data": {
-    "getAnalyticsData": {
-      "data": {
-        "headers": ["CMP_ELIGIBLE","CMP_SHOWN","country","countrySubdivision","date","DENY_ALL","DENY_ALL_EXPLICIT_PERCENTAGE","DENY_ALL_IMPLICIT_PERCENTAGE","DENY_ALL_RATE","DENY_ALL_TOTAL","devicetype"],
-        "rows": [
-          ["0","2","US","TX","2025-10-25","0","0","0","0","0","Desktop"],
-          ["12","2","US","ID","2025-10-25","0","0","0","0","0","Desktop"],
-          ["0","2","US","CO","2025-10-25","0","0","0","0","0","Desktop"],
-          ["0","2","US","CA","2025-10-27","0","0","0","0","0","Desktop"]
-        ]
-      }
-    }
-  }
-}
-</textarea>
-<br><br>
-<button id="render">Render Table</button>
-
-<div id="output" style="margin-top:20px;"></div>
 
 <script>
 document.getElementById('render').onclick = function() {
