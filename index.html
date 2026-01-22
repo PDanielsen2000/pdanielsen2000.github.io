@@ -128,6 +128,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 })();
 </script>
 
+<script>
+(async function () {
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    if (!res.ok) return;
+
+    const geo = await res.json();
+
+    // Only act for NON-US visitors
+    if (geo.country_code && geo.country_code !== "US") {
+
+      // Remove any existing *_UC_* keys
+      Object.keys(localStorage).forEach(key => {
+        if (key.endsWith("_UC") || key.includes("_UC_")) {
+          localStorage.removeItem(key);
+        }
+      });
+
+      const countryKey = `${geo.country_code}_UC`;
+      localStorage.setItem(countryKey, "1");
+    }
+  } catch (e) {
+    // fail silently
+  }
+})();
+</script>
 
 
     <div class="container">
