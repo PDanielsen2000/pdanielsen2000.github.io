@@ -103,6 +103,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
          <a href="subpage10.html">Subpage10</a>
         <a href="analytics.html">Analytics</a>
     </nav>
+<script>
+(async function () {
+  try {
+    // Example GeoIP endpoint (replace with your preferred provider)
+    const res = await fetch("https://ipapi.co/json/");
+    if (!res.ok) return;
+
+    const geo = await res.json();
+    const isUS = (geo && geo.country_code === "US");
+
+    if (isUS) {
+      localStorage.setItem("US_UC_Cookie", "1");
+    } else {
+      localStorage.removeItem("US_UC_Cookie");
+    }
+  } catch (e) {
+    // fail silently
+  }
+})();
+</script>
 
     <div class="container">
         <div class="card">
