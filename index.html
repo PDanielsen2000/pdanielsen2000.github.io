@@ -111,17 +111,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     const geo = await res.json();
 
+    // Remove any existing US_UC_* keys
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith("US_UC_")) {
+        localStorage.removeItem(key);
+      }
+    });
+
     if (geo.country_code === "US" && geo.region_code) {
-      // Example: "CA", "NY"
-      localStorage.setItem("US_UC_Cookie", geo.region_code);
-    } else {
-      localStorage.removeItem("US_UC_Cookie");
+      const stateKey = `US_UC_${geo.region_code}`;
+      localStorage.setItem(stateKey, "1");
     }
   } catch (e) {
     // fail silently
   }
 })();
 </script>
+
 
 
     <div class="container">
