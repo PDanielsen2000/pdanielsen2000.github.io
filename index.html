@@ -110,51 +110,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!res.ok) return;
 
     const geo = await res.json();
+    const country = (geo.country_code || "").toUpperCase();
+    const state = (geo.region_code || "").toUpperCase(); // US only
 
-    // Remove any existing US_UC_* keys
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith("US_UC_")) {
-        localStorage.removeItem(key);
-      }
-    });
+    if (!country) return;
 
-    if (geo.country_code === "US" && geo.region_code) {
-      const stateKey = `US_UC_${geo.region_code}`;
-      localStorage.setItem(stateKey, "1");
+    const key =
+      country === "US" && state
+        ? `UC_${country}_${state}`   // e.g. UC_US_CA
+        : `UC_${country}`;           // e.g. UC_DE
+
+    // Write once per key; no overwriting needed
+    if (!localStorage.getItem(key)) {
+      localStorage.setItem(key, "1");
     }
   } catch (e) {
     // fail silently
   }
 })();
 </script>
-
-<script>
-(async function () {
-  try {
-    const res = await fetch("https://ipapi.co/json/");
-    if (!res.ok) return;
-
-    const geo = await res.json();
-
-    // Only act for NON-US visitors
-    if (geo.country_code && geo.country_code !== "US") {
-
-      // Remove any existing *_UC_* keys
-      Object.keys(localStorage).forEach(key => {
-        if (key.endsWith("_UC") || key.includes("_UC_")) {
-          localStorage.removeItem(key);
-        }
-      });
-
-      const countryKey = `${geo.country_code}_UC`;
-      localStorage.setItem(countryKey, "1");
-    }
-  } catch (e) {
-    // fail silently
-  }
-})();
-</script>
-
 
     <div class="container">
         <div class="card">
