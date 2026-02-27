@@ -1,74 +1,446 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDanielsen's Githup Site</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PDanielsen's GitHub Site</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #21262d;
+      --accent: #58a6ff;
+      --accent2: #1f6feb;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --border: #30363d;
+      --green: #3fb950;
+      --red: #f85149;
+      --yellow: #d29922;
+      --radius: 12px;
+    }
 
-        header {
-            background-color: #0056b3;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 1.8rem;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        footer {
-            background-color: #003f7f;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            position: relative;
-            bottom: 0;
-            width: 100%;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-        .container {
-            width: 80%;
-            margin: auto;
-            padding: 20px;
-        }
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo svg { width: 28px; height: 28px; fill: var(--accent); }
 
-        .media-container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            text-align: center;
-        }
+    nav { display: flex; gap: 4px; flex-wrap: wrap; }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      padding: 5px 10px;
+      border-radius: 6px;
+      transition: background .2s, color .2s;
+    }
+    nav a:hover { background: var(--surface2); color: var(--text); }
 
-        iframe {
-            border: 2px solid #0056b3;
-            border-radius: 10px;
-            display: block;
-            margin: auto;
-        }
-    </style>
+    /* dropdown */
+    .nav-dropdown { position: relative; }
+    .nav-dropbtn {
+      color: var(--muted);
+      font-size: 0.8rem;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+      transition: background .2s, color .2s;
+    }
+    .nav-dropbtn:hover { background: var(--surface2); color: var(--text); }
+    .nav-dropdown-content {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      min-width: 140px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-content { display: block; }
+    .nav-dropdown-content a {
+      display: block;
+      padding: 8px 14px;
+      border-radius: 0;
+      font-size: 0.82rem;
+    }
+    .nav-dropdown-content a:hover { background: var(--surface2); }
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0;
+    }
 
-    
-    <!--<script src="https://web.cmp.usercentrics-sandbox.eu/modules/autoblocker.js"></script>-->
-<!--<script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-settings-id="uvcffwucJnLxAG" data-sandbox="true" async></script>-->
+    /* ── HERO ── */
+    .hero {
+      padding: 60px 40px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .hero h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #a371f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 560px;
+    }
 
-    <script src="https://web.cmp.usercentrics-sandbox.eu/modules/autoblocker.js"></script>
-<script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-ruleset-id="ESaukqEIfWmMaV" data-sandbox="true" async></script>
+    /* ── STATUS BAR ── */
+    .status-bar {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      padding: 0 40px;
+    }
+    .status-bar h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 10px;
+    }
+    .status-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.88rem;
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot.green  { background: var(--green);  box-shadow: 0 0 6px var(--green); }
+    .dot.red    { background: var(--red);    box-shadow: 0 0 6px var(--red); }
+    .dot.yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+    .status-card .name { font-weight: 600; color: var(--text); }
+    .status-card .hint { font-size: 0.75rem; color: var(--muted); }
 
+    /* ── MEDIA GRID ── */
+    .section {
+      max-width: 900px;
+      margin: 0 auto 60px;
+      padding: 0 40px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-header h2 { font-size: 1.1rem; font-weight: 700; }
+    .section-header .badge {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
 
-   <!--<script id="Cookiebot" src="https://dev-consent-cookiebot-com.cookiebot.dev/uc.js" data-cbid="666c6299-fbfb-448b-a671-8397e17df5a5" type="text/javascript"></script>-->
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 20px;
+    }
+    .media-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color .2s, transform .2s;
+    }
+    .media-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
+    .media-card-header {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .media-card-header .title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .media-card-header .service-tag {
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: var(--surface2);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .media-card-body {
+      padding: 16px;
+      background: #0d1117;
+    }
+    .media-card-body iframe {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      display: block;
+    }
 
-    <!-- <script src="https://web.cmp.usercentrics.eu/modules/autoblocker.js"></script>-->
-   <!--  <script id="usercentrics-cmp" src="https://web.cmp.usercentrics.eu/ui/loader.js" data-settings-id="zHBiWV9He0_mT4" async></script>-->    
+    /* Blocked overlay */
+    .blocked-overlay {
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px dashed var(--border);
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .blocked-overlay .icon { font-size: 2rem; margin-bottom: 10px; }
+    .blocked-overlay .title { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+    .blocked-overlay .desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+    .blocked-overlay .tag {
+      display: inline-block;
+      margin-top: 12px;
+      background: #2d1010;
+      color: var(--red);
+      border: 1px solid #5a2020;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
 
+    /* ── CLOCK SPECIAL ── */
+    .clock-card { grid-column: 1 / -1; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 24px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 640px) {
+      header { padding: 0 16px; flex-direction: column; height: auto; padding: 14px 16px; gap: 10px; }
+      .hero, .status-bar, .section { padding: 0 16px; }
+      .hero { padding-top: 32px; }
+      .media-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="logo">
+    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38
+        0-.19-.01-.82-.01-1.49C4 14.52 3.48 13.36 3.32 12.75c-.1-.26-.52-1.07-.89-1.28
+        -.3-.17-.74-.59-.01-.6.68-.01 1.17.63 1.33.89.78 1.31 2.02.94 2.52.72
+        .08-.56.3-.94.55-1.16-1.93-.22-3.95-.96-3.95-4.27 0-.94.34-1.71.89-2.31
+        -.09-.22-.39-1.09.08-2.28 0 0 .73-.23 2.38.89a8.3 8.3 0 012.17-.29
+        c.73 0 1.47.1 2.17.29 1.65-1.13 2.38-.89 2.38-.89.47 1.19.17 2.06.08 2.28
+        .56.6.89 1.37.89 2.31 0 3.32-2.03 4.05-3.96 4.27.31.27.59.8.59 1.62
+        0 1.17-.01 2.11-.01 2.4 0 .21.15.46.55.38A8 8 0 0016 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+    PDanielsen
+  </div>
+  <nav>
+    <a href="index.html">Home</a>
+    <div class="nav-dropdown">
+      <span class="nav-dropbtn">Subpages ▾</span>
+      <div class="nav-dropdown-content">
+        <a href="subpage.html">Subpage</a>
+        <div class="dropdown-divider"></div>
+        <a href="subpage1.html">Subpage 1</a>
+        <a href="subpage2.html">Subpage 2</a>
+        <a href="subpage3.html">Subpage 3</a>
+        <a href="subpage4.html">Subpage 4</a>
+        <a href="subpage5.html">Subpage 5</a>
+        <a href="subpage6.html">Subpage 6</a>
+        <a href="subpage7.html">Subpage 7</a>
+        <a href="subpage8.html">Subpage 8</a>
+        <a href="subpage9.html">Subpage 9</a>
+        <a href="subpage10.html">Subpage 10</a>
+      </div>
+    </div>
+    <a href="trackerdecldefault.html">Tracker Default</a>
+    <a href="trackerdeclmatrix.html">Tracker Matrix</a>
+    <a href="trackerdeclcontainer.html">Tracker Container</a>
+    <a href="analytics.html">Analytics</a>
+  </nav>
+</header>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <h1>GitHub Test Lab</h1>
+  <p>A personal sandbox for testing consent management, tracker declarations, media embeds, and third-party service integrations. Use the status panel below to see which services are currently loading or blocked by your CMP settings.</p>
+</div>
+
+<!-- ══ SERVICE STATUS ══ -->
+<div class="status-bar">
+  <h2>Service Status</h2>
+  <div class="status-grid" id="statusGrid">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- ══ MEDIA EMBEDS ══ -->
+<div class="section">
+  <div class="section-header">
+    <h2>Media Embeds</h2>
+    <span class="badge">7 services</span>
+  </div>
+
+  <div class="media-grid">
+
+    <!-- YouTube No Cookies -->
+    <div class="media-card">
+      <div class="media-card-header">
+        <span class="title">▶ YouTube (Privacy Enhanced)</span>
+        <span class="service-tag">youtube-nocookie.com</span>
+      </div>
+      <div class="media-card-body">
+        <iframe height="215" src="https://www.youtube-nocookie.com/embed/bp612TdEK1c"
+          allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- YouTube Standard -->
+    <div class="media-card">
+      <div class="media-card-header">
+        <span class="title">▶ YouTube</span>
+        <span class="service-tag">youtube.com</span>
+      </div>
+      <div class="media-card-body">
+        <iframe height="215" src="https://www.youtube.com/embed/tROVq1lW0IU?si=VMdGX-0tbe-6Ed7d"
+          title="YouTube video player" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- Vimeo -->
+    <div class="media-card">
+      <div class="media-card-header">
+        <span class="title">▶ Vimeo</span>
+        <span class="service-tag">vimeo.com</span>
+      </div>
+      <div class="media-card-body">
+        <iframe height="215" src="https://player.vimeo.com/video/76979871?h=8272103f6e"
+          allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- SoundCloud -->
+    <div class="media-card">
+      <div class="media-card-header">
+        <span class="title">♪ SoundCloud</span>
+        <span class="service-tag">soundcloud.com</span>
+      </div>
+      <div class="media-card-body">
+        <iframe height="120" scrolling="no"
+          src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1398648325&color=%2358a6ff&auto_play=false&show_artwork=true"></iframe>
+      </div>
+    </div>
+
+    <!-- Dailymotion -->
+    <div class="media-card">
+      <div class="media-card-header">
+        <span class="title">▶ Dailymotion</span>
+        <span class="service-tag">dailymotion.com</span>
+      </div>
+      <div class="media-card-body">
+        <iframe height="215" src="https://geo.dailymotion.com/player.html?video=x9d37ea"
+          allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- Twitter/X -->
+    <div class="media-card">
+      <div class="media-card-header">
+        <span class="title">𝕏 Twitter / X</span>
+        <span class="service-tag">twitter.com</span>
+      </div>
+      <div class="media-card-body">
+        <div id="twitterEmbed">
+          <blockquote class="twitter-tweet" data-theme="dark">
+            <a href="https://twitter.com/username/status/807811447862468608"></a>
+          </blockquote>
+        </div>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      </div>
+    </div>
+
+    <!-- Clock -->
+    <div class="media-card clock-card">
+      <div class="media-card-header">
+        <span class="title">🕐 Live Clock</span>
+        <span class="service-tag">clocklink.com</span>
+      </div>
+      <div class="media-card-body" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <iframe scrolling="no" style="width:120px;height:40px;border:none;"
+          src="https://www.clocklink.com/html5embed.php?clock=004&timezone=ACST&color=green&size=120"></iframe>
+        <p style="color:var(--muted);font-size:0.85rem;">Live clock widget via clocklink.com — may be blocked depending on your consent settings.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  &copy; 2025 PDanielsen · GitHub Test Lab · Built for CMP &amp; consent experimentation
+</footer>
+
+<!-- ══ SCRIPTS (kept from original) ══ -->
+<script src="https://web.cmp.usercentrics-sandbox.eu/modules/autoblocker.js"></script>
+<script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js"
+  data-ruleset-id="ESaukqEIfWmMaV" data-sandbox="true" async></script>
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -76,119 +448,67 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-5TFL5GG5');</script>
-<!-- End Google Tag Manager -->
- <!--<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=gtm2";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","qtochu4h1u");</script>-->
 
- <script src="https://t.contentsquare.net/uxa/b2f8a0bdfeb51.js"></script>
+<script src="https://t.contentsquare.net/uxa/b2f8a0bdfeb51.js"></script>
 
-    
-</head>
-<body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5TFL5GG5"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-    
-    <header>
-        PDanielsen's Githup Site
-    </header>
+<!-- TWIPLA -->
+<script>(function(v,i,s,a,t){v[t]=v[t]||function(){(v[t].v=v[t].v||[]).push(arguments)};if(!v._visaSettings){v._visaSettings={}}v._visaSettings[a]={v:'1.0',s:a,a:'1',t:t};var b=i.getElementsByTagName('body')[0];var p=i.createElement('script');p.defer=1;p.async=1;p.src=s+'?s='+a;b.appendChild(p)})(window,document,'//app-worker.visitor-analytics.io/main.js','792ef646-bf0c-11f0-84e1-960004340fd3','va')</script>
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="subpage.html">Subpage</a>
-       <a href="trackerdecldefault.html">TrackerDeclarationDefault</a>
-       <a href="trackerdeclmatrix.html">TrackerDeclarationMatrix</a>
-        <a href="trackerdeclcontainer.html">TrackerDeclarationContainer</a>
-        <a href="Subpage1.html">Subpage1</a>
-        <a href="subpage2.html">Subpage2</a>
-        <a href="subpage3.html">Subpage3</a>
-        <a href="subpage4.html">Subpage4</a>
-         <a href="subpage5.html">Subpage5</a>
-         <a href="subpage6.html">Subpage6</a>
-         <a href="subpage7.html">Subpage7</a>
-         <a href="subpage8.html">Subpage8</a>
-         <a href="subpage9.html">Subpage9</a>
-         <a href="subpage10.html">Subpage10</a>
-        <a href="analytics.html">Analytics</a>
-    </nav>
+<!-- Geo key script -->
 <script>
 (async function () {
   try {
     const res = await fetch("https://ipapi.co/json/");
     if (!res.ok) return;
-
     const geo = await res.json();
     const country = (geo.country_code || "").toUpperCase();
-    const state = (geo.region_code || "").toUpperCase(); // US only
-
+    const state   = (geo.region_code   || "").toUpperCase();
     if (!country) return;
-
-    const key =
-      country === "US" && state
-        ? `UC_${country}_${state}`   // e.g. UC_US_CA
-        : `UC_${country}`;           // e.g. UC_DE
-
-    // Write once per key; no overwriting needed
-    if (!localStorage.getItem(key)) {
-      localStorage.setItem(key, "1");
-    }
-  } catch (e) {
-    // fail silently
-  }
+    const key = country === "US" && state ? `UC_${country}_${state}` : `UC_${country}`;
+    if (!localStorage.getItem(key)) localStorage.setItem(key, "1");
+  } catch(e) {}
 })();
 </script>
 
-    <div class="container">
-        <div class="card">
-            <h2>Welcome to My Site</h2>
-            <p>This is a simple GitHub website for tetsing and having fun!</p>
-        </div>
+<!-- ══ STATUS PANEL LOGIC ══ -->
+<script>
+  const services = [
+    { name: "Usercentrics CMP",    hint: "Consent layer",      test: () => typeof window.UC_UI !== 'undefined' },
+    { name: "Google Tag Manager",  hint: "Tag management",     test: () => typeof window.google_tag_manager !== 'undefined' },
+    { name: "ContentSquare",       hint: "UX analytics",       test: () => typeof window.CS_CONF !== 'undefined' },
+    { name: "TWIPLA / Visitor Analytics", hint: "Web analytics", test: () => typeof window.va !== 'undefined' },
+    { name: "Twitter Widgets",     hint: "Social embed",       test: () => typeof window.twttr !== 'undefined' },
+    { name: "ipapi (Geo)",         hint: "Geo detection",      test: () => !!localStorage.getItem('UC_') || Object.keys(localStorage).some(k => k.startsWith('UC_')) },
+    { name: "YouTube",             hint: "Video embed",        test: () => document.querySelector('iframe[src*="youtube"]') !== null },
+    { name: "Vimeo",               hint: "Video embed",        test: () => document.querySelector('iframe[src*="vimeo"]') !== null },
+    { name: "SoundCloud",          hint: "Audio embed",        test: () => document.querySelector('iframe[src*="soundcloud"]') !== null },
+    { name: "Dailymotion",         hint: "Video embed",        test: () => document.querySelector('iframe[src*="dailymotion"]') !== null },
+  ];
 
-        <div class="media-container">
-           <h2>Youtube (No Cookies)</h2>
-           <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/bp612TdEK1c" frameborder="0" allow="autoplay; encrypted-media;" allowfullscreen></iframe>
-        </div>
+  function buildStatus() {
+    const grid = document.getElementById('statusGrid');
+    grid.innerHTML = '';
+    services.forEach(s => {
+      let loaded;
+      try { loaded = s.test(); } catch(e) { loaded = false; }
+      const dotClass = loaded ? 'green' : 'red';
+      const statusText = loaded ? 'Loaded' : 'Blocked / not yet loaded';
+      grid.innerHTML += `
+        <div class="status-card">
+          <div class="dot ${dotClass}"></div>
+          <div>
+            <div class="name">${s.name}</div>
+            <div class="hint">${statusText}</div>
+          </div>
+        </div>`;
+    });
+  }
 
-        <div class="media-container">
-            <h2>YouTube</h2>
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/tROVq1lW0IU?si=VMdGX-0tbe-6Ed7d" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-        </div>
+  // Run after page settles
+  window.addEventListener('load', () => { setTimeout(buildStatus, 1800); });
+  // Also run immediately for a quick first pass
+  buildStatus();
+</script>
 
-        <div class="media-container">
-            <h2>Vimeo</h2>
-           <<iframe src="https://player.vimeo.com/video/76979871?h=8272103f6e" width="640" height="360" frameborder="0" allowfullscreen></iframe>
-        </div>
-
-        <div class="media-container">
-            <h2>SoundCloud</h2>
-           <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1398648325"></iframe>
-        </div>
-
-        <div class="media-container">
-            <h2>Clock</h2>
-           <iframe scrolling="no" frameborder="no" style="width:120px;height:40px;" src="https://www.clocklink.com/html5embed.php?clock=004&timezone=ACST&color=green&size=120"></iframe>
-        </div>
-
-        <div class="media-container">
-            <h2>Twitter</h2>
-            <blockquote class="twitter-tweet">
-              <a href="https://twitter.com/username/status/807811447862468608"></a>
-            </blockquote>
-           <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-        </div>
-
-        <div class="media-container">
-            <h2>Dailymotion</h2>
-           <iframe src="https://geo.dailymotion.com/player.html?video=x9d37ea" style="width:100%; height:100%; border:none;" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <footer>
-        &copy; 2025 My GitHub Website. All rights reserved.
-    </footer>
-     <!-- TWIPLA Tracking Code for pdanielsen2000.github.io -->
-<script>(function(v,i,s,a,t){v[t]=v[t]||function(){(v[t].v=v[t].v||[]).push(arguments)};if(!v._visaSettings){v._visaSettings={}}v._visaSettings[a]={v:'1.0',s:a,a:'1',t:t};var b=i.getElementsByTagName('body')[0];var p=i.createElement('script');p.defer=1;p.async=1;p.src=s+'?s='+a;b.appendChild(p)})(window,document,'//app-worker.visitor-analytics.io/main.js','792ef646-bf0c-11f0-84e1-960004340fd3','va')</script>
-<!-- TWIPLA Tracking Code anonymous for pdanielsen2000.github.io -->
-    <!--<script>(function(v,i,s,a,t){v[t]=v[t]||function(){(v[t].v=v[t].v||[]).push(arguments)};if(!v._visaSettings){v._visaSettings={}}v._visaSettings[a]={v:'1.0',s:a,a:'1',t:t,f:true};var b=i.getElementsByTagName('body')[0];var p=i.createElement('script');p.defer=1;p.async=1;p.src=s+'?s='+a;b.appendChild(p)})(window,document,'//app-worker.visitor-analytics.io/main.js','792ef646-bf0c-11f0-84e1-960004340fd3','va')</script>--><!-- TWIPLA Tracking Code for pdanielsen2000.github.io-->
 </body>
 </html>
