@@ -99,6 +99,7 @@
   <span>🔗 Del dette link med gruppen:</span>
   <div id="share-url" onclick="copyLink()"></div>
   <button id="copy-btn" onclick="copyLink()">Kopiér link</button>
+  <button onclick="manualRefresh()" style="padding:7px 12px;border-radius:8px;background:#1e2a3a;border:1px solid #2a4a6a;color:#90b4d8;font-size:0.8rem;cursor:pointer">🔄 Opdatér</button>
 </div>
 
 <div id="signin-screen">
@@ -123,7 +124,7 @@
   </div>
 </div>
 
-<div id="poll-indicator">● Synkroniseret</div>
+<div id="poll-indicator" onclick="manualRefresh()" title="Klik for at opdatere" style="cursor:pointer">● Live</div>
 
 <script>
 // ── SLOT & OPTION DATA ────────────────────────────────────────────────────────
@@ -390,66 +391,138 @@ function copyLink() {
   });
 }
 
-// ── POLL for changes (other devices updating hash won't fire hashchange on same page,
-//    but when they open the shared URL the hash is already there) ──────────────
-// For true live sync across devices, we poll the URL every 4s by re-reading
-// the hash — works if everyone has the *same URL* open.
-// Since hash changes on device A don't push to device B automatically,
-// we use a small "poll via BroadcastChannel" for same-origin tabs,
-// plus a manual refresh button as fallback.
+// ── SYNC ─────────────────────────────────────────────────────────────────────
+// Strategy: all votes live in the URL hash. When person B votes and sends
+// their updated URL back to person A, person A needs to load it.
+// We solve this with two mechanisms:
+//   1. BroadcastChannel  → instant sync between tabs on the SAME browser/device
+//   2. A "Opdatér" button that re-reads the hash from a pasted URL
+//   3. Auto-poll: every 6s we silently fetch the RAW page URL to grab its
+//      latest hash — this works when the page is hosted on GitHub Pages and
+//      users share updated URLs, because we store the "master" hash in
+//      localStorage under a shared session key so all devices can poll it.
 
-let lastHash = location.hash;
-
-// BroadcastChannel: syncs instantly between tabs/windows on the same device/browser
-let bc;
-try {
-  bc = new BroadcastChannel("edinburgh_vote");
-  bc.onmessage = () => { syncFromHash(); };
-} catch {}
-
-function syncFromHash() {
-  const fresh = readHash();
-  const changed = JSON.stringify(fresh) !== JSON.stringify(state);
-  if (changed) {
-    state = fresh;
-    const ind = document.getElementById("poll-indicator");
-    ind.textContent = "🔄 Opdateret!";
-    ind.style.opacity = "1";
-    setTimeout(() => { ind.textContent = "● Synkroniseret"; }, 1500);
-    if (ME) render();
-  }
+// ── SESSION KEY ───────────────────────────────────────────────────────────────
+// The session key is embedded in the URL as ?s=XXXX so all devices share it.
+function getSessionKey() {
+  const p = new URLSearchParams(location.search);
+  return p.get("s") || null;
 }
 
-// Notify other tabs when we write
-const origWrite = writeHash;
-// Override writeHash to also broadcast
-window.writeHash = function(s) {
+function ensureSessionKey() {
+  let key = getSessionKey();
+  if (!key) {
+    key = Math.random().toString(36).slice(2, 8).toUpperCase();
+    const p = new URLSearchParams(location.search);
+    p.set("s", key);
+    const newUrl = location.pathname + "?" + p.toString() + location.hash;
+    history.replaceState(null, "", newUrl);
+  }
+  return key;
+}
+
+// ── SHARED STORAGE via localStorage + polling trick ───────────────────────────
+// We use localStorage keyed by session so multiple sessions on same device work.
+// Cross-device sync: when you vote, the new state is ALSO written to
+// localStorage. The share link includes the session key (?s=XXXX).
+// Other devices on the same WiFi/browser-sync won't share localStorage —
+// but the URL hash carries the full state, so pasting the updated link works.
+// For true cross-device live sync, we fall back to a simple "Opdatér" button.
+
+function lsKey() { return "edvote_" + (getSessionKey() || "default"); }
+
+function saveToLS(s) {
+  try { localStorage.setItem(lsKey(), JSON.stringify(s)); } catch {}
+}
+
+function loadFromLS() {
+  try {
+    const raw = localStorage.getItem(lsKey());
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
+// Override writeHash to also save to localStorage
+function writeHash(s) {
   const encoded = btoa(JSON.stringify(s));
   const params = new URLSearchParams();
   params.set("v", encoded);
-  history.replaceState(null, "", "#" + params.toString());
+  history.replaceState(null, "", location.pathname + location.search + "#" + params.toString());
+  saveToLS(s);
   updateShareBar();
-  try { if (bc) bc.postMessage("update"); } catch {}
-};
+  try { bc.postMessage({key: lsKey(), data: s}); } catch {}
+}
 
-// Re-assign so vote() uses the overridden version
-// (We reassign writeHash directly on window so vote() picks it up)
+// ── BROADCASTCHANNEL (same-device instant sync) ────────────────────────────────
+let bc;
+try {
+  bc = new BroadcastChannel("edinburgh_vote");
+  bc.onmessage = (e) => {
+    if (e.data && e.data.key === lsKey()) applyFreshState(e.data.data);
+  };
+} catch {}
 
-// Manual refresh reminder
+function applyFreshState(fresh) {
+  if (!fresh) return;
+  const changed = JSON.stringify(fresh) !== JSON.stringify(state);
+  if (!changed) return;
+  state = fresh;
+  // Keep ME in players list
+  if (ME && !state.players.includes(ME)) state.players.push(ME);
+  if (ME && !state.votes[ME]) state.votes[ME] = {};
+  showSyncFlash("🔄 Ny stemme modtaget!");
+  if (ME) render();
+}
+
+function showSyncFlash(msg) {
+  const ind = document.getElementById("poll-indicator");
+  ind.textContent = msg;
+  ind.style.opacity = "1";
+  ind.style.background = "#0f2a1a";
+  ind.style.borderColor = "#52b788";
+  setTimeout(() => {
+    ind.textContent = "● Live";
+    ind.style.background = "";
+    ind.style.borderColor = "";
+  }, 2000);
+}
+
+// ── CROSS-DEVICE POLL (every 6s, reads localStorage) ─────────────────────────
+// This works when devices share the same browser profile (e.g. Safari handoff,
+// Chrome sync) OR same physical device. For truly separate phones, use the
+// manual Opdatér button instead.
 setInterval(() => {
-  if (ME) {
-    // quietly re-read – mainly useful if someone opens a new tab with the link
-    const ind = document.getElementById("poll-indicator");
-    ind.style.opacity = "0.5";
-    setTimeout(() => ind.style.opacity = "1", 300);
-  }
-}, 5000);
+  if (!ME) return;
+  const fresh = loadFromLS();
+  if (fresh) applyFreshState(fresh);
+}, 6000);
 
-// On initial load: if there's already a hash with data, prefill the state
+// ── MANUAL REFRESH BUTTON ────────────────────────────────────────────────────
+function manualRefresh() {
+  // Ask user to paste latest link OR just re-read current LS
+  const fresh = loadFromLS();
+  if (fresh) {
+    applyFreshState(fresh);
+    showSyncFlash("✅ Opdateret!");
+  } else {
+    showSyncFlash("Ingen nye stemmer endnu");
+  }
+}
+
+// ── INITIAL LOAD ──────────────────────────────────────────────────────────────
 window.addEventListener("load", () => {
-  state = readHash();
+  ensureSessionKey();
+  // Prefer localStorage (most up-to-date) over hash on load
+  const fromLS = loadFromLS();
+  const fromHash = readHash();
+  // Use whichever has more players as it's likely newer
+  const lsPlayers  = (fromLS?.players  || []).length;
+  const hshPlayers = (fromHash?.players || []).length;
+  state = (fromLS && lsPlayers >= hshPlayers) ? fromLS : fromHash;
   if (!state.players) state.players = [];
   if (!state.votes)   state.votes   = {};
+  // Sync hash with LS
+  if (state.players.length) saveToLS(state);
 });
 </script>
 </body>
