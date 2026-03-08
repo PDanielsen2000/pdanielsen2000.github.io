@@ -2,7 +2,7 @@
   "name": "Edinburgh Dagsplan",
   "short_name": "Edinburgh",
   "description": "Stem på dagens program i Edinburgh",
-  "start_url": "/tripplanner/edinburgh.html",
+  "start_url": "/tripplanner/tripplanner.html",
   "scope": "/tripplanner/",
   "display": "standalone",
   "orientation": "portrait",
