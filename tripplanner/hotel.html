@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vores Hotel – Novotel Edinburgh Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --stone:#1a1612;--stone2:#242018;--stone3:#2e2a24;
+    --gold:#c9a84c;--gold2:#e8c97a;
+    --mist:#8a9aaa;--fog:#b0bec8;--text:#f0ece4;
+    --whisky:#a0522d;--whisky2:#cd853f;
+  }
+  body{background:var(--stone);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+
+  .tartan-bg{position:fixed;inset:0;z-index:0;opacity:.04;
+    background-image:
+      repeating-linear-gradient(0deg,transparent,transparent 40px,#4a6741 40px,#4a6741 44px),
+      repeating-linear-gradient(90deg,transparent,transparent 40px,#4a6741 40px,#4a6741 44px),
+      repeating-linear-gradient(0deg,transparent,transparent 20px,#1a3a6a 20px,#1a3a6a 22px),
+      repeating-linear-gradient(90deg,transparent,transparent 20px,#1a3a6a 20px,#1a3a6a 22px)}
+
+  /* HEADER */
+  .hero{position:relative;z-index:1;background:linear-gradient(180deg,#0a0e14,#1a1a2e 60%,#2a1a0e);padding:0;overflow:hidden}
+  .hero-img{width:100%;height:260px;object-fit:cover;opacity:.5;display:block}
+  .hero-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:24px 20px;background:linear-gradient(0deg,rgba(10,14,20,.95) 0%,transparent 60%);text-align:center}
+  .back-btn{position:absolute;top:16px;left:16px;padding:6px 14px;border-radius:20px;background:rgba(0,0,0,.5);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-size:.8rem;text-decoration:none;font-family:'Inter',sans-serif;backdrop-filter:blur(6px);transition:all .2s}
+  .back-btn:hover{background:rgba(201,168,76,.1)}
+  .hotel-badge{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  .hotel-name{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold2);text-shadow:0 0 30px rgba(201,168,76,.5);line-height:1.1;margin-bottom:4px}
+  .hotel-sub{color:var(--mist);font-size:.82rem;letter-spacing:1px}
+  .mist-divider{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+  /* STARS */
+  .hotel-stars{display:flex;justify-content:center;gap:3px;margin-bottom:6px}
+  .hotel-stars span{color:var(--gold);font-size:1.1rem}
+
+  /* MAIN */
+  .wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:24px 14px 60px}
+
+  /* QUICK FACTS */
+  .facts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:24px}
+  .fact-card{background:var(--stone2);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:14px 12px;text-align:center;transition:border-color .2s}
+  .fact-card:hover{border-color:rgba(201,168,76,.3)}
+  .fact-icon{font-size:1.6rem;margin-bottom:6px;display:block;filter:drop-shadow(0 0 6px rgba(201,168,76,.3))}
+  .fact-label{font-size:.68rem;color:var(--mist);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+  .fact-val{font-size:.88rem;font-weight:600;color:var(--gold2)}
+
+  /* SECTION */
+  .section{background:var(--stone2);border:1px solid rgba(201,168,76,.12);border-radius:16px;padding:20px;margin-bottom:18px}
+  .section h2{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+  /* AMENITIES */
+  .amenities{display:flex;flex-wrap:wrap;gap:8px}
+  .amenity{padding:5px 12px;border-radius:20px;font-size:.76rem;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.18);color:var(--fog);display:flex;align-items:center;gap:5px}
+
+  /* REVIEWS */
+  .review-card{background:rgba(0,0,0,.2);border-radius:10px;padding:12px 14px;margin-bottom:10px;border-left:2px solid var(--gold)}
+  .review-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .review-stars{color:var(--gold);font-size:.8rem}
+  .review-source{font-size:.68rem;color:var(--mist)}
+  .review-text{font-size:.8rem;color:var(--fog);font-style:italic;line-height:1.5}
+  .review-author{font-size:.7rem;color:#5a6a7a;margin-top:4px}
+
+  /* SCORE */
+  .score-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .score-label{font-size:.78rem;color:var(--mist);width:120px;flex-shrink:0}
+  .score-bar-bg{flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:6px;overflow:hidden}
+  .score-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--whisky2))}
+  .score-val{font-size:.75rem;color:var(--gold);width:28px;text-align:right;font-weight:600}
+
+  /* MAP */
+  .map-wrap{border-radius:12px;overflow:hidden;border:1px solid rgba(201,168,76,.15)}
+  .map-wrap iframe{width:100%;height:260px;border:none;display:block}
+
+  /* LINKS */
+  .links-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .link-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:10px;font-size:.82rem;font-weight:600;text-decoration:none;transition:all .2s;font-family:'Inter',sans-serif;cursor:pointer}
+  .link-btn.primary{background:linear-gradient(135deg,var(--gold),var(--whisky2));color:#1a1200}
+  .link-btn.primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,168,76,.3)}
+  .link-btn.secondary{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);color:var(--gold2)}
+  .link-btn.secondary:hover{background:rgba(201,168,76,.14)}
+
+  /* PHOTOS */
+  .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+  .photo-grid img{width:100%;height:130px;object-fit:cover;border-radius:10px;border:1px solid rgba(201,168,76,.1);transition:all .2s}
+  .photo-grid img:hover{border-color:rgba(201,168,76,.4);transform:scale(1.02)}
+
+  /* TIPS */
+  .tip-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .tip-item{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--fog);line-height:1.5}
+  .tip-item .tip-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .wrap>*{animation:fadeUp .4s ease}
+</style>
+</head>
+<body>
+<div class="tartan-bg"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <img class="hero-img"
+    src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/57418967.jpg?k=6c5a3f4e2c9f45a5a2b0e3f1f1a7c8d0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c&o=&hp=1"
+    alt="Novotel Edinburgh Centre"
+    onerror="this.src='https://images.trvl-media.com/lodging/1000000/980000/982700/982662/ae3c79b0.jpg?impolicy=resizecrop&rw=500&ra=fit'">
+  <a class="back-btn" href="/tripplanner/">← Tilbage til dagsplan</a>
+  <div class="hero-overlay">
+    <div class="hotel-badge">⭐⭐⭐⭐ 4-stjernet hotel</div>
+    <div class="hotel-stars">
+      <span>★</span><span>★</span><span>★</span><span>★</span><span style="opacity:.3">★</span>
+    </div>
+    <div class="hotel-name">Novotel Edinburgh Centre</div>
+    <div class="hotel-sub">80 Lauriston Place, Edinburgh EH3 9DE</div>
+  </div>
+</div>
+<div class="mist-divider"></div>
+
+<div class="wrap">
+
+  <!-- QUICK FACTS -->
+  <div class="facts-grid">
+    <div class="fact-card">
+      <span class="fact-icon">🛎️</span>
+      <div class="fact-label">Check-in</div>
+      <div class="fact-val">Fra kl. 15:00</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🚪</span>
+      <div class="fact-label">Check-out</div>
+      <div class="fact-val">Senest kl. 12:00</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🍳</span>
+      <div class="fact-label">Morgenmad</div>
+      <div class="fact-val">07:00–11:00</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🏊</span>
+      <div class="fact-label">Pool</div>
+      <div class="fact-val">Indendørs</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">📶</span>
+      <div class="fact-label">WiFi</div>
+      <div class="fact-val">Gratis</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🐾</span>
+      <div class="fact-label">Kæledyr</div>
+      <div class="fact-val">Tilladt</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🚗</span>
+      <div class="fact-label">Parkering</div>
+      <div class="fact-val">Indendørs (mod betaling)</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🏰</span>
+      <div class="fact-label">Edinburgh Castle</div>
+      <div class="fact-val">15 min. gang</div>
+    </div>
+  </div>
+
+  <!-- FACILITETER -->
+  <div class="section">
+    <h2>🛁 Faciliteter</h2>
+    <div class="amenities">
+      <div class="amenity">🏊 Indendørs pool</div>
+      <div class="amenity">🧖 Sauna</div>
+      <div class="amenity">♨️ Jacuzzi / Hot tub</div>
+      <div class="amenity">💪 Fitnesscenter</div>
+      <div class="amenity">🍽️ TAP Bar & Kitchen</div>
+      <div class="amenity">🍺 Bar med craft beers</div>
+      <div class="amenity">🛎️ 24-timers reception</div>
+      <div class="amenity">🛎️ 24-timers roomservice</div>
+      <div class="amenity">📶 Gratis WiFi</div>
+      <div class="amenity">📺 50" LCD TV</div>
+      <div class="amenity">🧴 Minibar på værelset</div>
+      <div class="amenity">☕ Te/kaffe på værelset</div>
+      <div class="amenity">🔒 Sikkerhedsboks</div>
+      <div class="amenity">♿ Tilgængeligt</div>
+      <div class="amenity">💱 Valutaveksling</div>
+      <div class="amenity">🧺 Vaskeri</div>
+    </div>
+  </div>
+
+  <!-- MORGENMAD -->
+  <div class="section">
+    <h2>🍳 Morgenmad</h2>
+    <ul class="tip-list">
+      <li class="tip-item"><span class="tip-icon">🕖</span><span>Serveres dagligt — <strong>hverdage kl. 06:30–10:00</strong>, weekender kl. <strong>07:00–11:00</strong></span></li>
+      <li class="tip-item"><span class="tip-icon">🥣</span><span>Stort buffetudvalg: Full Scottish & English breakfast, friske bagels, croissanter, vafler, frisk frugt og meget mere</span></li>
+      <li class="tip-item"><span class="tip-icon">🏴󠁧󠁢󠁳󠁣󠁴󠁧</span><span>"Wee Menu" med sæsonbetonede skotske retter — prøv haggis til morgenmad!</span></li>
+      <li class="tip-item"><span class="tip-icon">👶</span><span>Op til 2 børn under 16 år spiser gratis med morgenmad når de deler værelse med forældre</span></li>
+      <li class="tip-item"><span class="tip-icon">💷</span><span>Morgenmad koster ekstra — ikke inkluderet i roomprisen medmindre du har booket med morgenmad</span></li>
+    </ul>
+  </div>
+
+  <!-- RATINGS -->
+  <div class="section">
+    <h2>📊 Ratings</h2>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap">
+      <div style="text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--gold2);line-height:1">8.3</div>
+        <div style="font-size:.72rem;color:var(--mist)">Booking.com</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--gold2);line-height:1">4.1</div>
+        <div style="font-size:.72rem;color:var(--mist)">TripAdvisor</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--gold2);line-height:1">4.2</div>
+        <div style="font-size:.72rem;color:var(--mist)">Google</div>
+      </div>
+    </div>
+    <div class="score-row"><div class="score-label">Beliggenhed</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:92%"></div></div><div class="score-val">9.2</div></div>
+    <div class="score-row"><div class="score-label">Renlighed</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:86%"></div></div><div class="score-val">8.6</div></div>
+    <div class="score-row"><div class="score-label">Personale</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:84%"></div></div><div class="score-val">8.4</div></div>
+    <div class="score-row"><div class="score-label">Faciliteter</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:82%"></div></div><div class="score-val">8.2</div></div>
+    <div class="score-row"><div class="score-label">Morgenmad</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:84%"></div></div><div class="score-val">8.4</div></div>
+    <div class="score-row"><div class="score-label">Værdi for pengene</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:75%"></div></div><div class="score-val">7.5</div></div>
+  </div>
+
+  <!-- ANMELDELSER -->
+  <div class="section">
+    <h2>💬 Gæsteanmeldelser</h2>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-source">Booking.com · Feb 2026</div>
+      </div>
+      <div class="review-text">"Hotel stay was excellent, clean, comfortable and staff very helpful. The pool, hot tub and sauna were fantastic after a day of sightseeing — highly recommend!"</div>
+      <div class="review-author">— Helen B., Familie</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-source">Booking.com · 2026</div>
+      </div>
+      <div class="review-text">"The breakfast was excellent with a good variety of high-quality food. The pool was a great bonus and the staff were friendly and helpful. Centrally located — easy to explore all attractions."</div>
+      <div class="review-author">— Bekræftet gæst</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★☆</div>
+        <div class="review-source">Expedia · 2026</div>
+      </div>
+      <div class="review-text">"Proximity to the city centre was great. I needed to be at Usher Hall which was walking distance. The bed was very comfortable and the shower was lovely."</div>
+      <div class="review-author">— Bekræftet gæst</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-source">Hotels.com · 2026</div>
+      </div>
+      <div class="review-text">"The room was spacious and the bathroom clean and well-equipped. Staff provided excellent service and breakfast had a wide variety of tasty options. The view from the restaurant was breathtaking!"</div>
+      <div class="review-author">— Bekræftet gæst</div>
+    </div>
+  </div>
+
+  <!-- GODE TIPS -->
+  <div class="section">
+    <h2>💡 Gode Tips</h2>
+    <ul class="tip-list">
+      <li class="tip-item"><span class="tip-icon">🏊</span><span>Poolen kan blive travl i spidsbelastning — gå tidligt om morgenen for at få den mere for jer selv</span></li>
+      <li class="tip-item"><span class="tip-icon">🧖</span><span>Saunaen er fremragende efter en lang dag med sightseeing — tag håndklæder med da de kan løbe tør</span></li>
+      <li class="tip-item"><span class="tip-icon">🚗</span><span>Parkering koster ekstra — Holyrood Park er billigere alternativ i nærheden (~£1/time)</span></li>
+      <li class="tip-item"><span class="tip-icon">🛎️</span><span>Early check-in kan arrangeres ved reception — spørg venligt, de gør hvad de kan</span></li>
+      <li class="tip-item"><span class="tip-icon">🏰</span><span>Edinburgh Castle er 15 min gang — Royal Mile er 15 min, Grassmarket er 5 min</span></li>
+      <li class="tip-item"><span class="tip-icon">🍺</span><span>TAP Bar & Kitchen serverer skotsk køkken og craft beers — god til en afslappet aften</span></li>
+      <li class="tip-item"><span class="tip-icon">📱</span><span>Gratis WiFi i alle rum og fællesarealer — ingen loginproblemer</span></li>
+    </ul>
+  </div>
+
+  <!-- BELIGGENHED -->
+  <div class="section">
+    <h2>📍 Beliggenhed</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+      <div class="amenity">🏰 Edinburgh Castle: 15 min gang</div>
+      <div class="amenity">🪨 Royal Mile: 15 min gang</div>
+      <div class="amenity">🛍️ Grassmarket: 5 min gang</div>
+      <div class="amenity">🎭 Royal Lyceum Theatre: 5 min gang</div>
+      <div class="amenity">🚂 Waverley Station: 20 min gang</div>
+      <div class="amenity">✈️ Flughafen: 11 km</div>
+    </div>
+    <div class="map-wrap">
+      <iframe
+        src="https://maps.google.com/maps?q=Novotel+Edinburgh+Centre,+80+Lauriston+Place,+Edinburgh&output=embed&z=15"
+        allowfullscreen loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- LINKS -->
+  <div class="section">
+    <h2>🔗 Nyttige Links</h2>
+    <div class="links-row">
+      <a class="link-btn primary" href="https://all.accor.com/hotel/3271/index.en.shtml" target="_blank">🏨 Officiel hjemmeside</a>
+      <a class="link-btn secondary" href="https://www.tripadvisor.com/Hotel_Review-g186525-d214382-Reviews-Novotel_Edinburgh_Centre-Edinburgh_Scotland.html" target="_blank">⭐ TripAdvisor anmeldelser</a>
+      <a class="link-btn secondary" href="https://www.booking.com/hotel/gb/novoteledinburghcentre.en-gb.html" target="_blank">📋 Booking.com</a>
+      <a class="link-btn secondary" href="https://maps.google.com/?q=Novotel+Edinburgh+Centre,+80+Lauriston+Place,+Edinburgh" target="_blank">🗺️ Google Maps</a>
+      <a class="link-btn secondary" href="tel:+441312299000">📞 Ring til hotellet</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
