@@ -270,18 +270,18 @@ const OPTIONS = {
 };
 
 // ─────────────────────────────────────────────
-// STATE  (stored in localStorage so it persists across page reloads)
+// STATE  (in-memory; swap saveState/loadState for localStorage in production)
 // ─────────────────────────────────────────────
-const STORE_KEY = "edinburgh_vote_v1";
-
 function loadState() {
-  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch { return {}; }
+  try {
+    const raw = localStorage.getItem("edinburgh_vote_v1");
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
 }
 function saveState(s) {
-  localStorage.setItem(STORE_KEY, JSON.stringify(s));
+  try { localStorage.setItem("edinburgh_vote_v1", JSON.stringify(s)); } catch {}
 }
 
-// state shape: { players: ["Alice","Bob"], votes: { "Alice": { morning:"castle", ... } } }
 let state = loadState();
 if (!state.players) state.players = [];
 if (!state.votes)   state.votes   = {};
@@ -296,19 +296,23 @@ document.getElementById("name-input").addEventListener("keydown", e => {
 });
 
 function signIn() {
-  const val = document.getElementById("name-input").value.trim();
-  if (!val) return;
+  const input = document.getElementById("name-input");
+  const val = (input.value || "").trim();
+  if (!val) {
+    input.style.borderColor = "#e76f51";
+    input.placeholder = "Skriv dit navn først!";
+    return;
+  }
+  input.style.borderColor = "";
   ME = val;
 
-  if (!state.players.includes(ME)) {
-    state.players.push(ME);
-    saveState(state);
-  }
+  if (!state.players.includes(ME)) state.players.push(ME);
   if (!state.votes[ME]) state.votes[ME] = {};
+  saveState(state);
 
   document.getElementById("signin-screen").style.display = "none";
-  document.getElementById("players-bar").style.display = "flex";
-  document.getElementById("app").style.display = "block";
+  document.getElementById("players-bar").style.display  = "flex";
+  document.getElementById("app").style.display          = "block";
 
   render();
 }
