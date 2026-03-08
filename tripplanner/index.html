@@ -102,6 +102,7 @@
     <button class="tab-btn active" onclick="switchTab('vote',this)">🗳️ Stem</button>
     <button class="tab-btn" onclick="switchTab('results',this)">📊 Resultater</button>
     <button class="refresh-btn" onclick="manualRefresh()">🔄 Opdatér</button>
+    <button class="refresh-btn" style="color:#e76f51;border-color:#e76f51" onclick="resetAll()">🗑️ Nulstil alt</button>
   </div>
   <div id="tab-vote" class="tab-content active">
     <div class="tip">💡 Klik på et kort for at stemme. Klik igen for at fjerne din stemme. Tryk 🔄 for at se andres stemmer.</div>
@@ -254,7 +255,22 @@ async function vote(slotId, optId) {
   render();
 }
 
-function tally(slotId) {
+async function resetAll() {
+  const confirmed = confirm("⚠️ Er du sikker? Dette sletter ALLE stemmer og spillere for hele gruppen!");
+  if (!confirmed) return;
+  const empty = { players: [], votes: {} };
+  await saveState(empty);
+  state = empty;
+  ME = null;
+  document.getElementById("signin-screen").style.display = "block";
+  document.getElementById("players-bar").style.display   = "none";
+  document.getElementById("app").style.display           = "none";
+  document.getElementById("name-input").value = "";
+  if (pollTimer) clearInterval(pollTimer);
+  flash("🗑️ Alt nulstillet!");
+}
+
+
   const out = {};
   for (const [name, picks] of Object.entries(state.votes || {})) {
     const p = picks[slotId];
