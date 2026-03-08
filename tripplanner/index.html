@@ -44,7 +44,7 @@
   .tab-bar { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; }
   .tab-btn { padding: 7px 16px; border-radius: 20px; font-size: 0.82rem; cursor: pointer; border: 1.5px solid #2a2a4a; background: #1a1a2e; color: #8090b0; transition: all .15s; }
   .tab-btn.active { background: #4a90d9; border-color: #4a90d9; color: #fff; font-weight: 700; }
-  .refresh-btn { margin-left: auto; padding: 7px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; border: 1px solid #2a2a4a; background: #1a1a2e; color: #52b788; }
+  .refresh-btn { padding: 7px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; border: 1px solid #2a2a4a; background: #1a1a2e; color: #52b788; }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
   .tip { background: #0f2a40; border: 1px solid #4a90d9; border-radius: 8px; padding: 9px 14px; font-size: 0.8rem; color: #90c0e0; margin-bottom: 18px; }
@@ -120,6 +120,8 @@
 <div id="poll-indicator">● Live</div>
 
 <script>
+const FB_URL = "https://edinburgh-vote-default-rtdb.europe-west1.firebasedatabase.app/votes.json";
+
 const SLOTS = [
   { id:"morning",   label:"🌅 Formiddagsaktivitet", time:"09:00–12:00", color:"#f4a261" },
   { id:"lunch",     label:"🍽️ Frokost",             time:"12:00–13:30", color:"#52b788" },
@@ -173,7 +175,6 @@ const OPTIONS = {
   ],
 };
 
-const FB_URL = "https://edinburgh-vote-default-rtdb.europe-west1.firebasedatabase.app/votes.json";
 let state = { players: [], votes: {} };
 let ME = null;
 let pollTimer = null;
@@ -204,7 +205,6 @@ document.getElementById("name-input").addEventListener("keydown", e => {
 });
 
 async function signIn() {
-  alert("signIn kaldt!");
   const val = (document.getElementById("name-input").value || "").trim();
   if (!val) {
     document.getElementById("name-input").style.borderColor = "#e76f51";
@@ -213,8 +213,6 @@ async function signIn() {
   ME = val;
   try {
     state = await loadState();
-    if (!state.players) state.players = [];
-    if (!state.votes) state.votes = {};
     if (!state.players.includes(ME)) state.players.push(ME);
     if (!state.votes[ME]) state.votes[ME] = {};
     await saveState(state);
@@ -278,7 +276,7 @@ async function resetAll() {
   flash("🗑️ Alt nulstillet!");
 }
 
-
+function tally(slotId) {
   const out = {};
   for (const [name, picks] of Object.entries(state.votes || {})) {
     const p = picks[slotId];
