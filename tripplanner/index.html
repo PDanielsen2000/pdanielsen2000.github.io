@@ -182,7 +182,10 @@ async function loadState() {
   try {
     const r = await fetch(FB_URL);
     const data = await r.json();
-    return data || { players: [], votes: {} };
+    if (!data || typeof data !== "object") return { players: [], votes: {} };
+    if (!data.players) data.players = [];
+    if (!data.votes)   data.votes   = {};
+    return data;
   } catch { return { players: [], votes: {} }; }
 }
 
@@ -207,19 +210,23 @@ async function signIn() {
     return;
   }
   ME = val;
-  state = await loadState();
-  if (!state.players) state.players = [];
-  if (!state.votes) state.votes = {};
-  if (!state.players.includes(ME)) state.players.push(ME);
-  if (!state.votes[ME]) state.votes[ME] = {};
-  await saveState(state);
+  try {
+    state = await loadState();
+    if (!state.players) state.players = [];
+    if (!state.votes) state.votes = {};
+    if (!state.players.includes(ME)) state.players.push(ME);
+    if (!state.votes[ME]) state.votes[ME] = {};
+    await saveState(state);
 
-  document.getElementById("signin-screen").style.display = "none";
-  document.getElementById("players-bar").style.display   = "flex";
-  document.getElementById("app").style.display           = "block";
+    document.getElementById("signin-screen").style.display = "none";
+    document.getElementById("players-bar").style.display   = "flex";
+    document.getElementById("app").style.display           = "block";
 
-  render();
-  startPolling();
+    render();
+    startPolling();
+  } catch(e) {
+    alert("Fejl: " + e.message);
+  }
 }
 
 function startPolling() {
