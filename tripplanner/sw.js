@@ -1,4 +1,4 @@
-const CACHE = "edinburgh-v3";
+const CACHE = "edinburgh-v4";
 const FILES = [
   "/tripplanner/",
   "/tripplanner/index.html",
