@@ -1,6 +1,119 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edinburgh Dagsplan – Stem!</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f0f1a; color: #e8e8f0; min-height: 100vh; }
 
-// ── SLOTS ────────────────────────────────────────────────────────────────────
+  header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 32px 20px 24px; text-align: center; border-bottom: 2px solid #4a90d9; }
+  header .flag { font-size: 2.4rem; }
+  header h1 { font-size: 1.9rem; color: #fff; margin: 6px 0 4px; letter-spacing: 1px; }
+  header p  { color: #90b4d8; font-size: 0.9rem; }
+
+  #signin-screen { max-width: 420px; margin: 60px auto; background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 16px; padding: 36px 28px; text-align: center; }
+  #signin-screen h2 { font-size: 1.4rem; margin-bottom: 8px; }
+  #signin-screen .sub { color: #8090b0; font-size: 0.85rem; margin-bottom: 22px; line-height: 1.5; }
+  input[type=text] { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid #3a3a6a; background: #12122a; color: #fff; font-size: 1rem; margin-bottom: 12px; outline: none; }
+  input[type=text]:focus { border-color: #4a90d9; }
+  .btn { width: 100%; padding: 12px; border-radius: 10px; background: #4a90d9; border: none; color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background .2s; }
+  .btn:hover { background: #357abd; }
+
+  #players-bar { display: none; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 10px 16px; background: #12122a; border-bottom: 1px solid #2a2a4a; }
+  .player-chip { background: #1e1e3a; border: 1.5px solid #3a3a6a; border-radius: 20px; padding: 4px 12px; font-size: 0.78rem; color: #c0cce0; display: flex; align-items: center; gap: 5px; }
+  .player-chip.me { border-color: #4a90d9; color: #fff; background: #0f3460; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #4a90d9; flex-shrink: 0; }
+
+  #app { display: none; max-width: 900px; margin: 0 auto; padding: 18px 12px 60px; }
+
+  .tab-bar { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; }
+  .tab-btn { padding: 7px 16px; border-radius: 20px; font-size: 0.82rem; cursor: pointer; border: 1.5px solid #2a2a4a; background: #1a1a2e; color: #8090b0; transition: all .15s; }
+  .tab-btn.active { background: #4a90d9; border-color: #4a90d9; color: #fff; font-weight: 700; }
+  .refresh-btn { margin-left: auto; padding: 7px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; border: 1px solid #2a2a4a; background: #1a1a2e; color: #52b788; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .tip { background: #0f2a40; border: 1px solid #4a90d9; border-radius: 8px; padding: 9px 14px; font-size: 0.8rem; color: #90c0e0; margin-bottom: 18px; }
+
+  .slot-section { margin-bottom: 28px; }
+  .slot-header { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px 12px 0 0; border-left: 4px solid var(--c); background: #1a1a2e; border-top: 1px solid #2a2a4a; border-right: 1px solid #2a2a4a; border-bottom: none; }
+  .slot-title { font-size: 1rem; font-weight: 700; color: var(--c); }
+  .slot-time  { font-size: 0.75rem; color: #607090; margin-left: auto; }
+
+  .options-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 9px; padding: 10px; background: #14142a; border: 1px solid #2a2a4a; border-top: none; border-radius: 0 0 12px 12px; }
+
+  .option-card { background: #1e1e38; border: 2px solid #2a2a4a; border-radius: 10px; padding: 11px 13px; cursor: pointer; transition: border-color .15s, background .15s; user-select: none; }
+  .option-card:hover { border-color: #4a6090; }
+  .option-card.voted { border-color: var(--c); background: #0f1f3a; }
+  .option-card.pause { border-style: dashed; }
+  .option-card.pause.voted { background: #1a2a1a; border-color: #52b788; }
+
+  .option-label { font-size: 0.9rem; font-weight: 600; color: #dde4f0; margin-bottom: 3px; display: flex; justify-content: space-between; }
+  .option-desc  { font-size: 0.73rem; color: #7090b0; margin-bottom: 8px; }
+
+  .vote-bar-meta { display: flex; justify-content: space-between; font-size: 0.7rem; color: #5070a0; margin-bottom: 3px; }
+  .vote-bar-bg   { background: #2a2a4a; border-radius: 4px; height: 5px; overflow: hidden; }
+  .vote-bar-fill { height: 100%; border-radius: 4px; background: var(--c); transition: width .4s ease; }
+  .option-card.pause .vote-bar-fill { background: #52b788; }
+
+  .voter-avatars { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+  .voter-avatar  { font-size: 0.65rem; padding: 2px 7px; border-radius: 10px; background: #1a2a3a; border: 1px solid #3a4a6a; color: #8090b0; }
+  .voter-avatar.is-me { background: #0f2a4a; border-color: #4a90d9; color: #90c0f0; }
+
+  #results-panel { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 14px; padding: 18px; margin-bottom: 24px; }
+  #results-panel h2 { font-size: 1.05rem; color: #4a90d9; margin-bottom: 14px; }
+  .result-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #12122a; border-radius: 8px; margin-bottom: 7px; border-left: 3px solid var(--c); }
+  .result-slot   { font-size: 0.73rem; color: #607090; width: 155px; flex-shrink: 0; }
+  .result-winner { font-size: 0.88rem; font-weight: 700; color: #fff; flex: 1; }
+  .result-votes  { font-size: 0.76rem; color: #4a90d9; }
+  .result-tie    { color: #ffb347; font-size: 0.76rem; }
+
+  #poll-indicator { position: fixed; bottom: 14px; right: 14px; font-size: 0.72rem; padding: 4px 10px; border-radius: 12px; background: #1a2a1a; border: 1px solid #3a5a3a; color: #52b788; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="flag">🏴󠁧󠁢󠁳󠁣󠁴󠁧</div>
+  <h1>Edinburgh Dagsplan</h1>
+  <p>Stem på dagens program – alle i gruppen bestemmer!</p>
+</header>
+
+<div id="signin-screen">
+  <h2>👋 Hvem er du?</h2>
+  <p class="sub">Skriv dit navn og deltag i afstemningen</p>
+  <input type="text" id="name-input" placeholder="Dit navn..." maxlength="24" autocomplete="off">
+  <button class="btn" onclick="signIn()">Gå med i gruppen →</button>
+  <p id="existing-players" style="margin-top:12px;font-size:0.78px;color:#5a6a8a;display:none"></p>
+</div>
+
+<div id="players-bar"></div>
+
+<div id="app">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('vote',this)">🗳️ Stem</button>
+    <button class="tab-btn" onclick="switchTab('results',this)">📊 Resultater</button>
+    <button class="refresh-btn" onclick="manualRefresh()">🔄 Opdatér</button>
+  </div>
+  <div id="tab-vote" class="tab-content active">
+    <div class="tip">💡 Klik på et kort for at stemme. Klik igen for at fjerne din stemme. Opdateres automatisk!</div>
+    <div id="slots-container"></div>
+  </div>
+  <div id="tab-results" class="tab-content">
+    <div id="results-panel">
+      <h2>📋 Dagens vindere</h2>
+      <div id="results-list"></div>
+    </div>
+    <div id="results-detail"></div>
+  </div>
+</div>
+
+<div id="poll-indicator">● Live</div>
+
+<script>
 const SLOTS = [
   { id:"morning",   label:"🌅 Formiddagsaktivitet", time:"09:00–12:00", color:"#f4a261" },
   { id:"lunch",     label:"🍽️ Frokost",             time:"12:00–13:30", color:"#52b788" },
@@ -9,524 +122,270 @@ const SLOTS = [
   { id:"night",     label:"🌙 Nataktivitet",         time:"20:00–?",     color:"#c77dff" },
 ];
 
-// ── OPTIONS with full detail ─────────────────────────────────────────────────
 const OPTIONS = {
   morning:[
-    { id:"castle",   label:"🏰 Edinburgh Castle",        desc:"Ca. £20 · ~170 kr.", tags:["Historie","Ikonisk"],
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Edinburgh_Castle_from_the_North.JPG/800px-Edinburgh_Castle_from_the_North.JPG",
-      about:"Skotlands mest besøgte attraktion thronende på en vulkanklippe. Hjem for Skotlands krondiamanter og over 1.300 år med historie.",
-      reviews:["★★★★★ \"Incredible place — we loved every bit of history walking through the castle grounds.\"","★★★★☆ \"Stunning views over the city. Go in the morning to avoid tour groups!\""] },
-    { id:"holyrood", label:"👑 Palace of Holyroodhouse",  desc:"Ca. £18 · ~157 kr.", tags:["Kongehuset","Historie"],
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Palace_of_Holyroodhouse_2010.jpg/800px-Palace_of_Holyroodhouse_2010.jpg",
-      about:"Kongens officielle skotske residens for enden af Royal Mile. Besøg Mary Queen of Scots' gemakker og ruinerne af Holyrood Abbey.",
-      reviews:["★★★★★ \"A breathtaking royal experience — truly did not disappoint!\"","★★★★☆ \"900 years of history at your feet. Don't miss the ruins of Holyrood Abbey.\""] },
-    { id:"arthurs",  label:"🌋 Arthur's Seat – vandring", desc:"Gratis 🆓", tags:["Gratis","Vandring","Udsigt"],
-      img:"https://www.earthtrekkers.com/wp-content/uploads/2018/09/Hiking-Arthurs-Seat-Edinburgh.jpg.webp",
-      about:"Uddød vulkan midt i Edinburgh med fantastisk udsigt over hele byen. Ca. 45–90 min. vandring. Gode sko anbefales!",
-      reviews:["★★★★★ \"Breathtaking views — you can see the whole city, the Firth of Forth and the Pentland Hills!\"","★★★★☆ \"Brilliant and free! The path can be slippery when wet, so bring good shoes.\""] },
-    { id:"museum",   label:"🏛️ National Museum",          desc:"Gratis 🆓", tags:["Gratis","Kultur","Historie"],
-      img:"https://www.nms.ac.uk/media/1160498/national-museum-of-scotland-exterior.jpg",
-      about:"Verdensklasse-museum med skotsk og global historie, videnskab, mode og natur. Afsæt mindst 3 timer. Gratis entre!",
-      reviews:["★★★★★ \"Free entry for everyone! Allow minimum three hours — the Grand Gallery is spectacular.\"","★★★★★ \"Science, history, art and innovation under a single roof. Don't miss the rooftop terrace!\""] },
-    { id:"camera",   label:"🌀 Camera Obscura",           desc:"Ca. £25 · ~217 kr.", tags:["Familie","Interaktivt"],
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Camera_Obscura%2C_Edinburgh_%28geograph_2045553%29.jpg/800px-Camera_Obscura%2C_Edinburgh_%28geograph_2045553%29.jpg",
-      about:"6 etager med optiske illusioner, spejllabyrint og det 170 år gamle Camera Obscura med 360° udsigt fra taget. Afsæt ca. 2 timer.",
-      reviews:["★★★★★ \"Every floor is filled with mind-bending exhibits — great fun for the whole family!\"","★★★★★ \"6 floors packed with illusions and the views to impress. Definitely go back!\""] },
-    { id:"pause_m",  label:"😴 Pause / Frileg",           desc:"Gratis", tags:["Pause"], isPause:true,
-      img:null, about:"Tag det roligt — sov længe, hyg jer på caféen eller udforsk på egen hånd.", reviews:[] },
+    {id:"castle",   label:"🏰 Edinburgh Castle",        desc:"Ca. £20 · ~170 kr."},
+    {id:"holyrood", label:"👑 Palace of Holyroodhouse",  desc:"Ca. £18 · ~157 kr."},
+    {id:"arthurs",  label:"🌋 Arthur's Seat – vandring", desc:"Gratis 🆓"},
+    {id:"museum",   label:"🏛️ National Museum",          desc:"Gratis 🆓"},
+    {id:"camera",   label:"🌀 Camera Obscura",           desc:"Ca. £25 · ~217 kr."},
+    {id:"pause_m",  label:"😴 Pause / Frileg",           desc:"Sov længe – hyg jer!", isPause:true},
   ],
   lunch:[
-    { id:"oink",       label:"🐷 Oink Pulled Pork",       desc:"Ca. £7 · ~61 kr.", tags:["Fastfood","Ikonisk"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/02/7f/32/oink.jpg?w=800&h=-1&s=1",
-      about:"Verdensberømt pulled pork-brød på Victoria Street. En hel stegt gris drejer sig i vinduet! Lille butik — tag ud og spis.",
-      reviews:["★★★★★ \"The pulled pork was cooked to perfection — we are so glad we tried it!\"","★★★★★ \"One of the best meals in Edinburgh. Very reasonable price!\""] },
-    { id:"makars",     label:"🥔 Makars Mash Bar",         desc:"Ca. £15 · ~130 kr.", tags:["Skotsk","Autentisk"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/a5/42/4b/makars-gourmet-mash-bar.jpg?w=800",
-      about:"Prøv haggis for første gang her! Langsomt tilberedt lammeskank og oksekød serveret med cremet kartoffelmos.",
-      reviews:["★★★★★ \"Best slow-cooked lamb I've ever had — exceptionally juicy and full of flavour!\"","★★★★★ \"First time trying haggis and it blew my expectations. Epic food!\""] },
-    { id:"streetfood", label:"🌮 Edinburgh Street Food",   desc:"Ca. £10 · ~87 kr.", tags:["Food Hall","Internationalt"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/28/39/11/63/edinburgh-street-food.jpg?w=800&h=-1&s=1",
-      about:"Stort street food-marked med tacos, japansk, koreansk, BBQ og meget mere. Bestil via QR-kode ved bordet.",
-      reviews:["★★★★★ \"So many flavours and good vibes — everything gets delivered to your table. Super easy!\"","★★★★☆ \"Great place where everyone can try different food. Fun atmosphere for everyone!\""] },
-    { id:"worldsend",  label:"🍺 The World's End Pub",     desc:"Ca. £15 · ~130 kr.", tags:["Historisk Pub","Skotsk"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/1f/a3/e0/the-world-s-end.jpg?w=800",
-      about:"En af Edinburghs ældste puber på High Street. Autentisk skotsk pubmad, stor whiskymenukort og hyggelig stemning.",
-      reviews:["★★★★★ \"Amazing first pub in Scotland — staff very welcoming, food hearty. Great whiskies!\"","★★★★★ \"Ale pie with cabbage was so delicious — I wanted to come back and eat it again!\""] },
-    { id:"larder",     label:"☕ Edinburgh Larder",        desc:"Ca. £12 · ~104 kr.", tags:["Brunch","Hyggelig"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/da/87/5c/edinburgh-larder.jpg?w=800",
-      about:"Hyggelig brunch-café nær Royal Mile med fokus på lokale skotske ingredienser. Superb kaffe og venligt personale.",
-      reviews:["★★★★★ \"One of the best breakfasts in Scotland — superb artisan coffee and a menu celebrating local farmers.\"","★★★★★ \"Great place for breakfast — staff are really nice and warm. Full Scottish was amazing!\""] },
-    { id:"pause_l",    label:"🧃 Pause / Frileg",          desc:"Gratis", tags:["Pause"], isPause:true,
-      img:null, about:"Picnic i en park, kig i butikker eller bare slap af.", reviews:[] },
+    {id:"oink",       label:"🐷 Oink Pulled Pork",       desc:"Ca. £7 · ~61 kr."},
+    {id:"makars",     label:"🥔 Makars Mash Bar",         desc:"Ca. £15 · ~130 kr."},
+    {id:"streetfood", label:"🌮 Edinburgh Street Food",   desc:"Ca. £10 · ~87 kr."},
+    {id:"worldsend",  label:"🍺 The World's End Pub",     desc:"Ca. £15 · ~130 kr."},
+    {id:"larder",     label:"☕ Edinburgh Larder",        desc:"Ca. £12 · ~104 kr."},
+    {id:"pause_l",    label:"🧃 Pause / Frileg",          desc:"Picnic i parken!", isPause:true},
   ],
   afternoon:[
-    { id:"royalmile", label:"🪨 Gåtur – Royal Mile",        desc:"Gratis 🆓", tags:["Gratis","Kultur"],
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Royal_Mile_Edinburgh_from_Outlook_Tower.jpg/800px-Royal_Mile_Edinburgh_from_Outlook_Tower.jpg",
-      about:"Vandring fra slottet til Holyroodhouse langs den historiske hovedgade. Udforsk skjulte closes, gademusikanter og middelalderarkitektur.",
-      reviews:["★★★★★ \"Walking through the various closes was fascinating — you never know where you'll end up!\"","★★★★★ \"A must-visit for first-timers. The atmosphere and architecture are just amazing.\""] },
-    { id:"whisky",    label:"🥃 Scotch Whisky Experience",  desc:"£21–45 · ~183–391 kr.", tags:["Whisky","Kulturelt"],
-      img:"https://www.scotchwhiskyexperience.co.uk/media/images/homepage-hero.jpg",
-      about:"Immersiv whisky-oplevelse ved siden af Edinburgh Castle. Silver Tour (£21, 50 min) til Platinum Tour (£45, 90 min).",
-      reviews:["★★★★★ \"Fantastic — informative, well organized and genuinely enjoyable. Not a tourist trap at all!\"","★★★★★ \"The AI/digital elements were brilliant. Loved that you keep the glass at the end!\""] },
-    { id:"dungeon",   label:"💀 Edinburgh Dungeon",         desc:"Ca. £22 · ~191 kr.", tags:["Uhyggeligt","Teatralsk"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/68/37/c2/the-edinburgh-dungeon.jpg?w=800",
-      about:"Levende skuespillere guider dig igennem Edinburghs mørke historie med humor og rideattraktioner. Sjovt for hele familien!",
-      reviews:["★★★★★ \"The whole experience was like a really fun show. I wish it was longer!\"","★★★★★ \"Beyond all expectations! The talented actors make it SO COOL for all ages.\""] },
-    { id:"boom",      label:"🪓 Boom Battle Bar",           desc:"Ca. £15 · ~130 kr.", tags:["Aktivitetsbar","Gruppe"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/27/44/82/a2/caption.jpg?w=800",
-      about:"Øksetkastning, elektrisk darts, minigolf og pool under ét tag med bar. Perfekt til aftensunderholdning for grupper.",
-      reviews:["★★★★★ \"Axe throwing was amazing — we all had a great laugh. Highly recommend to anyone!\"","★★★★★ \"Perfect birthday visit. The staff made it great fun. Don't hesitate — it's a great place!\""] },
-    { id:"calton",    label:"🏔️ Calton Hill – udsigt",      desc:"Gratis 🆓", tags:["Gratis","Udsigt"],
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Calton_Hill_from_the_south.jpg/800px-Calton_Hill_from_the_south.jpg",
-      about:"Kortere opstigning end Arthur's Seat med fremragende 360° udsigt over Edinburgh, slottet og Firth of Forth. Perfekt til solnedgangsfotos.",
-      reviews:["★★★★★ \"Best views of Edinburgh's skyline — Castle, Nelson Monument all in one spot!\"","★★★★★ \"Much easier than Arthur's Seat and just as stunning. Free and accessible for all!\""] },
-    { id:"pause_a",   label:"☕ Pause / Frileg",            desc:"Gratis", tags:["Pause"], isPause:true,
-      img:null, about:"Kaffe, shopping på Victoria Street eller bare slap af på en bænk.", reviews:[] },
+    {id:"royalmile", label:"🪨 Gåtur – Royal Mile",        desc:"Gratis 🆓"},
+    {id:"whisky",    label:"🥃 Scotch Whisky Experience",  desc:"£21–45 · ~183–391 kr."},
+    {id:"dungeon",   label:"💀 Edinburgh Dungeon",         desc:"Ca. £22 · ~191 kr."},
+    {id:"boom",      label:"🪓 Boom Battle Bar",           desc:"Ca. £15 · ~130 kr."},
+    {id:"dynamic",   label:"🌍 Dynamic Earth",             desc:"Ca. £20 · ~174 kr."},
+    {id:"calton",    label:"🏔️ Calton Hill – udsigt",      desc:"Gratis 🆓"},
+    {id:"pause_a",   label:"☕ Pause / Frileg",            desc:"Kaffe og shopping!", isPause:true},
   ],
   dinner:[
-    { id:"kitchin",  label:"⭐ The Kitchin (Michelin)",    desc:"Ca. £100 · ~870 kr.", tags:["Michelin","Fine Dining"],
-      img:"https://images.squarespace-cdn.com/content/v1/58d6d4fdff7c50bc7a17a0c7/1614273157218-J4AQNPF84G06YDGABF1D/The+Kitchin+-+Restaurant.jpg",
-      about:"Tom Kitchins Michelin-stjernede flagskib i Leith. Fokus på lokale skotske råvarer og sæsonbetonet madlavning. Book lang tid i forvejen!",
-      reviews:["★★★★★ \"Every course was a masterpiece of Scottish fine dining — we nearly licked the plates clean!\"","★★★★★ \"Partridge, scallops, Newhaven lobster all matched with amazing wines. Truly memorable!\""] },
-    { id:"dome",     label:"🍾 The Dome",                  desc:"Ca. £45 · ~391 kr.", tags:["Grand Dining","Cocktails"],
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Dome_Edinburgh.jpg/800px-The_Dome_Edinburgh.jpg",
-      about:"Storslået restaurant i historisk bankbygning på George Street. Perfekt til special lejligheder, afternoon tea eller festmiddag.",
-      reviews:["★★★★★ \"One of the most beautiful restaurants I've ever been to — interior far more stunning than photos!\"","★★★★★ \"Elegant and refined with lovely atmosphere. Highly recommend for any occasion!\""] },
-    { id:"devils",   label:"⚖️ The Devil's Advocate",      desc:"Ca. £35 · ~305 kr.", tags:["Cocktailbar","Gastropub"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/32/f2/e9/the-devil-s-advocate.jpg?w=800",
-      about:"Æstetisk smuk bar og restaurant i Advocate's Close ved Royal Mile. Fremragende whisky, cocktails og lækre small plates.",
-      reviews:["★★★★★ \"Stunning bar tucked in Advocate's Close — beautiful with amazing cocktails and attentive service!\"","★★★★☆ \"Whisky Old Fashioned was great, truffle fries excellent. Nice Sunday evening vibe!\""] },
-    { id:"makars2",  label:"🥔 Makars Mash Bar",           desc:"Ca. £18 · ~157 kr.", tags:["Skotsk","Hyggelig"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/a5/42/4b/makars-gourmet-mash-bar.jpg?w=800",
-      about:"Autentisk skotsk komfortmad. Langsomt tilberedt kød med hjemmelavet mos. Bestil bord i forvejen — altid fuldt!",
-      reviews:["★★★★★ \"Best lamb dish I've ever had — juicy, tender and full of flavour. Outstanding mash too!\"","★★★★★ \"First time trying haggis — it blew my expectations completely out of the water!\""] },
-    { id:"pepes",    label:"🍗 Pepe's Kylling",            desc:"Ca. £10 · ~87 kr.", tags:["Fastfood","Sent åbent"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/b4/af/34/caption.jpg?w=800",
-      about:"4,9-stjernet kyllingebar på South Bridge. Åbner til kl. 02–03! Lemon & herb og mango+lime er favoritter.",
-      reviews:["★★★★★ \"Food was fresh and flavourful — chicken well cooked, sauces great. Staff very friendly!\"","★★★★★ \"Really impressed with the quality. Everything tasted fresh, hot and properly seasoned!\""] },
-    { id:"pause_d",  label:"🛁 Pause / Frileg",            desc:"Gratis", tags:["Pause"], isPause:true,
-      img:null, about:"Tag tilbage på hotellet og gør jer klar til aftenen.", reviews:[] },
+    {id:"kitchin",  label:"⭐ The Kitchin (Michelin)",    desc:"Ca. £100 · ~870 kr."},
+    {id:"dome",     label:"🍾 The Dome",                  desc:"Ca. £45 · ~391 kr."},
+    {id:"devils",   label:"⚖️ The Devil's Advocate",      desc:"Ca. £35 · ~305 kr."},
+    {id:"makars2",  label:"🥔 Makars Mash Bar",           desc:"Ca. £18 · ~157 kr."},
+    {id:"pepes",    label:"🍗 Pepe's Kylling",            desc:"Ca. £10 · ~87 kr."},
+    {id:"pause_d",  label:"🛁 Pause / Frileg",            desc:"Tag tilbage på hotellet!", isPause:true},
   ],
   night:[
-    { id:"stramash",  label:"🎸 Stramash – Livmusik",      desc:"Gratis entre de fleste aftener", tags:["Livmusik","Gratis","Ceilidh"],
-      img:"https://brucegroup.co.uk/wp-content/uploads/2022/06/stramash-music-venue-edinburgh.jpg",
-      about:"Tidligere kirke med plads til 700 – livmusik næsten hver aften. Skotsk ceilidh-dans ons kl. 21:30 og lør kl. 16:30.",
-      reviews:["★★★★★ \"Traditional ceilidh every Wednesday — live music, a bar, and free entry in a converted church!\"","★★★★★ \"One of my favorite places in Edinburgh. Great live music and indie rock. Beers are great!\""] },
-    { id:"voodoo",    label:"🪩 The Voodoo Rooms",         desc:"Ingen fast entre", tags:["Cocktailbar","Livmusik"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/a1/34/1c/the-voodoo-rooms.jpg?w=800",
-      about:"Art deco-ballsal med spektakulær indretning, livemusik og dj-aftener. Cocktails, mad og koncerter under ét tag.",
-      reviews:["★★★★★ \"One hell of a cool looking place — functional and finished very well. Great cocktails!\"","★★★★☆ \"Had a meal then moved into the ballroom for a concert — a great combo night!\""] },
-    { id:"caves",     label:"🕯️ The Caves – Natklub",      desc:"Fra ca. £5 · ~44 kr.", tags:["Natklub","Under Jorden"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/25/6a/b0/the-caves.jpg?w=800",
-      about:"Uhyggeligt stemningsfuld natklub i ægte historiske hvælvinger under South Bridge. Åbner til 03:00.",
-      reviews:["★★★★★ \"Such a unique venue buried in the bowels of Auld Reekie — the atmosphere is incredible!\"","★★★★★ \"Quirky, intimate and I loved it. Fantastic for live music of all genres!\""] },
-    { id:"labelle",   label:"🎭 La Belle Angele",          desc:"Ca. £10 · ~87 kr.", tags:["Natklub","Koncerter"],
-      img:"https://la-belle-angele.com/wp-content/uploads/2019/10/La_Belle_Angele-Venue_Edinburgh.jpg",
-      about:"600-personers intimt venue i Old Town. Koncerter, natklub og events næsten dagligt fra 19:00 til 03:00.",
-      reviews:["★★★★★ \"Fantastic gig at an excellent venue — intimate setting, plenty of staff, no big queues!\"","★★★★★ \"One of the best venues in Edinburgh. Really positive staff who clearly enjoy their work!\""] },
-    { id:"pubcrawl",  label:"🍻 On The Rocks Pubcrawl",    desc:"Ca. £18 · ~157 kr.", tags:["Pubcrawl","Social"],
-      img:"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/4b/c3/2a/on-the-rocks-bar-crawl.jpg?w=800",
-      about:"Guidet tur igennem Edinburghs bedste barer med velkomstdrinks og rabatter inkluderet. Perfekt for grupper!",
-      reviews:["★★★★★ \"I came as a solo traveler and the guides made sure everyone got to know each other. So fun!\"","★★★★★ \"One of the best pub crawls I have ever been to — amazing people and fantastic guide!\""] },
-    { id:"vaccines",  label:"🎸 The Vaccines (4. april)",  desc:"Ca. £40 · ~348 kr.", tags:["Koncert","Indie Rock"],
-      img:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/The_Vaccines_at_Community_Festival_2022_%282%29.jpg/800px-The_Vaccines_at_Community_Festival_2022_%282%29.jpg",
-      about:"Britisk indie rock-band live på Usher Hall. Et af de mest elskede navne i moderne britisk rock — ikke gå glip af det!",
-      reviews:["★★★★★ \"Seen Suede perform here and seating on upper circle gives fantastic view. Great bars on each level!\"","★★★★★ \"A beautiful building with great acoustics. Usher Hall is an Edinburgh institution!\""] },
-    { id:"pause_n",   label:"🛌 Tidlig aften / Frileg",    desc:"Gratis", tags:["Pause"], isPause:true,
-      img:null, about:"Tidlig sengetid — ingen skam! Spar energi til næste dag.", reviews:[] },
+    {id:"stramash",  label:"🎸 Stramash – Livmusik",      desc:"Gratis entre de fleste aftener"},
+    {id:"voodoo",    label:"🪩 The Voodoo Rooms",         desc:"Ingen fast entre"},
+    {id:"caves",     label:"🕯️ The Caves – Natklub",      desc:"Fra ca. £5 · ~44 kr."},
+    {id:"labelle",   label:"🎭 La Belle Angele",          desc:"Ca. £10 · ~87 kr."},
+    {id:"pubcrawl",  label:"🍻 On The Rocks Pubcrawl",    desc:"Ca. £18 · ~157 kr."},
+    {id:"vaccines",  label:"🎸 The Vaccines (4. april)",  desc:"Ca. £40 · ~348 kr."},
+    {id:"pause_n",   label:"🛌 Tidlig aften / Frileg",    desc:"Ingen skam!", isPause:true},
   ],
 };
 
-// ── STORAGE KEY ───────────────────────────────────────────────────────────────
-const STORAGE_KEY = "edinburgh_group_vote_v3";
+const STORE_KEY = "edinburgh_vote_v1";
+let state = { players: [], votes: {} };
+let ME = null;
+let pollTimer = null;
 
-// ── STYLES (injected once) ────────────────────────────────────────────────────
-const CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', 'Segoe UI', sans-serif; background: #0f0f1a; color: #e8e8f0; }
-
-  .modal-backdrop {
-    position: fixed; inset: 0; background: rgba(0,0,0,.75);
-    z-index: 1000; display: flex; align-items: center; justify-content: center;
-    padding: 16px; animation: fadeIn .15s;
-  }
-  @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
-  .modal {
-    background: #1a1a2e; border: 1px solid #3a3a6a; border-radius: 16px;
-    width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
-    animation: slideUp .2s;
-  }
-  @keyframes slideUp { from { transform:translateY(30px); opacity:0 } to { transform:translateY(0); opacity:1 } }
-  .modal-img { width:100%; height:200px; object-fit:cover; border-radius:14px 14px 0 0; display:block; }
-  .modal-img-placeholder { width:100%; height:120px; border-radius:14px 14px 0 0; display:flex; align-items:center; justify-content:center; font-size:3rem; background:linear-gradient(135deg,#1e1e3a,#2a2a5a); }
-  .modal-body { padding: 20px; }
-  .modal-title { font-size:1.2rem; font-weight:700; margin-bottom:8px; }
-  .modal-tags { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px; }
-  .modal-tag { font-size:0.72rem; padding:3px 9px; border-radius:12px; background:#2a2a4a; border:1px solid #3a3a6a; color:#a0b4d0; }
-  .modal-price { font-size:1rem; font-weight:700; color:#ffd700; margin-bottom:10px; }
-  .modal-about { font-size:0.88rem; color:#b0b8cc; line-height:1.6; margin-bottom:14px; }
-  .modal-reviews-title { font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:#607090; margin-bottom:8px; }
-  .modal-review { background:#12122a; border-left:3px solid #4a90d9; border-radius:0 6px 6px 0; padding:8px 10px; margin-bottom:7px; font-size:0.82rem; color:#c0c8dc; font-style:italic; line-height:1.5; }
-  .modal-footer { display:flex; gap:10px; margin-top:16px; }
-  .modal-footer button { flex:1; padding:11px; border-radius:10px; font-size:0.9rem; font-weight:700; cursor:pointer; border:none; transition:all .15s; }
-  .btn-vote { color:#fff; }
-  .btn-vote:hover { filter:brightness(1.1); }
-  .btn-close { background:#2a2a4a; color:#90b4d8; }
-  .btn-close:hover { background:#3a3a6a; }
-`;
-
-function injectCSS() {
-  if (!document.getElementById("edi-styles")) {
-    const s = document.createElement("style");
-    s.id = "edi-styles";
-    s.textContent = CSS;
-    document.head.appendChild(s);
-  }
+// ── Storage ───────────────────────────────────────────────────────────────────
+async function loadState() {
+  try {
+    const r = await window.storage.get(STORE_KEY, true);
+    return r ? JSON.parse(r.value) : { players: [], votes: {} };
+  } catch { return { players: [], votes: {} }; }
 }
 
-// ── MODAL COMPONENT ──────────────────────────────────────────────────────────
-function OptionModal({ opt, slot, isVoted, onVote, onClose }) {
-  useEffect(() => {
-    const handler = e => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [onClose]);
-
-  return (
-    <div className="modal-backdrop" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="modal">
-        {opt.img
-          ? <img className="modal-img" src={opt.img} alt={opt.label} onError={e => { e.target.style.display="none"; }} />
-          : <div className="modal-img-placeholder">{opt.isPause ? "😴" : "🏴󠁧󠁢󠁳󠁣󠁴󠁧"}</div>
-        }
-        <div className="modal-body">
-          <div className="modal-title">{opt.label}</div>
-          <div className="modal-tags">
-            {(opt.tags||[]).map(t => <span key={t} className="modal-tag">{t}</span>)}
-          </div>
-          <div className="modal-price">{opt.desc}</div>
-          <div className="modal-about">{opt.about}</div>
-          {opt.reviews?.length > 0 && <>
-            <div className="modal-reviews-title">⭐ Anmeldelser</div>
-            {opt.reviews.map((r,i) => <div key={i} className="modal-review">{r}</div>)}
-          </>}
-          <div className="modal-footer">
-            <button
-              className="btn-vote"
-              style={{ background: isVoted ? "#666" : slot.color }}
-              onClick={() => { onVote(); onClose(); }}
-            >
-              {isVoted ? "✅ Fjern min stemme" : `🗳️ Stem på dette`}
-            </button>
-            <button className="btn-close" onClick={onClose}>Luk ✕</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+async function saveState(s) {
+  try { await window.storage.set(STORE_KEY, JSON.stringify(s), true); } catch {}
 }
 
-// ── MAIN APP ─────────────────────────────────────────────────────────────────
-export default function App() {
-  injectCSS();
+// ── Sign in ───────────────────────────────────────────────────────────────────
+document.getElementById("name-input").addEventListener("keydown", e => {
+  if (e.key === "Enter") signIn();
+});
 
-  const [state, setState] = useState({ players: [], votes: {} });
-  const [me, setMe]       = useState(null);
-  const [nameInput, setNameInput] = useState("");
-  const [tab, setTab]     = useState("vote");
-  const [modal, setModal] = useState(null); // { opt, slot }
-  const [syncMsg, setSyncMsg] = useState("● Live");
-  const [syncColor, setSyncColor] = useState("#52b788");
-  const pollRef = useRef(null);
+async function signIn() {
+  const val = (document.getElementById("name-input").value || "").trim();
+  if (!val) {
+    document.getElementById("name-input").style.borderColor = "#e76f51";
+    return;
+  }
+  ME = val;
+  state = await loadState();
+  if (!state.players.includes(ME)) state.players.push(ME);
+  if (!state.votes[ME]) state.votes[ME] = {};
+  await saveState(state);
 
-  // ── storage helpers ──────────────────────────────────────────────────────
-  const load = useCallback(async () => {
-    try {
-      const r = await window.storage.get(STORAGE_KEY, true);
-      return r ? JSON.parse(r.value) : { players: [], votes: {} };
-    } catch { return { players: [], votes: {} }; }
-  }, []);
+  document.getElementById("signin-screen").style.display = "none";
+  document.getElementById("players-bar").style.display   = "flex";
+  document.getElementById("app").style.display           = "block";
 
-  const save = useCallback(async (s) => {
-    try { await window.storage.set(STORAGE_KEY, JSON.stringify(s), true); } catch {}
-  }, []);
+  render();
+  startPolling();
+}
 
-  // ── poll every 3s ────────────────────────────────────────────────────────
-  const startPolling = useCallback((currentMe) => {
-    if (pollRef.current) clearInterval(pollRef.current);
-    pollRef.current = setInterval(async () => {
-      const fresh = await load();
-      setState(prev => {
-        if (JSON.stringify(fresh) !== JSON.stringify(prev)) {
-          setSyncMsg("🔄 Opdateret!");
-          setSyncColor("#f4a261");
-          setTimeout(() => { setSyncMsg("● Live"); setSyncColor("#52b788"); }, 1500);
-          return fresh;
-        }
-        return prev;
-      });
-    }, 3000);
-  }, [load]);
-
-  useEffect(() => () => { if (pollRef.current) clearInterval(pollRef.current); }, []);
-
-  // ── sign in ──────────────────────────────────────────────────────────────
-  const signIn = async () => {
-    const name = nameInput.trim();
-    if (!name) return;
-    const fresh = await load();
-    if (!fresh.players) fresh.players = [];
-    if (!fresh.votes)   fresh.votes   = {};
-    if (!fresh.players.includes(name)) fresh.players.push(name);
-    if (!fresh.votes[name]) fresh.votes[name] = {};
-    await save(fresh);
-    setState(fresh);
-    setMe(name);
-    startPolling(name);
-  };
-
-  // ── vote ─────────────────────────────────────────────────────────────────
-  const vote = async (slotId, optId) => {
-    const fresh = await load();
-    if (!fresh.votes[me]) fresh.votes[me] = {};
-    if (fresh.votes[me][slotId] === optId) delete fresh.votes[me][slotId];
-    else fresh.votes[me][slotId] = optId;
-    await save(fresh);
-    setState(fresh);
-  };
-
-  // ── tally ────────────────────────────────────────────────────────────────
-  const tally = (slotId) => {
-    const counts = {};
-    for (const [name, picks] of Object.entries(state.votes || {})) {
-      const p = picks[slotId];
-      if (p) { if (!counts[p]) counts[p] = []; counts[p].push(name); }
+// ── Polling ───────────────────────────────────────────────────────────────────
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(async () => {
+    const fresh = await loadState();
+    if (JSON.stringify(fresh) !== JSON.stringify(state)) {
+      state = fresh;
+      render();
+      flash("🔄 Ny stemme!");
     }
-    return counts;
-  };
-
-  const winner = (slotId) => {
-    const t = tally(slotId);
-    if (!Object.keys(t).length) return null;
-    let best = null, bestN = 0, tie = false;
-    for (const [oid, voters] of Object.entries(t)) {
-      if (voters.length > bestN) { best = oid; bestN = voters.length; tie = false; }
-      else if (voters.length === bestN) { tie = true; }
-    }
-    return { optId: best, count: bestN, tie };
-  };
-
-  // ── shared styles ─────────────────────────────────────────────────────────
-  const s = {
-    body:     { background:"#0f0f1a", color:"#e8e8f0", minHeight:"100vh", fontFamily:"'Inter','Segoe UI',sans-serif" },
-    header:   { background:"linear-gradient(135deg,#1a1a2e,#0f3460)", padding:"28px 20px 20px", textAlign:"center", borderBottom:"2px solid #4a90d9" },
-    syncBadge:{ position:"fixed", bottom:14, right:14, fontSize:"0.72rem", padding:"4px 10px", borderRadius:"12px", background:"#1a2a1a", border:"1px solid #3a5a3a", color:syncColor, cursor:"pointer", zIndex:500 },
-  };
-
-  // ── SIGN IN SCREEN ────────────────────────────────────────────────────────
-  if (!me) return (
-    <div style={s.body}>
-      <header style={s.header}>
-        <div style={{fontSize:"2.2rem"}}>🏴󠁧󠁢󠁳󠁣󠁴󠁧</div>
-        <h1 style={{fontSize:"1.8rem",color:"#fff",margin:"6px 0 4px",letterSpacing:"1px"}}>Edinburgh Dagsplan</h1>
-        <p style={{color:"#90b4d8",fontSize:"0.88rem"}}>Stem på dagens program – alle bestemmer!</p>
-      </header>
-      <div style={{maxWidth:"400px",margin:"50px auto 0",background:"#1a1a2e",border:"1px solid #2a2a4a",borderRadius:"16px",padding:"32px 28px",textAlign:"center"}}>
-        <h2 style={{fontSize:"1.3rem",marginBottom:"8px"}}>👋 Hvem er du?</h2>
-        <p style={{color:"#8090b0",fontSize:"0.85rem",marginBottom:"22px",lineHeight:"1.5"}}>Skriv dit navn og deltag i afstemningen</p>
-        <input
-          type="text" value={nameInput} maxLength={24} autoComplete="off"
-          placeholder="Dit navn..."
-          onChange={e => setNameInput(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && signIn()}
-          style={{width:"100%",padding:"12px 14px",borderRadius:"10px",border:"1.5px solid #3a3a6a",background:"#12122a",color:"#fff",fontSize:"1rem",marginBottom:"12px",outline:"none"}}
-        />
-        <button onClick={signIn}
-          style={{width:"100%",padding:"12px",borderRadius:"10px",background:"#4a90d9",border:"none",color:"#fff",fontSize:"1rem",fontWeight:"700",cursor:"pointer"}}>
-          Gå med i gruppen →
-        </button>
-        {state.players.length > 0 && (
-          <p style={{marginTop:"14px",fontSize:"0.8rem",color:"#607090"}}>
-            Allerede med: {state.players.join(", ")}
-          </p>
-        )}
-      </div>
-    </div>
-  );
-
-  // ── MAIN APP ──────────────────────────────────────────────────────────────
-  return (
-    <div style={s.body}>
-      {/* Modal */}
-      {modal && (
-        <OptionModal
-          opt={modal.opt} slot={modal.slot}
-          isVoted={state.votes[me]?.[modal.slot.id] === modal.opt.id}
-          onVote={() => vote(modal.slot.id, modal.opt.id)}
-          onClose={() => setModal(null)}
-        />
-      )}
-
-      <header style={s.header}>
-        <div style={{fontSize:"2.2rem"}}>🏴󠁧󠁢󠁳󠁣󠁴󠁧</div>
-        <h1 style={{fontSize:"1.8rem",color:"#fff",margin:"6px 0 4px",letterSpacing:"1px"}}>Edinburgh Dagsplan</h1>
-        <p style={{color:"#90b4d8",fontSize:"0.88rem"}}>Stem på dagens program – alle bestemmer!</p>
-      </header>
-
-      {/* Players bar */}
-      <div style={{display:"flex",flexWrap:"wrap",gap:"8px",justifyContent:"center",padding:"10px 16px",background:"#12122a",borderBottom:"1px solid #2a2a4a"}}>
-        {(state.players||[]).map(p => (
-          <div key={p} style={{background:p===me?"#0f3460":"#1e1e3a",border:`1.5px solid ${p===me?"#4a90d9":"#3a3a6a"}`,borderRadius:"20px",padding:"4px 12px",fontSize:"0.78rem",color:p===me?"#fff":"#c0cce0",display:"flex",alignItems:"center",gap:"5px"}}>
-            <div style={{width:"7px",height:"7px",borderRadius:"50%",background:"#4a90d9",flexShrink:0}}/>
-            {p}{p===me?" (dig)":""}
-          </div>
-        ))}
-      </div>
-
-      {/* Tabs */}
-      <div style={{maxWidth:"900px",margin:"0 auto",padding:"18px 12px 60px"}}>
-        <div style={{display:"flex",gap:"6px",marginBottom:"18px",flexWrap:"wrap"}}>
-          {["vote","results"].map(t => (
-            <button key={t} onClick={() => setTab(t)}
-              style={{padding:"7px 18px",borderRadius:"20px",fontSize:"0.82rem",cursor:"pointer",border:`1.5px solid ${tab===t?"#4a90d9":"#2a2a4a"}`,background:tab===t?"#4a90d9":"#1a1a2e",color:tab===t?"#fff":"#8090b0",fontWeight:tab===t?"700":"400"}}>
-              {t==="vote" ? "🗳️ Stem" : "📊 Resultater"}
-            </button>
-          ))}
-        </div>
-
-        {/* VOTE TAB */}
-        {tab === "vote" && (
-          <div>
-            <div style={{background:"#0f2a40",border:"1px solid #4a90d9",borderRadius:"8px",padding:"9px 14px",fontSize:"0.8rem",color:"#90c0e0",marginBottom:"18px"}}>
-              💡 Klik <strong>👁️ Info</strong> for at se billede, pris og anmeldelser. Klik <strong>🗳️ Stem</strong> for at afgive din stemme.
-            </div>
-            {SLOTS.map(slot => {
-              const t = tally(slot.id);
-              const total = Object.values(state.votes||{}).filter(v=>v[slot.id]).length;
-              const myVote = state.votes[me]?.[slot.id] || null;
-
-              return (
-                <div key={slot.id} style={{marginBottom:"28px"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:"12px",padding:"11px 14px",borderRadius:"12px 12px 0 0",borderLeft:`4px solid ${slot.color}`,background:"#1a1a2e",border:`1px solid #2a2a4a`,borderBottom:"none"}}>
-                    <span style={{fontSize:"1rem",fontWeight:"700",color:slot.color}}>{slot.label}</span>
-                    <span style={{fontSize:"0.75rem",color:"#607090",marginLeft:"auto"}}>{slot.time}</span>
-                  </div>
-                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(230px,1fr))",gap:"9px",padding:"10px",background:"#14142a",border:"1px solid #2a2a4a",borderTop:"none",borderRadius:"0 0 12px 12px"}}>
-                    {OPTIONS[slot.id].map(opt => {
-                      const voters = t[opt.id] || [];
-                      const pct = total > 0 ? Math.round(voters.length/total*100) : 0;
-                      const isVoted = myVote === opt.id;
-                      const borderColor = isVoted ? slot.color : (opt.isPause ? "#3a5a3a" : "#2a2a4a");
-                      const bg = isVoted ? (opt.isPause ? "#1a2a1a" : "#0f1f3a") : "#1e1e38";
-
-                      return (
-                        <div key={opt.id} style={{background:bg,border:`2px ${opt.isPause?"dashed":"solid"} ${borderColor}`,borderRadius:"10px",padding:"11px 13px",transition:"border-color .15s"}}>
-                          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:"6px",marginBottom:"4px"}}>
-                            <div style={{fontSize:"0.9rem",fontWeight:"600",color:"#dde4f0",lineHeight:"1.3",flex:1}}>{opt.label}</div>
-                            {isVoted && <span>✅</span>}
-                          </div>
-                          <div style={{fontSize:"0.73rem",color:"#7090b0",marginBottom:"8px"}}>{opt.desc}</div>
-
-                          {/* Action buttons */}
-                          <div style={{display:"flex",gap:"6px",marginBottom:"8px",flexWrap:"wrap"}}>
-                            <button
-                              onClick={() => setModal({ opt, slot })}
-                              style={{padding:"4px 10px",borderRadius:"7px",fontSize:"0.75rem",fontWeight:"600",border:"1px solid #3a4a6a",background:"#1a2a3a",color:"#90b4d8",cursor:"pointer"}}>
-                              👁️ Info
-                            </button>
-                            <button
-                              onClick={() => vote(slot.id, opt.id)}
-                              style={{padding:"4px 10px",borderRadius:"7px",fontSize:"0.75rem",fontWeight:"700",border:"none",background:isVoted?(opt.isPause?"#52b788":slot.color):"#2a3a5a",color:isVoted?"#fff":"#90b4d8",cursor:"pointer"}}>
-                              {isVoted ? "✅ Din stemme" : "🗳️ Stem"}
-                            </button>
-                          </div>
-
-                          {/* Vote bar */}
-                          <div style={{marginTop:"4px"}}>
-                            <div style={{display:"flex",justifyContent:"space-between",fontSize:"0.7rem",color:"#5070a0",marginBottom:"3px"}}>
-                              <span>{voters.length} stemme{voters.length!==1?"r":""}</span>
-                              <span>{pct}%</span>
-                            </div>
-                            <div style={{background:"#2a2a4a",borderRadius:"4px",height:"5px",overflow:"hidden"}}>
-                              <div style={{height:"100%",borderRadius:"4px",background:opt.isPause?"#52b788":slot.color,width:`${pct}%`,transition:"width .4s ease"}}/>
-                            </div>
-                            {voters.length > 0 && (
-                              <div style={{display:"flex",flexWrap:"wrap",gap:"4px",marginTop:"5px"}}>
-                                {voters.map(v => (
-                                  <span key={v} style={{fontSize:"0.67rem",padding:"2px 7px",borderRadius:"10px",background:v===me?"#0f2a4a":"#1a2a3a",border:`1px solid ${v===me?"#4a90d9":"#3a4a6a"}`,color:v===me?"#90c0f0":"#8090b0"}}>{v}</span>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* RESULTS TAB */}
-        {tab === "results" && (
-          <div>
-            <div style={{background:"#1a1a2e",border:"1px solid #2a2a4a",borderRadius:"14px",padding:"18px",marginBottom:"24px"}}>
-              <h2 style={{fontSize:"1.05rem",color:"#4a90d9",marginBottom:"14px"}}>📋 Dagens vindere</h2>
-              {SLOTS.map(slot => {
-                const w = winner(slot.id);
-                const total = Object.values(state.votes||{}).filter(v=>v[slot.id]).length;
-                const opt = w ? OPTIONS[slot.id].find(o=>o.id===w.optId) : null;
-                return (
-                  <div key={slot.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"9px 12px",background:"#12122a",borderRadius:"8px",marginBottom:"7px",borderLeft:`3px solid ${slot.color}`}}>
-                    <div style={{fontSize:"0.73rem",color:"#607090",width:"155px",flexShrink:0}}>{slot.label}</div>
-                    <div style={{fontSize:"0.88rem",fontWeight:"700",color:"#fff",flex:1}}>
-                      {w ? <>👑 {opt?.label || w.optId} {w.tie&&<span style={{color:"#ffb347",fontSize:"0.76rem"}}> · Uafgjort!</span>}</> : <span style={{color:"#607090"}}>Ingen stemmer endnu</span>}
-                    </div>
-                    {w && <div style={{fontSize:"0.76rem",color:"#4a90d9"}}>{w.count}/{total}</div>}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Expanded results per slot */}
-            {SLOTS.map(slot => {
-              const t = tally(slot.id);
-              const total = Object.values(state.votes||{}).filter(v=>v[slot.id]).length;
-              return (
-                <div key={slot.id} style={{marginBottom:"20px"}}>
-                  <div style={{fontSize:"0.95rem",fontWeight:"700",color:slot.color,marginBottom:"8px",borderLeft:`3px solid ${slot.color}`,paddingLeft:"10px"}}>{slot.label}</div>
-                  {OPTIONS[slot.id].map(opt => {
-                    const voters = t[opt.id]||[];
-                    const pct = total>0 ? Math.round(voters.length/total*100) : 0;
-                    const isWinner = Object.keys(t).length>0 && voters.length === Math.max(...Object.values(t).map(v=>v.length));
-                    return (
-                      <div key={opt.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"7px 10px",background:isWinner?"#0f1f3a":"#12122a",borderRadius:"8px",marginBottom:"5px",border:`1px solid ${isWinner?slot.color:"#2a2a4a"}`}}>
-                        <div style={{flex:1,fontSize:"0.85rem",color:isWinner?"#fff":"#8090b0"}}>{isWinner?"👑 ":""}{opt.label}</div>
-                        <div style={{width:"80px"}}>
-                          <div style={{background:"#2a2a4a",borderRadius:"4px",height:"5px",overflow:"hidden"}}>
-                            <div style={{height:"100%",borderRadius:"4px",background:opt.isPause?"#52b788":slot.color,width:`${pct}%`,transition:"width .4s"}}/>
-                          </div>
-                        </div>
-                        <div style={{fontSize:"0.75rem",color:"#4a90d9",width:"50px",textAlign:"right"}}>{voters.length} · {pct}%</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* Sync indicator */}
-      <div style={s.syncBadge} onClick={async () => {
-        const fresh = await load();
-        setState(fresh);
-        setSyncMsg("✅ Opdateret!"); setSyncColor("#52b788");
-        setTimeout(()=>{setSyncMsg("● Live");setSyncColor("#52b788");},1500);
-      }}>{syncMsg}</div>
-    </div>
-  );
+  }, 3000);
 }
+
+function flash(msg) {
+  const el = document.getElementById("poll-indicator");
+  el.textContent = msg;
+  setTimeout(() => { el.textContent = "● Live"; }, 2000);
+}
+
+async function manualRefresh() {
+  state = await loadState();
+  render();
+  flash("✅ Opdateret!");
+}
+
+// ── Vote ──────────────────────────────────────────────────────────────────────
+async function vote(slotId, optId) {
+  state = await loadState();
+  if (!state.votes[ME]) state.votes[ME] = {};
+  if (state.votes[ME][slotId] === optId) delete state.votes[ME][slotId];
+  else state.votes[ME][slotId] = optId;
+  await saveState(state);
+  render();
+}
+
+// ── Tally ─────────────────────────────────────────────────────────────────────
+function tally(slotId) {
+  const out = {};
+  for (const [name, picks] of Object.entries(state.votes || {})) {
+    const p = picks[slotId];
+    if (p) { out[p] = out[p] || []; out[p].push(name); }
+  }
+  return out;
+}
+
+function totalVoters(slotId) {
+  return Object.values(state.votes || {}).filter(v => v[slotId]).length;
+}
+
+function winner(slotId) {
+  const t = tally(slotId);
+  if (!Object.keys(t).length) return null;
+  let best = null, bestN = 0, tie = false;
+  for (const [id, voters] of Object.entries(t)) {
+    if (voters.length > bestN) { best = id; bestN = voters.length; tie = false; }
+    else if (voters.length === bestN) tie = true;
+  }
+  return { id: best, count: bestN, tie };
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function render() {
+  renderPlayers();
+  renderSlots();
+  renderResults();
+}
+
+function renderPlayers() {
+  document.getElementById("players-bar").innerHTML =
+    (state.players || []).map(p =>
+      `<div class="player-chip ${p === ME ? "me" : ""}">
+        <div class="dot"></div>${p}${p === ME ? " (dig)" : ""}
+      </div>`
+    ).join("");
+}
+
+function renderSlots() {
+  const c = document.getElementById("slots-container");
+  if (!c) return;
+  c.innerHTML = "";
+  SLOTS.forEach(slot => {
+    const t = tally(slot.id);
+    const total = totalVoters(slot.id);
+    const myVote = state.votes[ME]?.[slot.id] || null;
+
+    const cards = OPTIONS[slot.id].map(opt => {
+      const voters = t[opt.id] || [];
+      const pct = total > 0 ? Math.round(voters.length / total * 100) : 0;
+      const voted = myVote === opt.id;
+      const avatars = voters.map(v =>
+        `<span class="voter-avatar ${v === ME ? "is-me" : ""}">${v}</span>`
+      ).join("");
+
+      return `
+        <div class="option-card ${voted ? "voted" : ""} ${opt.isPause ? "pause" : ""}"
+             style="--c:${slot.color}"
+             onclick="vote('${slot.id}','${opt.id}')">
+          <div class="option-label">
+            <span>${opt.label}</span>
+            ${voted ? "<span>✅</span>" : ""}
+          </div>
+          <div class="option-desc">${opt.desc}</div>
+          <div class="vote-bar-meta">
+            <span>${voters.length} stemme${voters.length !== 1 ? "r" : ""}</span>
+            <span>${pct}%</span>
+          </div>
+          <div class="vote-bar-bg">
+            <div class="vote-bar-fill" style="--c:${slot.color}; width:${pct}%"></div>
+          </div>
+          ${voters.length > 0 ? `<div class="voter-avatars">${avatars}</div>` : ""}
+        </div>`;
+    }).join("");
+
+    const sec = document.createElement("div");
+    sec.className = "slot-section";
+    sec.innerHTML = `
+      <div class="slot-header" style="--c:${slot.color}">
+        <span class="slot-title">${slot.label}</span>
+        <span class="slot-time">${slot.time}</span>
+      </div>
+      <div class="options-grid">${cards}</div>`;
+    c.appendChild(sec);
+  });
+}
+
+function renderResults() {
+  const list = document.getElementById("results-list");
+  const detail = document.getElementById("results-detail");
+  if (!list || !detail) return;
+
+  list.innerHTML = SLOTS.map(slot => {
+    const w = winner(slot.id);
+    const total = totalVoters(slot.id);
+    const opt = w ? OPTIONS[slot.id].find(o => o.id === w.id) : null;
+    return `
+      <div class="result-row" style="--c:${slot.color}">
+        <div class="result-slot">${slot.label}</div>
+        <div class="result-winner">
+          ${w
+            ? `👑 ${opt ? opt.label : w.id} ${w.tie ? '<span class="result-tie">(uafgjort)</span>' : ""}`
+            : `<span style="color:#607090">Ingen stemmer endnu</span>`}
+        </div>
+        ${w ? `<div class="result-votes">${w.count}/${total}</div>` : ""}
+      </div>`;
+  }).join("");
+
+  detail.innerHTML = SLOTS.map(slot => {
+    const t = tally(slot.id);
+    const total = totalVoters(slot.id);
+    const maxV = Math.max(0, ...Object.values(t).map(v => v.length));
+    return `
+      <div style="margin-bottom:18px">
+        <div style="font-weight:700;color:${slot.color};margin-bottom:6px;padding-left:10px;border-left:3px solid ${slot.color};font-size:0.9rem">${slot.label}</div>
+        ${OPTIONS[slot.id].map(opt => {
+          const voters = t[opt.id] || [];
+          const pct = total > 0 ? Math.round(voters.length / total * 100) : 0;
+          const isWin = voters.length > 0 && voters.length === maxV;
+          return `
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:${isWin ? "#0f1f38" : "#12122a"};border-radius:7px;margin-bottom:4px;border:1px solid ${isWin ? slot.color : "#2a2a4a"}">
+              <span style="flex:1;font-size:0.83rem;color:${isWin ? "#fff" : "#7080a0"}">${isWin ? "👑 " : ""}${opt.label}</span>
+              <div style="width:70px;background:#2a2a4a;border-radius:3px;height:4px;overflow:hidden">
+                <div style="height:100%;background:${opt.isPause ? "#52b788" : slot.color};width:${pct}%;transition:width .4s"></div>
+              </div>
+              <span style="font-size:0.72rem;color:#4a90d9;width:48px;text-align:right">${voters.length} · ${pct}%</span>
+            </div>`;
+        }).join("")}
+      </div>`;
+  }).join("");
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("tab-" + id).classList.add("active");
+}
+</script>
+</body>
+</html>
