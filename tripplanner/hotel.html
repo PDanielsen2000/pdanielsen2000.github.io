@@ -3,20 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edinburgh Dagsplan</title>
+<title>Vores Hotel – Novotel Edinburgh Centre</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="manifest" href="/tripplanner/manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Edinburgh">
-<link rel="apple-touch-icon" href="/tripplanner/icon-192.png">
-<script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/tripplanner/sw.js");
-    });
-  }
-</script>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -26,6 +14,7 @@
     --whisky:#a0522d;--whisky2:#cd853f;
   }
   body{background:var(--stone);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+
   .tartan-bg{position:fixed;inset:0;z-index:0;opacity:.04;
     background-image:
       repeating-linear-gradient(0deg,transparent,transparent 40px,#4a6741 40px,#4a6741 44px),
@@ -33,741 +22,290 @@
       repeating-linear-gradient(0deg,transparent,transparent 20px,#1a3a6a 20px,#1a3a6a 22px),
       repeating-linear-gradient(90deg,transparent,transparent 20px,#1a3a6a 20px,#1a3a6a 22px)}
 
-  header{position:relative;z-index:1;overflow:hidden}
-  .hero{background:linear-gradient(180deg,#0a0e14 0%,#1a1a2e 40%,#2a1a0e 100%);padding:30px 20px 0;text-align:center;position:relative}
-  .skyline{width:100%;max-width:600px;margin:0 auto;display:block;opacity:.6;filter:drop-shadow(0 0 20px rgba(201,168,76,.3))}
-  .hero-text{position:relative;padding:16px 20px 28px;background:linear-gradient(180deg,transparent,rgba(10,14,20,.95));margin-top:-60px}
-  .hero-flag{font-size:2rem;margin-bottom:6px}
-  .hero-title{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--gold2);text-shadow:0 0 40px rgba(201,168,76,.5);letter-spacing:2px;line-height:1.1;margin-bottom:5px}
-  .hero-sub{color:var(--mist);font-size:.82rem;letter-spacing:2px;text-transform:uppercase;font-weight:300}
+  /* HEADER */
+  .hero{position:relative;z-index:1;background:linear-gradient(180deg,#0a0e14,#1a1a2e 60%,#2a1a0e);padding:0;overflow:hidden}
+  .hero-img{width:100%;height:260px;object-fit:cover;opacity:.5;display:block}
+  .hero-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:24px 20px;background:linear-gradient(0deg,rgba(10,14,20,.95) 0%,transparent 60%);text-align:center}
+  .back-btn{position:absolute;top:16px;left:16px;padding:6px 14px;border-radius:20px;background:rgba(0,0,0,.5);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-size:.8rem;text-decoration:none;font-family:'Inter',sans-serif;backdrop-filter:blur(6px);transition:all .2s}
+  .back-btn:hover{background:rgba(201,168,76,.1)}
+  .hotel-badge{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  .hotel-name{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold2);text-shadow:0 0 30px rgba(201,168,76,.5);line-height:1.1;margin-bottom:4px}
+  .hotel-sub{color:var(--mist);font-size:.82rem;letter-spacing:1px}
   .mist-divider{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 
-  #signin-screen{position:relative;z-index:1;max-width:420px;margin:40px auto;padding:0 20px;animation:fadeUp .6s ease}
-  .signin-card{background:var(--stone2);border:1px solid rgba(201,168,76,.2);border-radius:20px;padding:36px 28px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(201,168,76,.1)}
-  .whisky-icon{font-size:2.5rem;margin-bottom:12px;display:block;filter:drop-shadow(0 0 10px rgba(201,168,76,.4))}
-  .signin-title{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--gold2);margin-bottom:6px}
-  .signin-sub{color:var(--mist);font-size:.83rem;margin-bottom:24px;line-height:1.5}
-  .input-wrap{margin-bottom:14px}
-  .input-wrap input{width:100%;padding:14px 18px;border-radius:12px;border:1.5px solid rgba(201,168,76,.25);background:rgba(255,255,255,.05);color:var(--text);font-size:1rem;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s}
-  .input-wrap input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}
-  .input-wrap input::placeholder{color:#5a5550}
-  .btn-primary{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--whisky2));border:none;color:#1a1200;font-size:1rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(201,168,76,.3)}
-  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(201,168,76,.4)}
+  /* STARS */
+  .hotel-stars{display:flex;justify-content:center;gap:3px;margin-bottom:6px}
+  .hotel-stars span{color:var(--gold);font-size:1.1rem}
 
-  #players-bar{display:none;position:relative;z-index:1;flex-wrap:wrap;gap:7px;justify-content:center;padding:10px 16px;background:rgba(0,0,0,.3);border-bottom:1px solid rgba(201,168,76,.15)}
-  .player-chip{padding:4px 12px;border-radius:20px;font-size:.76rem;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);color:var(--fog);display:flex;align-items:center;gap:5px}
-  .player-chip.me{background:rgba(201,168,76,.15);border-color:var(--gold);color:var(--gold2)}
-  .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+  /* MAIN */
+  .wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:24px 14px 60px}
 
-  #app{display:none}
-  .hotel-link{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;font-size:.78rem;text-decoration:none;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:var(--gold2);font-family:'Inter',sans-serif;transition:all .2s;margin-left:auto}
-  .hotel-link:hover{background:rgba(201,168,76,.18)}
-  .tab-bar{position:relative;z-index:1;display:flex;gap:6px;padding:12px 16px;background:var(--stone2);border-bottom:1px solid rgba(201,168,76,.1);align-items:center;flex-wrap:wrap}
-  .tab-btn{padding:8px 18px;border-radius:25px;font-size:.82rem;cursor:pointer;border:1px solid rgba(201,168,76,.2);background:transparent;color:var(--mist);font-family:'Inter',sans-serif;transition:all .2s}
-  .tab-btn.active{background:linear-gradient(135deg,var(--gold),var(--whisky2));border-color:transparent;color:#1a1200;font-weight:700}
-  .refresh-btn{padding:7px 14px;border-radius:25px;font-size:.78rem;cursor:pointer;border:1px solid rgba(138,154,170,.3);background:transparent;color:var(--mist);font-family:'Inter',sans-serif}
-  .reset-btn{padding:7px 14px;border-radius:25px;font-size:.78rem;cursor:pointer;border:1px solid rgba(180,60,60,.3);background:transparent;color:#e06060;font-family:'Inter',sans-serif}
-  .tab-content{display:none}
-  .tab-content.active{display:block}
+  /* QUICK FACTS */
+  .facts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:24px}
+  .fact-card{background:var(--stone2);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:14px 12px;text-align:center;transition:border-color .2s}
+  .fact-card:hover{border-color:rgba(201,168,76,.3)}
+  .fact-icon{font-size:1.6rem;margin-bottom:6px;display:block;filter:drop-shadow(0 0 6px rgba(201,168,76,.3))}
+  .fact-label{font-size:.68rem;color:var(--mist);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+  .fact-val{font-size:.88rem;font-weight:600;color:var(--gold2)}
 
-  .app-wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px 14px 80px}
-  .whisky-deco{text-align:center;padding:8px;font-size:1.3rem;opacity:.25;letter-spacing:8px;margin-bottom:10px}
-  .tip{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.15);border-radius:10px;padding:9px 14px;font-size:.78rem;color:var(--mist);margin-bottom:18px}
+  /* SECTION */
+  .section{background:var(--stone2);border:1px solid rgba(201,168,76,.12);border-radius:16px;padding:20px;margin-bottom:18px}
+  .section h2{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 
-  .slot-section{margin-bottom:26px;animation:fadeUp .4s ease}
-  .slot-header{display:flex;align-items:center;gap:12px;padding:13px 18px;border-radius:14px 14px 0 0;border-left:3px solid var(--gold);background:linear-gradient(90deg,rgba(201,168,76,.08),transparent);border-top:1px solid rgba(201,168,76,.15);border-right:1px solid rgba(201,168,76,.1);border-bottom:none}
-  .slot-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold2)}
-  .slot-time{font-size:.72rem;color:var(--mist);margin-left:auto;letter-spacing:1px}
-  .options-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;padding:10px;background:var(--stone2);border:1px solid rgba(201,168,76,.1);border-top:none;border-radius:0 0 14px 14px}
+  /* AMENITIES */
+  .amenities{display:flex;flex-wrap:wrap;gap:8px}
+  .amenity{padding:5px 12px;border-radius:20px;font-size:.76rem;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.18);color:var(--fog);display:flex;align-items:center;gap:5px}
 
-  .option-card{background:var(--stone3);border:1.5px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;position:relative}
-  .option-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-1px)}
-  .option-card.voted{border-color:var(--gold);background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(46,42,36,.9));box-shadow:0 0 20px rgba(201,168,76,.15)}
-  .option-card.pause{border-style:dashed;border-color:rgba(138,154,170,.25)}
-  .option-card.pause.voted{border-color:#52b788;background:linear-gradient(135deg,rgba(82,183,136,.1),rgba(46,42,36,.9))}
+  /* REVIEWS */
+  .review-card{background:rgba(0,0,0,.2);border-radius:10px;padding:12px 14px;margin-bottom:10px;border-left:2px solid var(--gold)}
+  .review-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .review-stars{color:var(--gold);font-size:.8rem}
+  .review-source{font-size:.68rem;color:var(--mist)}
+  .review-text{font-size:.8rem;color:var(--fog);font-style:italic;line-height:1.5}
+  .review-author{font-size:.7rem;color:#5a6a7a;margin-top:4px}
 
-  .option-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px}
-  .option-label{font-size:.88rem;font-weight:600;color:var(--fog);flex:1;line-height:1.3}
-  .option-card.voted .option-label{color:var(--gold2)}
-  .option-check{font-size:.9rem;flex-shrink:0;margin-left:4px}
-  .option-price{font-size:.69rem;color:#6a7a8a;margin-bottom:5px}
-  .option-rating{display:flex;align-items:center;gap:4px;margin-bottom:5px}
-  .stars{color:var(--gold);font-size:.7rem;letter-spacing:1px}
-  .rating-score{font-size:.69rem;color:var(--mist)}
-
-  .info-btn{font-size:.68rem;color:rgba(201,168,76,.6);background:none;border:none;cursor:pointer;padding:0;font-family:'Inter',sans-serif;text-decoration:underline;text-underline-offset:2px;display:block;margin-bottom:6px}
-  .info-btn:hover{color:var(--gold)}
-  .info-panel{display:none;background:rgba(0,0,0,.25);border-radius:8px;padding:9px 10px;margin-bottom:7px;border:1px solid rgba(201,168,76,.1)}
-  .info-panel.open{display:block;animation:fadeUp .2s ease}
-  .info-desc{font-size:.72rem;color:var(--mist);line-height:1.5;margin-bottom:6px}
-  .info-review{font-size:.68rem;color:#6a7a8a;font-style:italic;line-height:1.4;margin-bottom:6px;border-left:2px solid rgba(201,168,76,.2);padding-left:6px}
-  .info-link{display:inline-block;font-size:.68rem;color:var(--gold);text-decoration:none;border:1px solid rgba(201,168,76,.3);border-radius:6px;padding:3px 8px;transition:all .15s;margin-right:5px;margin-bottom:5px}
-  .info-link:hover{background:rgba(201,168,76,.1)}
-
-  /* YOUTUBE */
-  .yt-wrap{margin-top:8px;border-radius:8px;overflow:hidden;position:relative;padding-bottom:56.25%;height:0}
-  .yt-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:8px}
-  .yt-thumb{position:relative;cursor:pointer;border-radius:8px;overflow:hidden;margin-top:8px}
-  .yt-thumb img{width:100%;display:block;border-radius:8px;filter:brightness(.8)}
-  .yt-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:rgba(255,0,0,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all .2s}
-  .yt-thumb:hover .yt-play{background:rgba(255,0,0,1);transform:translate(-50%,-50%) scale(1.1)}
-  .yt-label{font-size:.65rem;color:var(--mist);text-align:center;margin-top:3px;margin-bottom:4px}
-
-  .vote-bar-meta{display:flex;justify-content:space-between;font-size:.67rem;color:#5a6a7a;margin-bottom:3px}
-  .vote-bar-bg{background:rgba(255,255,255,.06);border-radius:4px;height:3px;overflow:hidden}
-  .vote-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--whisky2));transition:width .5s ease}
-  .option-card.pause .vote-bar-fill{background:#52b788}
-  .voter-avatars{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
-  .voter-avatar{font-size:.62rem;padding:2px 7px;border-radius:10px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);color:var(--mist)}
-  .voter-avatar.is-me{background:rgba(201,168,76,.15);border-color:var(--gold);color:var(--gold2)}
-
-  /* RESULTS */
-  .results-panel{background:var(--stone2);border:1px solid rgba(201,168,76,.15);border-radius:16px;padding:20px;margin-bottom:20px}
-  .results-panel h2{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:14px}
-  .result-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,0,0,.2);border-radius:9px;margin-bottom:6px;border-left:2px solid var(--gold)}
-  .result-slot{font-size:.71rem;color:var(--mist);width:150px;flex-shrink:0}
-  .result-winner{font-size:.87rem;font-weight:600;color:var(--text);flex:1}
-  .result-votes{font-size:.74rem;color:var(--gold)}
-  .result-tie{color:var(--whisky2);font-size:.74rem}
-
-  /* PRICE TOTAL */
-  .price-total{background:linear-gradient(135deg,rgba(201,168,76,.1),rgba(160,82,45,.1));border:1px solid rgba(201,168,76,.3);border-radius:14px;padding:18px 20px;margin-bottom:20px;text-align:center}
-  .price-total h3{font-family:'Playfair Display',serif;color:var(--gold2);font-size:1rem;margin-bottom:12px}
-  .price-rows{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
-  .price-row{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;padding:4px 0;border-bottom:1px solid rgba(201,168,76,.08)}
-  .price-row .pr-label{color:var(--mist)}
-  .price-row .pr-val{color:var(--fog);font-weight:600}
-  .price-grand{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid rgba(201,168,76,.3)}
-  .price-grand .pg-label{font-family:'Playfair Display',serif;color:var(--gold2);font-size:1rem}
-  .price-grand .pg-val{font-family:'Playfair Display',serif;color:var(--gold2);font-size:1.3rem;font-weight:700}
-  .price-note{font-size:.68rem;color:#5a6a7a;margin-top:8px}
+  /* SCORE */
+  .score-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .score-label{font-size:.78rem;color:var(--mist);width:120px;flex-shrink:0}
+  .score-bar-bg{flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:6px;overflow:hidden}
+  .score-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--whisky2))}
+  .score-val{font-size:.75rem;color:var(--gold);width:28px;text-align:right;font-weight:600}
 
   /* MAP */
-  .map-panel{background:var(--stone2);border:1px solid rgba(201,168,76,.15);border-radius:16px;overflow:hidden;margin-bottom:20px}
-  .map-header{padding:14px 18px;border-bottom:1px solid rgba(201,168,76,.1)}
-  .map-header h3{font-family:'Playfair Display',serif;color:var(--gold2);font-size:1rem}
-  .map-header p{font-size:.75rem;color:var(--mist);margin-top:2px}
-  .map-frame{width:100%;height:320px;border:none;display:block}
-  .map-pins{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px;background:rgba(0,0,0,.2)}
-  .map-pin{font-size:.72rem;padding:3px 10px;border-radius:12px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);color:var(--fog)}
+  .map-wrap{border-radius:12px;overflow:hidden;border:1px solid rgba(201,168,76,.15)}
+  .map-wrap iframe{width:100%;height:260px;border:none;display:block}
 
-  .detail-slot-title{font-family:'Playfair Display',serif;font-weight:700;color:var(--gold2);margin-bottom:7px;padding-left:10px;border-left:2px solid var(--gold);font-size:.9rem}
-  .detail-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;margin-bottom:4px;border:1px solid rgba(201,168,76,.08)}
-  .detail-row.win{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.25)}
+  /* LINKS */
+  .links-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .link-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:10px;font-size:.82rem;font-weight:600;text-decoration:none;transition:all .2s;font-family:'Inter',sans-serif;cursor:pointer}
+  .link-btn.primary{background:linear-gradient(135deg,var(--gold),var(--whisky2));color:#1a1200}
+  .link-btn.primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,168,76,.3)}
+  .link-btn.secondary{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);color:var(--gold2)}
+  .link-btn.secondary:hover{background:rgba(201,168,76,.14)}
 
-  #poll-indicator{position:fixed;bottom:16px;right:16px;font-size:.7rem;padding:5px 12px;border-radius:20px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:var(--gold);pointer-events:none;backdrop-filter:blur(10px);z-index:999}
+  /* PHOTOS */
+  .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+  .photo-grid img{width:100%;height:130px;object-fit:cover;border-radius:10px;border:1px solid rgba(201,168,76,.1);transition:all .2s}
+  .photo-grid img:hover{border-color:rgba(201,168,76,.4);transform:scale(1.02)}
+
+  /* TIPS */
+  .tip-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .tip-item{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--fog);line-height:1.5}
+  .tip-item .tip-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
 
   @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .wrap>*{animation:fadeUp .4s ease}
 </style>
 </head>
 <body>
 <div class="tartan-bg"></div>
 
-<header>
-  <div class="hero">
-    <svg class="skyline" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" fill="#c9a84c">
-      <polygon points="80,200 80,120 100,120 100,100 120,100 120,80 140,80 140,60 160,60 160,80 180,80 180,100 200,100 200,120 220,120 220,200" opacity=".9"/>
-      <rect x="130" y="40" width="20" height="20" opacity=".9"/><rect x="155" y="45" width="10" height="15" opacity=".9"/>
-      <line x1="140" y1="40" x2="140" y2="20" stroke="#c9a84c" stroke-width="1.5"/>
-      <polygon points="140,20 155,26 140,32" opacity=".9"/>
-      <ellipse cx="150" cy="200" rx="100" ry="30" opacity=".5"/>
-      <polygon points="340,200 340,80 345,75 350,60 355,75 360,80 360,200" opacity=".8"/>
-      <polygon points="344,80 356,80 358,90 342,90" opacity=".8"/>
-      <rect x="338" y="90" width="24" height="110" opacity=".7"/>
-      <ellipse cx="560" cy="180" rx="80" ry="25" opacity=".5"/>
-      <rect x="530" y="140" width="60" height="40" rx="4" opacity=".7"/>
-      <polygon points="530,140 560,110 590,140" opacity=".8"/>
-      <rect x="535" y="140" width="4" height="35" opacity=".6"/><rect x="545" y="140" width="4" height="35" opacity=".6"/>
-      <rect x="555" y="140" width="4" height="35" opacity=".6"/><rect x="565" y="140" width="4" height="35" opacity=".6"/>
-      <rect x="575" y="140" width="4" height="35" opacity=".6"/>
-      <rect x="650" y="100" width="80" height="100" opacity=".7"/>
-      <polygon points="650,100 690,60 730,100" opacity=".8"/>
-      <rect x="680" y="40" width="20" height="30" opacity=".9"/>
-      <polygon points="675,40 690,15 705,40" opacity=".9"/>
-      <rect x="0" y="185" width="800" height="15" opacity=".15" fill="white"/>
-    </svg>
-    <div class="hero-text">
-      <div class="hero-flag">🏴󠁧󠁢󠁳󠁣󠁴󠁧</div>
-      <div class="hero-title">EDINBURGH</div>
-      <div class="hero-sub">Dagsplan · Stem · Oplev</div>
+<!-- HERO -->
+<div class="hero">
+  <img class="hero-img"
+    src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/57418967.jpg?k=6c5a3f4e2c9f45a5a2b0e3f1f1a7c8d0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c&o=&hp=1"
+    alt="Novotel Edinburgh Centre"
+    onerror="this.src='https://images.trvl-media.com/lodging/1000000/980000/982700/982662/ae3c79b0.jpg?impolicy=resizecrop&rw=500&ra=fit'">
+  <a class="back-btn" href="/tripplanner/index.html">← Tilbage til dagsplan</a>
+  <div class="hero-overlay">
+    <div class="hotel-badge">⭐⭐⭐⭐ 4-stjernet hotel</div>
+    <div class="hotel-stars">
+      <span>★</span><span>★</span><span>★</span><span>★</span><span style="opacity:.3">★</span>
     </div>
-  </div>
-  <div class="mist-divider"></div>
-</header>
-
-<div id="signin-screen">
-  <div class="signin-card">
-    <span class="whisky-icon">🥃</span>
-    <div class="signin-title">Hvem er du?</div>
-    <p class="signin-sub">Skriv dit navn og deltag i afstemningen om dagens program</p>
-    <div class="input-wrap">
-      <input type="text" id="name-input" placeholder="Dit navn..." maxlength="24" autocomplete="off">
-    </div>
-    <button class="btn-primary" onclick="signIn()">Gå med i gruppen →</button>
+    <div class="hotel-name">Novotel Edinburgh Centre</div>
+    <div class="hotel-sub">80 Lauriston Place, Edinburgh EH3 9DE</div>
   </div>
 </div>
+<div class="mist-divider"></div>
 
-<div id="players-bar"></div>
+<div class="wrap">
 
-<div id="app">
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('vote',this)">🗳️ Stem</button>
-    <button class="tab-btn" onclick="switchTab('results',this)">📊 Resultater</button>
-    <button class="refresh-btn" onclick="manualRefresh()">🔄 Opdatér</button>
-    <button class="reset-btn" onclick="resetAll()">🗑️ Nulstil</button>
-    <a class="hotel-link" href="/tripplanner/hotel.html">🏨 Vores hotel</a>
-  </div>
-  <div id="tab-vote" class="tab-content active">
-    <div class="app-wrap">
-      <div class="whisky-deco">🥃 ⚔️ 🏰 ⚔️ 🥃</div>
-      <div class="tip">💡 Klik på et kort for at stemme. Tryk <strong>ℹ️ Info</strong> for beskrivelse, video og anmeldelse.</div>
-      <div id="slots-container"></div>
+  <!-- QUICK FACTS -->
+  <div class="facts-grid">
+    <div class="fact-card">
+      <span class="fact-icon">🛎️</span>
+      <div class="fact-label">Check-in</div>
+      <div class="fact-val">Fra kl. 15:00</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🚪</span>
+      <div class="fact-label">Check-out</div>
+      <div class="fact-val">Senest kl. 12:00</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🍳</span>
+      <div class="fact-label">Morgenmad</div>
+      <div class="fact-val">07:00–11:00</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🏊</span>
+      <div class="fact-label">Pool</div>
+      <div class="fact-val">Indendørs</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">📶</span>
+      <div class="fact-label">WiFi</div>
+      <div class="fact-val">Gratis</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🐾</span>
+      <div class="fact-label">Kæledyr</div>
+      <div class="fact-val">Tilladt</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🚗</span>
+      <div class="fact-label">Parkering</div>
+      <div class="fact-val">Indendørs (mod betaling)</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🏰</span>
+      <div class="fact-label">Edinburgh Castle</div>
+      <div class="fact-val">15 min. gang</div>
     </div>
   </div>
-  <div id="tab-results" class="tab-content">
-    <div class="app-wrap">
-      <div class="results-panel">
-        <h2>📋 Dagens vindere</h2>
-        <div id="results-list"></div>
-      </div>
-      <div id="price-panel" class="price-total" style="display:none">
-        <h3>💰 Estimeret pris per person</h3>
-        <div class="price-rows" id="price-rows"></div>
-        <div class="price-grand">
-          <span class="pg-label">Total</span>
-          <span class="pg-val" id="price-total-val"></span>
-        </div>
-        <div class="price-note">* Priser er ca.-angivelser · £1 ≈ 8,70 kr.</div>
-      </div>
-      <div id="map-panel" class="map-panel" style="display:none">
-        <div class="map-header">
-          <h3>🗺️ Vindernes placering</h3>
-          <p>Dagens valgte steder i Edinburgh</p>
-        </div>
-        <iframe id="map-frame" class="map-frame" allowfullscreen loading="lazy"></iframe>
-        <div class="map-pins" id="map-pins"></div>
-      </div>
-      <div id="results-detail"></div>
+
+  <!-- FACILITETER -->
+  <div class="section">
+    <h2>🛁 Faciliteter</h2>
+    <div class="amenities">
+      <div class="amenity">🏊 Indendørs pool</div>
+      <div class="amenity">🧖 Sauna</div>
+      <div class="amenity">♨️ Jacuzzi / Hot tub</div>
+      <div class="amenity">💪 Fitnesscenter</div>
+      <div class="amenity">🍽️ TAP Bar & Kitchen</div>
+      <div class="amenity">🍺 Bar med craft beers</div>
+      <div class="amenity">🛎️ 24-timers reception</div>
+      <div class="amenity">🛎️ 24-timers roomservice</div>
+      <div class="amenity">📶 Gratis WiFi</div>
+      <div class="amenity">📺 50" LCD TV</div>
+      <div class="amenity">🧴 Minibar på værelset</div>
+      <div class="amenity">☕ Te/kaffe på værelset</div>
+      <div class="amenity">🔒 Sikkerhedsboks</div>
+      <div class="amenity">♿ Tilgængeligt</div>
+      <div class="amenity">💱 Valutaveksling</div>
+      <div class="amenity">🧺 Vaskeri</div>
     </div>
   </div>
+
+  <!-- MORGENMAD -->
+  <div class="section">
+    <h2>🍳 Morgenmad</h2>
+    <ul class="tip-list">
+      <li class="tip-item"><span class="tip-icon">🕖</span><span>Serveres dagligt — <strong>hverdage kl. 06:30–10:00</strong>, weekender kl. <strong>07:00–11:00</strong></span></li>
+      <li class="tip-item"><span class="tip-icon">🥣</span><span>Stort buffetudvalg: Full Scottish & English breakfast, friske bagels, croissanter, vafler, frisk frugt og meget mere</span></li>
+      <li class="tip-item"><span class="tip-icon">🏴󠁧󠁢󠁳󠁣󠁴󠁧</span><span>"Wee Menu" med sæsonbetonede skotske retter — prøv haggis til morgenmad!</span></li>
+      <li class="tip-item"><span class="tip-icon">👶</span><span>Op til 2 børn under 16 år spiser gratis med morgenmad når de deler værelse med forældre</span></li>
+      <li class="tip-item"><span class="tip-icon">💷</span><span>Morgenmad koster ekstra — ikke inkluderet i roomprisen medmindre du har booket med morgenmad</span></li>
+    </ul>
+  </div>
+
+  <!-- RATINGS -->
+  <div class="section">
+    <h2>📊 Ratings</h2>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap">
+      <div style="text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--gold2);line-height:1">8.3</div>
+        <div style="font-size:.72rem;color:var(--mist)">Booking.com</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--gold2);line-height:1">4.1</div>
+        <div style="font-size:.72rem;color:var(--mist)">TripAdvisor</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;color:var(--gold2);line-height:1">4.2</div>
+        <div style="font-size:.72rem;color:var(--mist)">Google</div>
+      </div>
+    </div>
+    <div class="score-row"><div class="score-label">Beliggenhed</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:92%"></div></div><div class="score-val">9.2</div></div>
+    <div class="score-row"><div class="score-label">Renlighed</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:86%"></div></div><div class="score-val">8.6</div></div>
+    <div class="score-row"><div class="score-label">Personale</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:84%"></div></div><div class="score-val">8.4</div></div>
+    <div class="score-row"><div class="score-label">Faciliteter</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:82%"></div></div><div class="score-val">8.2</div></div>
+    <div class="score-row"><div class="score-label">Morgenmad</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:84%"></div></div><div class="score-val">8.4</div></div>
+    <div class="score-row"><div class="score-label">Værdi for pengene</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:75%"></div></div><div class="score-val">7.5</div></div>
+  </div>
+
+  <!-- ANMELDELSER -->
+  <div class="section">
+    <h2>💬 Gæsteanmeldelser</h2>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-source">Booking.com · Feb 2026</div>
+      </div>
+      <div class="review-text">"Hotel stay was excellent, clean, comfortable and staff very helpful. The pool, hot tub and sauna were fantastic after a day of sightseeing — highly recommend!"</div>
+      <div class="review-author">— Helen B., Familie</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-source">Booking.com · 2026</div>
+      </div>
+      <div class="review-text">"The breakfast was excellent with a good variety of high-quality food. The pool was a great bonus and the staff were friendly and helpful. Centrally located — easy to explore all attractions."</div>
+      <div class="review-author">— Bekræftet gæst</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★☆</div>
+        <div class="review-source">Expedia · 2026</div>
+      </div>
+      <div class="review-text">"Proximity to the city centre was great. I needed to be at Usher Hall which was walking distance. The bed was very comfortable and the shower was lovely."</div>
+      <div class="review-author">— Bekræftet gæst</div>
+    </div>
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-source">Hotels.com · 2026</div>
+      </div>
+      <div class="review-text">"The room was spacious and the bathroom clean and well-equipped. Staff provided excellent service and breakfast had a wide variety of tasty options. The view from the restaurant was breathtaking!"</div>
+      <div class="review-author">— Bekræftet gæst</div>
+    </div>
+  </div>
+
+  <!-- GODE TIPS -->
+  <div class="section">
+    <h2>💡 Gode Tips</h2>
+    <ul class="tip-list">
+      <li class="tip-item"><span class="tip-icon">🏊</span><span>Poolen kan blive travl i spidsbelastning — gå tidligt om morgenen for at få den mere for jer selv</span></li>
+      <li class="tip-item"><span class="tip-icon">🧖</span><span>Saunaen er fremragende efter en lang dag med sightseeing — tag håndklæder med da de kan løbe tør</span></li>
+      <li class="tip-item"><span class="tip-icon">🚗</span><span>Parkering koster ekstra — Holyrood Park er billigere alternativ i nærheden (~£1/time)</span></li>
+      <li class="tip-item"><span class="tip-icon">🛎️</span><span>Early check-in kan arrangeres ved reception — spørg venligt, de gør hvad de kan</span></li>
+      <li class="tip-item"><span class="tip-icon">🏰</span><span>Edinburgh Castle er 15 min gang — Royal Mile er 15 min, Grassmarket er 5 min</span></li>
+      <li class="tip-item"><span class="tip-icon">🍺</span><span>TAP Bar & Kitchen serverer skotsk køkken og craft beers — god til en afslappet aften</span></li>
+      <li class="tip-item"><span class="tip-icon">📱</span><span>Gratis WiFi i alle rum og fællesarealer — ingen loginproblemer</span></li>
+    </ul>
+  </div>
+
+  <!-- BELIGGENHED -->
+  <div class="section">
+    <h2>📍 Beliggenhed</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+      <div class="amenity">🏰 Edinburgh Castle: 15 min gang</div>
+      <div class="amenity">🪨 Royal Mile: 15 min gang</div>
+      <div class="amenity">🛍️ Grassmarket: 5 min gang</div>
+      <div class="amenity">🎭 Royal Lyceum Theatre: 5 min gang</div>
+      <div class="amenity">🚂 Waverley Station: 20 min gang</div>
+      <div class="amenity">✈️ Flughafen: 11 km</div>
+    </div>
+    <div class="map-wrap">
+      <iframe
+        src="https://maps.google.com/maps?q=Novotel+Edinburgh+Centre,+80+Lauriston+Place,+Edinburgh&output=embed&z=15"
+        allowfullscreen loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- LINKS -->
+  <div class="section">
+    <h2>🔗 Nyttige Links</h2>
+    <div class="links-row">
+      <a class="link-btn primary" href="https://all.accor.com/hotel/3271/index.en.shtml" target="_blank">🏨 Officiel hjemmeside</a>
+      <a class="link-btn secondary" href="https://www.tripadvisor.com/Hotel_Review-g186525-d214382-Reviews-Novotel_Edinburgh_Centre-Edinburgh_Scotland.html" target="_blank">⭐ TripAdvisor anmeldelser</a>
+      <a class="link-btn secondary" href="https://www.booking.com/hotel/gb/novoteledinburghcentre.en-gb.html" target="_blank">📋 Booking.com</a>
+      <a class="link-btn secondary" href="https://maps.google.com/?q=Novotel+Edinburgh+Centre,+80+Lauriston+Place,+Edinburgh" target="_blank">🗺️ Google Maps</a>
+      <a class="link-btn secondary" href="tel:+441312299000">📞 Ring til hotellet</a>
+    </div>
+  </div>
+
 </div>
-
-<div id="poll-indicator">● Live</div>
-
-<script>
-const FB_URL = "https://edinburgh-vote-default-rtdb.europe-west1.firebasedatabase.app/votes.json";
-
-const SLOTS = [
-  {id:"morning",   label:"🌅 Formiddagsaktivitet", time:"09:00–12:00"},
-  {id:"lunch",     label:"🍽️ Frokost",             time:"12:00–13:30"},
-  {id:"afternoon", label:"☀️ Eftermiddagsaktivitet",time:"13:30–17:00"},
-  {id:"dinner",    label:"🍷 Aftenspisning",        time:"17:00–20:00"},
-  {id:"night",     label:"🌙 Nataktivitet",         time:"20:00–?"},
-];
-
-const OPTIONS = {
-  morning:[
-    {id:"castle", label:"🏰 Edinburgh Castle", desc:"Ca. £20 · ~170 kr.", priceDKK:170, priceLow:170, priceHigh:170,
-     rating:"4.6", stars:"★★★★★",
-     about:"Skotlands mest besøgte attraktion på en vulkanklippe. Hjem for krondiamanter og 1.300 år med historie. Book online!",
-     review:"\"Incredible — we loved every bit of history walking through the castle grounds. A must-visit!\"",
-     url:"https://www.edinburghcastle.scot",
-     ytId:"ph5FbEOm9ro",
-     lat:55.9486, lng:-3.1999,
-     mapLabel:"Edinburgh Castle"},
-    {id:"holyrood", label:"👑 Palace of Holyroodhouse", desc:"Ca. £18 · ~157 kr.", priceDKK:157, priceLow:157, priceHigh:157,
-     rating:"4.5", stars:"★★★★★",
-     about:"Kongens officielle skotske residens. Mary Queen of Scots' gemakker og ruinerne af Holyrood Abbey.",
-     review:"\"A breathtaking royal experience — 900 years of history at your feet. Truly did not disappoint!\"",
-     url:"https://www.rct.uk/visit/palace-of-holyroodhouse",
-     ytId:"CxKWWgtbaus",
-     lat:55.9524, lng:-3.1718,
-     mapLabel:"Palace of Holyroodhouse"},
-    {id:"arthurs", label:"🌋 Arthur's Seat", desc:"Gratis 🆓", priceDKK:0, priceLow:0, priceHigh:0,
-     rating:"4.7", stars:"★★★★★",
-     about:"Uddød vulkan midt i Edinburgh med fantastisk udsigt over hele byen. Ca. 45–90 min. vandring.",
-     review:"\"Breathtaking views — you can see the whole city, the Firth of Forth and beyond. Absolutely free!\"",
-     url:"https://www.historicenvironment.scot/visit-a-place/places/holyrood-park-and-arthurs-seat",
-     ytId:"LLGf3xkFl1E",
-     lat:55.9444, lng:-3.1615,
-     mapLabel:"Arthur's Seat"},
-    {id:"museum", label:"🏛️ National Museum", desc:"Gratis 🆓", priceDKK:0, priceLow:0, priceHigh:0,
-     rating:"4.8", stars:"★★★★★",
-     about:"Verdensklasse-museum med skotsk og global histoire, videnskab, mode og natur. Gratis entre!",
-     review:"\"Free for everyone! Allow three hours minimum — the Grand Gallery is absolutely spectacular.\"",
-     url:"https://www.nms.ac.uk/national-museum-of-scotland",
-     ytId:"UMhlIfOJPBM",
-     lat:55.9470, lng:-3.1906,
-     mapLabel:"National Museum of Scotland"},
-    {id:"camera", label:"🌀 Camera Obscura", desc:"Ca. £25 · ~217 kr.", priceDKK:217, priceLow:217, priceHigh:217,
-     rating:"4.6", stars:"★★★★★",
-     about:"6 etager med optiske illusioner og 360° panoramaudsigt fra taget. Sjovt for alle aldre!",
-     review:"\"Mind-bending exhibits on every floor — the rooftop views of Edinburgh are absolutely stunning!\"",
-     url:"https://www.camera-obscura.co.uk",
-     ytId:"vKcDPABZ3bk",
-     lat:55.9489, lng:-3.1957,
-     mapLabel:"Camera Obscura"},
-    {id:"pause_m", label:"😴 Pause / Frileg", desc:"Gratis", priceDKK:0, priceLow:0, priceHigh:0, isPause:true,
-     rating:"", stars:"", about:"Tag det roligt — sov længe, hyg jer på café eller udforsk på egen hånd.",
-     review:"", url:"", ytId:"", lat:0, lng:0, mapLabel:""},
-  ],
-  lunch:[
-    {id:"oink", label:"🐷 Oink Pulled Pork", desc:"Ca. £7 · ~61 kr.", priceDKK:61, priceLow:61, priceHigh:61,
-     rating:"4.5", stars:"★★★★★",
-     about:"Verdensberømt pulled pork-brød på Victoria Street. En hel gris drejer sig i vinduet!",
-     review:"\"The pulled pork was cooked to perfection — best value meal in all of Edinburgh!\"",
-     url:"https://oinkhogroast.co.uk",
-     ytId:"nqbEIGEBpAw",
-     lat:55.9486, lng:-3.1942,
-     mapLabel:"Oink Pulled Pork"},
-    {id:"makars", label:"🥔 Makars Mash Bar", desc:"Ca. £15 · ~130 kr.", priceDKK:130, priceLow:130, priceHigh:130,
-     rating:"4.8", stars:"★★★★★",
-     about:"Prøv haggis for første gang! Langsomt tilberedt lammeskank og oksekød med cremet kartoffelmos.",
-     review:"\"Best slow-cooked lamb I've ever had — juicy, tender, full of flavour. First time haggis was a revelation!\"",
-     url:"https://makarsmash.com",
-     ytId:"CNbGmRpDqAA",
-     lat:55.9499, lng:-3.1931,
-     mapLabel:"Makars Mash Bar"},
-    {id:"streetfood", label:"🌮 Edinburgh Street Food", desc:"Ca. £10 · ~87 kr.", priceDKK:87, priceLow:87, priceHigh:87,
-     rating:"4.6", stars:"★★★★★",
-     about:"Stort street food-marked med tacos, japansk, koreansk og BBQ. Bestil via QR-kode ved bordet.",
-     review:"\"So many flavours and good vibes — everything gets delivered to your table. Super easy and delicious!\"",
-     url:"https://www.edinburghstreetfood.co.uk",
-     ytId:"7p3EHKLurWQ",
-     lat:55.9559, lng:-3.1861,
-     mapLabel:"Edinburgh Street Food"},
-    {id:"worldsend", label:"🍺 The World's End", desc:"Ca. £15 · ~130 kr.", priceDKK:130, priceLow:130, priceHigh:130,
-     rating:"4.5", stars:"★★★★★",
-     about:"En af Edinburghs ældste puber på High Street. Autentisk pubmad og stort whiskyudvalg.",
-     review:"\"Amazing first pub in Scotland — staff very welcoming, food hearty. Great list of whiskies!\"",
-     url:"https://www.theworldsend.co.uk",
-     ytId:"5Y0gC7eSMWU",
-     lat:55.9505, lng:-3.1844,
-     mapLabel:"The World's End"},
-    {id:"larder", label:"☕ Edinburgh Larder", desc:"Ca. £12 · ~104 kr.", priceDKK:104, priceLow:104, priceHigh:104,
-     rating:"4.6", stars:"★★★★★",
-     about:"Hyggelig brunch-café med lokale skotske ingredienser, superb kaffe og venligt personale.",
-     review:"\"One of the best breakfasts in Scotland — artisan coffee and a menu celebrating local farmers.\"",
-     url:"https://www.edinburghlarder.co.uk",
-     ytId:"",
-     lat:55.9500, lng:-3.1859,
-     mapLabel:"Edinburgh Larder"},
-    {id:"pause_l", label:"🧃 Pause / Frileg", desc:"Gratis", priceDKK:0, priceLow:0, priceHigh:0, isPause:true,
-     rating:"", stars:"", about:"Picnic i en park, kig i butikker eller bare slap af i solen.",
-     review:"", url:"", ytId:"", lat:0, lng:0, mapLabel:""},
-  ],
-  afternoon:[
-    {id:"royalmile", label:"🪨 Gåtur – Royal Mile", desc:"Gratis 🆓", priceDKK:0, priceLow:0, priceHigh:0,
-     rating:"4.7", stars:"★★★★★",
-     about:"Vandring fra slottet til Holyroodhouse. Udforsk skjulte closes, gademusikanter og middelalderarkitektur.",
-     review:"\"Walking through the various closes was fascinating — you never know where you'll end up. A must!\"",
-     url:"https://www.visitscotland.com/destinations-maps/edinburgh/royal-mile",
-     ytId:"Sz_ACX2o4iQ",
-     lat:55.9501, lng:-3.1880,
-     mapLabel:"Royal Mile"},
-    {id:"whisky", label:"🥃 Scotch Whisky Experience", desc:"£21–45 · ~183 kr.", priceDKK:183, priceLow:183, priceHigh:391,
-     rating:"4.7", stars:"★★★★★",
-     about:"Immersiv whisky-oplevelse ved siden af Edinburgh Castle. Silver Tour £21 til Platinum Tour £45.",
-     review:"\"Informative, well organized and genuinely enjoyable. You get to keep the glass at the end!\"",
-     url:"https://www.scotchwhiskyexperience.co.uk",
-     ytId:"3U7JClg7oCE",
-     lat:55.9487, lng:-3.1959,
-     mapLabel:"Scotch Whisky Experience"},
-    {id:"dungeon", label:"💀 Edinburgh Dungeon", desc:"Ca. £22 · ~191 kr.", priceDKK:191, priceLow:191, priceHigh:191,
-     rating:"4.5", stars:"★★★★★",
-     about:"Levende skuespillere guider dig igennem Edinburghs mørke historie med humor og rideattraktioner.",
-     review:"\"The whole experience was like a really fun show — informative, fun and scary all at once!\"",
-     url:"https://www.thedungeons.com/edinburgh",
-     ytId:"TcECT7h3_QA",
-     lat:55.9511, lng:-3.1909,
-     mapLabel:"Edinburgh Dungeon"},
-    {id:"boom", label:"🪓 Boom Battle Bar", desc:"Ca. £15 · ~130 kr.", priceDKK:130, priceLow:130, priceHigh:130,
-     rating:"4.8", stars:"★★★★★",
-     about:"Øksetkastning, elektrisk darts, minigolf og pool under ét tag med bar. Perfekt til grupper!",
-     review:"\"Axe throwing was amazing — we all had a great laugh. Staff made it great fun. Highly recommend!\"",
-     url:"https://boombattlebar.co.uk/locations/edinburgh",
-     ytId:"GlX5OdTT_BY",
-     lat:55.9561, lng:-3.1854,
-     mapLabel:"Boom Battle Bar"},
-    {id:"dynamic", label:"🌍 Dynamic Earth", desc:"Ca. £20 · ~174 kr.", priceDKK:174, priceLow:174, priceHigh:174,
-     rating:"4.4", stars:"★★★★☆",
-     about:"Interaktivt videnskabscenter og planetarium om jordens 4,5 milliard år lange histoire.",
-     review:"\"A brilliant way to spend an afternoon — the volcano simulation and planetarium were highlights!\"",
-     url:"https://www.dynamicearth.co.uk",
-     ytId:"Z9lRNjGFBwk",
-     lat:55.9508, lng:-3.1745,
-     mapLabel:"Dynamic Earth"},
-    {id:"calton", label:"🏔️ Calton Hill", desc:"Gratis 🆓", priceDKK:0, priceLow:0, priceHigh:0,
-     rating:"4.6", stars:"★★★★★",
-     about:"Kortere opstigning end Arthur's Seat med 360° udsigt over Edinburgh og Firth of Forth.",
-     review:"\"Best views of Edinburgh's skyline — Castle, monuments all in one spot. Free and accessible!\"",
-     url:"https://www.visitscotland.com/destinations-maps/edinburgh/calton-hill",
-     ytId:"uX6WPXC7bBo",
-     lat:55.9553, lng:-3.1824,
-     mapLabel:"Calton Hill"},
-    {id:"pause_a", label:"☕ Pause / Frileg", desc:"Gratis", priceDKK:0, priceLow:0, priceHigh:0, isPause:true,
-     rating:"", stars:"", about:"Kaffe, shopping på Victoria Street eller bare slap af på en bænk i solen.",
-     review:"", url:"", ytId:"", lat:0, lng:0, mapLabel:""},
-  ],
-  dinner:[
-    {id:"kitchin", label:"⭐ The Kitchin", desc:"Ca. £100 · ~870 kr.", priceDKK:870, priceLow:870, priceHigh:870,
-     rating:"4.8", stars:"★★★★★",
-     about:"Tom Kitchins Michelin-stjernede flagskib i Leith. Fokus på lokale skotske råvarer og sæsonbetonet madlavning.",
-     review:"\"Every course was a masterpiece of Scottish fine dining — we nearly licked the plates clean!\"",
-     url:"https://thekitchin.com",
-     ytId:"L4Xf1pRlTeE",
-     lat:55.9769, lng:-3.1727,
-     mapLabel:"The Kitchin"},
-    {id:"dome", label:"🍾 The Dome", desc:"Ca. £45 · ~391 kr.", priceDKK:391, priceLow:391, priceHigh:391,
-     rating:"4.6", stars:"★★★★★",
-     about:"Storslået restaurant i historisk bankbygning på George Street. Perfekt til festmiddage og special lejligheder.",
-     review:"\"One of the most beautiful restaurants I've ever been to — more stunning than in the photos!\"",
-     url:"https://www.thedomeedinburgh.com",
-     ytId:"kY2IZT1XRPU",
-     lat:55.9537, lng:-3.1956,
-     mapLabel:"The Dome"},
-    {id:"devils", label:"⚖️ The Devil's Advocate", desc:"Ca. £35 · ~305 kr.", priceDKK:305, priceLow:305, priceHigh:305,
-     rating:"4.5", stars:"★★★★★",
-     about:"Smuk cocktailbar og restaurant i Advocate's Close. Fremragende whisky, cocktails og small plates.",
-     review:"\"Stunning bar in Advocate's Close — beautiful with amazing cocktails and genuinely attentive service!\"",
-     url:"https://www.devilsadvocateedinburgh.co.uk",
-     ytId:"",
-     lat:55.9503, lng:-3.1917,
-     mapLabel:"The Devil's Advocate"},
-    {id:"makars2", label:"🥔 Makars Mash Bar", desc:"Ca. £18 · ~157 kr.", priceDKK:157, priceLow:157, priceHigh:157,
-     rating:"4.8", stars:"★★★★★",
-     about:"Autentisk skotsk komfortmad med langsomt tilberedt kød og hjemmelavet mos. Book bord!",
-     review:"\"Best lamb dish I've ever had — juicy, tender and full of flavour. The mash is outstanding too!\"",
-     url:"https://makarsmash.com",
-     ytId:"CNbGmRpDqAA",
-     lat:55.9499, lng:-3.1931,
-     mapLabel:"Makars Mash Bar"},
-    {id:"pepes", label:"🍗 Pepe's Kylling", desc:"Ca. £10 · ~87 kr.", priceDKK:87, priceLow:87, priceHigh:87,
-     rating:"4.9", stars:"★★★★★",
-     about:"4,9-stjernet kyllingebar på South Bridge. Åbner til kl. 02–03! Lemon & herb er favorit.",
-     review:"\"Food was fresh and flavourful — chicken perfectly cooked, sauces great. Very friendly staff!\"",
-     url:"https://www.pepespiri.com",
-     ytId:"",
-     lat:55.9474, lng:-3.1859,
-     mapLabel:"Pepe's Kylling"},
-    {id:"pause_d", label:"🛁 Pause / Frileg", desc:"Gratis", priceDKK:0, priceLow:0, priceHigh:0, isPause:true,
-     rating:"", stars:"", about:"Tag tilbage på hotellet og gør jer klar til aftenen i ro og mag.",
-     review:"", url:"", ytId:"", lat:0, lng:0, mapLabel:""},
-  ],
-  night:[
-    {id:"stramash", label:"🎸 Stramash – Livmusik", desc:"Gratis entre de fleste aftener", priceDKK:0, priceLow:0, priceHigh:0,
-     rating:"4.5", stars:"★★★★★",
-     about:"Tidligere kirke med plads til 700. Livmusik næsten hver aften. Skotsk ceilidh-dans ons + lør.",
-     review:"\"Traditional ceilidh — live music, a bar, and free entry in a stunning converted church. Loved it!\"",
-     url:"https://stramash.com",
-     ytId:"Jv4Sp-_8KsE",
-     lat:55.9486, lng:-3.1878,
-     mapLabel:"Stramash"},
-    {id:"voodoo", label:"🪩 The Voodoo Rooms", desc:"Ingen fast entre", priceDKK:0, priceLow:0, priceHigh:0,
-     rating:"4.4", stars:"★★★★☆",
-     about:"Art deco-ballsal med spektakulær indretning, livemusik og dj-aftener. Cocktails og mad under ét tag.",
-     review:"\"One hell of a cool looking place — the ballroom for concerts is truly spectacular!\"",
-     url:"https://www.thevoodoorooms.com",
-     ytId:"",
-     lat:55.9537, lng:-3.1906,
-     mapLabel:"The Voodoo Rooms"},
-    {id:"caves", label:"🕯️ The Caves", desc:"Fra ca. £5 · ~44 kr.", priceDKK:44, priceLow:44, priceHigh:44,
-     rating:"4.6", stars:"★★★★★",
-     about:"Natklub i ægte historiske hvælvinger under South Bridge. Uhyggeligt stemningsfuld — åbner til 03:00.",
-     review:"\"Such a unique venue buried in the bowels of Auld Reekie — the atmosphere is truly incredible!\"",
-     url:"https://www.thecavesedinburgh.com",
-     ytId:"vbWsYEmGp8s",
-     lat:55.9484, lng:-3.1864,
-     mapLabel:"The Caves"},
-    {id:"labelle", label:"🎭 La Belle Angele", desc:"Ca. £10 · ~87 kr.", priceDKK:87, priceLow:87, priceHigh:87,
-     rating:"4.4", stars:"★★★★☆",
-     about:"600-personers intimt venue i Old Town. Koncerter og natklub næsten dagligt fra 19:00 til 03:00.",
-     review:"\"Fantastic gig — intimate setting, plenty of staff, no big queues. One of the best venues in Edinburgh!\"",
-     url:"https://la-belle-angele.com",
-     ytId:"",
-     lat:55.9486, lng:-3.1876,
-     mapLabel:"La Belle Angele"},
-    {id:"pubcrawl", label:"🍻 On The Rocks Pubcrawl", desc:"Ca. £18 · ~157 kr.", priceDKK:157, priceLow:157, priceHigh:157,
-     rating:"5.0", stars:"★★★★★",
-     about:"Guidet tur igennem Edinburghs bedste barer med velkomstdrinks og rabatter. Perfekt for grupper!",
-     review:"\"One of the best pub crawls I have ever been to — amazing people and a fantastic guide all night!\"",
-     url:"https://www.ontherocksedinburgh.com",
-     ytId:"",
-     lat:55.9488, lng:-3.1858,
-     mapLabel:"On The Rocks Pubcrawl"},
-    {id:"vaccines", label:"🎸 The Vaccines (4. april)", desc:"Ca. £40 · ~348 kr.", priceDKK:348, priceLow:348, priceHigh:348,
-     rating:"4.7", stars:"★★★★★",
-     about:"Britisk indie rock-band live på Usher Hall. Et af de mest elskede navne i moderne britisk rock!",
-     review:"\"Seen them at Usher Hall — upper circle gives a fantastic view. Amazing setlist and atmosphere!\"",
-     url:"https://www.usherhall.co.uk",
-     ytId:"oROBPKA4S9A",
-     lat:55.9473, lng:-3.2050,
-     mapLabel:"Usher Hall"},
-    {id:"pause_n", label:"🛌 Tidlig aften / Frileg", desc:"Gratis", priceDKK:0, priceLow:0, priceHigh:0, isPause:true,
-     rating:"", stars:"", about:"Tidlig sengetid — ingen skam! Spar energi til næste dags eventyr.",
-     review:"", url:"", ytId:"", lat:0, lng:0, mapLabel:""},
-  ],
-};
-
-let state={players:[],votes:{}}, ME=null, pollTimer=null;
-
-async function loadState(){
-  try{
-    const r=await fetch(FB_URL); const data=await r.json();
-    if(!data||typeof data!=="object") return{players:[],votes:{}};
-    if(!data.players) data.players=[];
-    if(!data.votes)   data.votes={};
-    return data;
-  }catch{return{players:[],votes:{}};}
-}
-
-async function saveState(s){
-  try{
-    await fetch(FB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(s)});
-  }catch{}
-}
-
-document.getElementById("name-input").addEventListener("keydown",e=>{if(e.key==="Enter")signIn();});
-
-async function signIn(){
-  const val=(document.getElementById("name-input").value||"").trim();
-  if(!val){document.getElementById("name-input").style.borderColor="#e06060";return;}
-  ME=val;
-  try{
-    state=await loadState();
-    if(!state.players.includes(ME)) state.players.push(ME);
-    if(!state.votes[ME]) state.votes[ME]={};
-    await saveState(state);
-    document.getElementById("signin-screen").style.display="none";
-    document.getElementById("players-bar").style.display="flex";
-    document.getElementById("app").style.display="block";
-    render(); startPolling();
-  }catch(e){alert("Fejl: "+e.message);}
-}
-
-function startPolling(){
-  if(pollTimer) clearInterval(pollTimer);
-  pollTimer=setInterval(async()=>{
-    const fresh=await loadState();
-    if(JSON.stringify(fresh)!==JSON.stringify(state)){state=fresh;render();flash("🔄 Ny stemme!");}
-  },3000);
-}
-
-function flash(msg){
-  const el=document.getElementById("poll-indicator");
-  el.textContent=msg; setTimeout(()=>{el.textContent="● Live";},2000);
-}
-
-async function manualRefresh(){state=await loadState();render();flash("✅ Opdateret!");}
-
-async function vote(slotId,optId){
-  state=await loadState();
-  if(!state.votes[ME]) state.votes[ME]={};
-  if(state.votes[ME][slotId]===optId) delete state.votes[ME][slotId];
-  else state.votes[ME][slotId]=optId;
-  await saveState(state); render();
-}
-
-async function resetAll(){
-  if(!confirm("⚠️ Er du sikker? Dette sletter ALLE stemmer og spillere!")) return;
-  const empty={players:[],votes:{}};
-  await saveState(empty); state=empty; ME=null;
-  document.getElementById("signin-screen").style.display="block";
-  document.getElementById("players-bar").style.display="none";
-  document.getElementById("app").style.display="none";
-  document.getElementById("name-input").value="";
-  if(pollTimer) clearInterval(pollTimer);
-}
-
-function toggleInfo(id){
-  const panel=document.getElementById("info-"+id);
-  const btn=document.getElementById("btn-"+id);
-  if(!panel) return;
-  const open=panel.classList.toggle("open");
-  btn.textContent=open?"▲ Skjul info":"ℹ️ Info & video";
-}
-
-function loadYT(ytId,wrapperId){
-  const w=document.getElementById(wrapperId);
-  if(!w) return;
-  w.innerHTML=`<div class="yt-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe></div>`;
-}
-
-function filterMap(lat,lng,label,el){
-  // Highlight active pin
-  document.querySelectorAll(".map-pin").forEach(p=>p.style.background="rgba(201,168,76,0.08)");
-  el.style.background="rgba(201,168,76,0.25)";
-  // Update map to zoom into selected location
-  document.getElementById("map-frame").src=
-    `https://maps.google.com/maps?q=${encodeURIComponent(label+", Edinburgh")}&output=embed&z=17`;
-}
-
-function tally(slotId){
-  const out={};
-  for(const[name,picks]of Object.entries(state.votes||{})){
-    const p=picks[slotId];
-    if(p){out[p]=out[p]||[];out[p].push(name);}
-  }
-  return out;
-}
-
-function totalVoters(slotId){
-  return Object.values(state.votes||{}).filter(v=>v[slotId]).length;
-}
-
-function winner(slotId){
-  const t=tally(slotId);
-  if(!Object.keys(t).length) return null;
-  let best=null,bestN=0,tie=false;
-  for(const[id,voters]of Object.entries(t)){
-    if(voters.length>bestN){best=id;bestN=voters.length;tie=false;}
-    else if(voters.length===bestN) tie=true;
-  }
-  return{id:best,count:bestN,tie};
-}
-
-function getWinnerOpt(slotId){
-  const w=winner(slotId);
-  if(!w) return null;
-  return OPTIONS[slotId].find(o=>o.id===w.id)||null;
-}
-
-function render(){renderPlayers();renderSlots();renderResults();}
-
-function renderPlayers(){
-  document.getElementById("players-bar").innerHTML=
-    (state.players||[]).map(p=>
-      `<div class="player-chip ${p===ME?"me":""}"><div class="dot"></div>${p}${p===ME?" (dig)":""}</div>`
-    ).join("");
-}
-
-function renderSlots(){
-  const c=document.getElementById("slots-container");
-  if(!c) return;
-  c.innerHTML="";
-  SLOTS.forEach(slot=>{
-    const t=tally(slot.id), total=totalVoters(slot.id), myVote=state.votes[ME]?.[slot.id]||null;
-    const cards=OPTIONS[slot.id].map(opt=>{
-      const voters=t[opt.id]||[], pct=total>0?Math.round(voters.length/total*100):0, voted=myVote===opt.id;
-      const cardId=slot.id+"_"+opt.id;
-      const avatars=voters.map(v=>`<span class="voter-avatar ${v===ME?"is-me":""}">${v}</span>`).join("");
-      const infoSection=!opt.isPause?`
-        <button class="info-btn" id="btn-${cardId}" onclick="event.stopPropagation();toggleInfo('${cardId}')">ℹ️ Info & video</button>
-        <div class="info-panel" id="info-${cardId}">
-          <div class="info-desc">${opt.about}</div>
-          ${opt.review?`<div class="info-review">${opt.review}</div>`:""}
-          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px">
-            ${opt.url?`<a class="info-link" href="${opt.url}" target="_blank" onclick="event.stopPropagation()">🌐 Hjemmeside</a>`:""}
-            ${opt.ytId?`<a class="info-link" href="https://www.youtube.com/watch?v=${opt.ytId}" target="_blank" onclick="event.stopPropagation()">▶️ YouTube video</a>`:""}
-          </div>
-        </div>`:"";
-      return`<div class="option-card ${voted?"voted":""} ${opt.isPause?"pause":""}" onclick="vote('${slot.id}','${opt.id}')">
-        <div class="option-top"><div class="option-label">${opt.label}</div>${voted?`<span class="option-check">✅</span>`:""}</div>
-        <div class="option-price">${opt.desc}</div>
-        ${opt.rating?`<div class="option-rating"><span class="stars">${opt.stars}</span><span class="rating-score">${opt.rating}/5</span></div>`:""}
-        ${infoSection}
-        <div class="vote-bar-meta"><span>${voters.length} stemme${voters.length!==1?"r":""}</span><span>${pct}%</span></div>
-        <div class="vote-bar-bg"><div class="vote-bar-fill" style="width:${pct}%"></div></div>
-        ${voters.length>0?`<div class="voter-avatars">${avatars}</div>`:""}
-      </div>`;
-    }).join("");
-    const sec=document.createElement("div");
-    sec.className="slot-section";
-    sec.innerHTML=`<div class="slot-header"><span class="slot-title">${slot.label}</span><span class="slot-time">${slot.time}</span></div><div class="options-grid">${cards}</div>`;
-    c.appendChild(sec);
-  });
-}
-
-function renderResults(){
-  const list=document.getElementById("results-list");
-  const detail=document.getElementById("results-detail");
-  const pricePanel=document.getElementById("price-panel");
-  const priceRows=document.getElementById("price-rows");
-  const priceTotalVal=document.getElementById("price-total-val");
-  const mapPanel=document.getElementById("map-panel");
-  if(!list||!detail) return;
-
-  // Winners list
-  list.innerHTML=SLOTS.map(slot=>{
-    const w=winner(slot.id), total=totalVoters(slot.id);
-    const opt=w?OPTIONS[slot.id].find(o=>o.id===w.id):null;
-    return`<div class="result-row">
-      <div class="result-slot">${slot.label}</div>
-      <div class="result-winner">${w?`👑 ${opt?opt.label:w.id} ${w.tie?'<span class="result-tie">(uafgjort)</span>':""}`:
-        `<span style="color:#5a6a7a">Ingen stemmer endnu</span>`}</div>
-      ${w?`<div class="result-votes">${w.count}/${total}</div>`:""}
-    </div>`;
-  }).join("");
-
-  // Price calculation
-  const winners=SLOTS.map(s=>getWinnerOpt(s.id)).filter(o=>o&&!o.isPause&&o.priceDKK!==undefined);
-  if(winners.length>0){
-    pricePanel.style.display="block";
-    let total=0;
-    priceRows.innerHTML=winners.map(opt=>{
-      total+=opt.priceDKK;
-      return`<div class="price-row">
-        <span class="pr-label">${opt.label}</span>
-        <span class="pr-val">${opt.priceDKK===0?"Gratis":"~"+opt.priceDKK+" kr."}</span>
-      </div>`;
-    }).join("");
-    priceTotalVal.textContent=total===0?"Gratis dag! 🎉":"~"+total+" kr. per person";
-  } else {
-    pricePanel.style.display="none";
-  }
-
-  // Map — build Google Maps embed with winner locations as markers
-  const mapWinners=SLOTS.map(s=>getWinnerOpt(s.id)).filter(o=>o&&!o.isPause&&o.lat&&o.lng);
-  if(mapWinners.length>0){
-    mapPanel.style.display="block";
-    // Build a search query from all winner locations
-    const query=mapWinners.map(o=>encodeURIComponent(o.mapLabel+", Edinburgh")).join("|");
-    const center="55.9505,-3.1883";
-    // Use Google Maps embed with markers
-    const markers=mapWinners.map(o=>`markers=color:red|label:${o.mapLabel.charAt(0)}|${o.lat},${o.lng}`).join("&");
-    const mapSrc=`https://maps.google.com/maps?q=Edinburgh,Scotland&output=embed&z=14`;
-    // Fallback: use a search-based embed showing all winners
-    const searchQuery=mapWinners.map(o=>o.mapLabel).join(" and ")+" Edinburgh";
-    document.getElementById("map-frame").src=
-      `https://maps.google.com/maps?q=${encodeURIComponent(searchQuery)}&output=embed&z=14`;
-
-    // Pin labels — klikbare, filtrerer kortet
-    document.getElementById("map-pins").innerHTML=
-      mapWinners.map((o,i)=>
-        `<span class="map-pin" onclick="filterMap(${o.lat},${o.lng},'${o.mapLabel.replace(/'/g,"\\'")}',this)"
-          style="cursor:pointer">📍 ${o.mapLabel}</span>`
-      ).join("");
-  } else {
-    mapPanel.style.display="none";
-  }
-
-  // Detail bars
-  detail.innerHTML=SLOTS.map(slot=>{
-    const t=tally(slot.id), total=totalVoters(slot.id);
-    const maxV=Math.max(0,...Object.values(t).map(v=>v.length));
-    return`<div style="margin-bottom:18px">
-      <div class="detail-slot-title">${slot.label}</div>
-      ${OPTIONS[slot.id].map(opt=>{
-        const voters=t[opt.id]||[], pct=total>0?Math.round(voters.length/total*100):0;
-        const isWin=voters.length>0&&voters.length===maxV;
-        return`<div class="detail-row ${isWin?"win":""}">
-          <span style="flex:1;font-size:.83rem;color:${isWin?"var(--gold2)":"#6a7a8a"}">${isWin?"👑 ":""}${opt.label}</span>
-          <div style="width:70px;background:rgba(255,255,255,.05);border-radius:3px;height:3px;overflow:hidden">
-            <div style="height:100%;background:${opt.isPause?"#52b788":"linear-gradient(90deg,var(--gold),var(--whisky2))"};width:${pct}%"></div>
-          </div>
-          <span style="font-size:.71rem;color:var(--gold);width:46px;text-align:right">${voters.length}·${pct}%</span>
-        </div>`;
-      }).join("")}
-    </div>`;
-  }).join("");
-}
-
-function switchTab(id,btn){
-  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
-  btn.classList.add("active");
-  document.getElementById("tab-"+id).classList.add("active");
-}
-</script>
 </body>
 </html>
