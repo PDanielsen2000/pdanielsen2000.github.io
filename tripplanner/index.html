@@ -60,6 +60,8 @@
   .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
 
   #app{display:none}
+  .hotel-link{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;font-size:.78rem;text-decoration:none;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:var(--gold2);font-family:'Inter',sans-serif;transition:all .2s;margin-left:auto}
+  .hotel-link:hover{background:rgba(201,168,76,.18)}
   .tab-bar{position:relative;z-index:1;display:flex;gap:6px;padding:12px 16px;background:var(--stone2);border-bottom:1px solid rgba(201,168,76,.1);align-items:center;flex-wrap:wrap}
   .tab-btn{padding:8px 18px;border-radius:25px;font-size:.82rem;cursor:pointer;border:1px solid rgba(201,168,76,.2);background:transparent;color:var(--mist);font-family:'Inter',sans-serif;transition:all .2s}
   .tab-btn.active{background:linear-gradient(135deg,var(--gold),var(--whisky2));border-color:transparent;color:#1a1200;font-weight:700}
@@ -213,6 +215,7 @@
     <button class="tab-btn" onclick="switchTab('results',this)">📊 Resultater</button>
     <button class="refresh-btn" onclick="manualRefresh()">🔄 Opdatér</button>
     <button class="reset-btn" onclick="resetAll()">🗑️ Nulstil</button>
+    <a class="hotel-link" href="/tripplanner/hotel.html">🏨 Vores hotel</a>
   </div>
   <div id="tab-vote" class="tab-content active">
     <div class="app-wrap">
@@ -590,6 +593,15 @@ function loadYT(ytId,wrapperId){
   w.innerHTML=`<div class="yt-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe></div>`;
 }
 
+function filterMap(lat,lng,label,el){
+  // Highlight active pin
+  document.querySelectorAll(".map-pin").forEach(p=>p.style.background="rgba(201,168,76,0.08)");
+  el.style.background="rgba(201,168,76,0.25)";
+  // Update map to zoom into selected location
+  document.getElementById("map-frame").src=
+    `https://maps.google.com/maps?q=${encodeURIComponent(label+", Edinburgh")}&output=embed&z=17`;
+}
+
 function tally(slotId){
   const out={};
   for(const[name,picks]of Object.entries(state.votes||{})){
@@ -646,9 +658,8 @@ function renderSlots(){
           ${opt.review?`<div class="info-review">${opt.review}</div>`:""}
           <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px">
             ${opt.url?`<a class="info-link" href="${opt.url}" target="_blank" onclick="event.stopPropagation()">🌐 Hjemmeside</a>`:""}
-            ${opt.ytId?`<button class="info-link" style="cursor:pointer" onclick="event.stopPropagation();loadYT('${opt.ytId}','yt-${cardId}')">▶️ Se video</button>`:""}
+            ${opt.ytId?`<a class="info-link" href="https://www.youtube.com/watch?v=${opt.ytId}" target="_blank" onclick="event.stopPropagation()">▶️ YouTube video</a>`:""}
           </div>
-          <div id="yt-${cardId}"></div>
         </div>`:"";
       return`<div class="option-card ${voted?"voted":""} ${opt.isPause?"pause":""}" onclick="vote('${slot.id}','${opt.id}')">
         <div class="option-top"><div class="option-label">${opt.label}</div>${voted?`<span class="option-check">✅</span>`:""}</div>
@@ -720,9 +731,12 @@ function renderResults(){
     document.getElementById("map-frame").src=
       `https://maps.google.com/maps?q=${encodeURIComponent(searchQuery)}&output=embed&z=14`;
 
-    // Pin labels
+    // Pin labels — klikbare, filtrerer kortet
     document.getElementById("map-pins").innerHTML=
-      mapWinners.map((o,i)=>`<span class="map-pin">📍 ${o.mapLabel}</span>`).join("");
+      mapWinners.map((o,i)=>
+        `<span class="map-pin" onclick="filterMap(${o.lat},${o.lng},'${o.mapLabel.replace(/'/g,"\\'")}',this)"
+          style="cursor:pointer">📍 ${o.mapLabel}</span>`
+      ).join("");
   } else {
     mapPanel.style.display="none";
   }
