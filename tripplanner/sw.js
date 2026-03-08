@@ -1,6 +1,7 @@
-const CACHE = "edinburgh-v1";
+const CACHE = "edinburgh-v3";
 const FILES = [
-  "/tripplanner/tripplanner.html",
+  "/tripplanner/",
+  "/tripplanner/index.html",
   "/tripplanner/manifest.json",
   "/tripplanner/icon-192.png",
   "/tripplanner/icon-512.png"
