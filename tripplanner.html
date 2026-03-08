@@ -1,40 +1,19 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
- const CACHE = "edinburgh-v1";
-const FILES = [
-  "/tripplanner/tripplanner.html",
-  "/tripplanner/manifest.json",
-  "/tripplanner/icon-192.png",
-  "/tripplanner/icon-512.png"
-];
-
-self.addEventListener("install", e => {
-  e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(FILES))
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener("activate", e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
-  );
-  self.clients.claim();
-});
-
-self.addEventListener("fetch", e => {
-  e.respondWith(
-    fetch(e.request)
-      .then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copy));
-        return res;
-      })
-      .catch(() => caches.match(e.request))
-  );
+<!-- PWA -->
+<link rel="manifest" href="/tripplanner/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Edinburgh">
+<link rel="apple-touch-icon" href="/tripplanner/icon-192.png">
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/tripplanner/sw.js");
+    });
+  }
+</script>
 });
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
