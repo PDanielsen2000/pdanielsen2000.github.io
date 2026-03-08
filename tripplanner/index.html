@@ -149,7 +149,14 @@
   .map-header p{font-size:.75rem;color:var(--mist);margin-top:2px}
   .map-frame{width:100%;height:320px;border:none;display:block}
   .map-pins{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px;background:rgba(0,0,0,.2)}
-  .map-pin{font-size:.72rem;padding:3px 10px;border-radius:12px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);color:var(--fog)}
+  .map-pin{font-size:.72rem;padding:3px 10px;border-radius:12px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);color:var(--fog);transition:all .2s}
+  .map-pin.active{background:rgba(201,168,76,.25);border-color:var(--gold);color:var(--gold2)}
+  .map-address-box{display:none;padding:10px 14px;background:rgba(0,0,0,.3);border-top:1px solid rgba(201,168,76,.1);gap:8px;align-items:center;flex-wrap:wrap}
+  .map-address-box.visible{display:flex}
+  .map-address-input{flex:1;min-width:180px;padding:8px 12px;border-radius:8px;border:1px solid rgba(201,168,76,.25);background:rgba(255,255,255,.05);color:var(--gold2);font-size:.78rem;font-family:'Inter',sans-serif;outline:none}
+  .map-copy-btn{padding:7px 13px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--whisky2));border:none;color:#1a1200;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:all .2s}
+  .map-copy-btn:active{opacity:.8}
+  .map-gmaps-btn{padding:7px 13px;border-radius:8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:var(--gold2);font-size:.75rem;font-weight:600;text-decoration:none;white-space:nowrap;font-family:'Inter',sans-serif}
 
   .detail-slot-title{font-family:'Playfair Display',serif;font-weight:700;color:var(--gold2);margin-bottom:7px;padding-left:10px;border-left:2px solid var(--gold);font-size:.9rem}
   .detail-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;margin-bottom:4px;border:1px solid rgba(201,168,76,.08)}
@@ -246,6 +253,11 @@
         </div>
         <iframe id="map-frame" class="map-frame" allowfullscreen loading="lazy"></iframe>
         <div class="map-pins" id="map-pins"></div>
+        <div class="map-address-box" id="map-address-box">
+          <input class="map-address-input" id="map-address-input" readonly>
+          <button class="map-copy-btn" onclick="copyAddress()">📋 Kopiér</button>
+          <a class="map-gmaps-btn" id="map-gmaps-link" href="#" target="_blank">🗺️ Åbn i Maps</a>
+        </div>
       </div>
       <div id="results-detail"></div>
     </div>
@@ -267,7 +279,7 @@ const SLOTS = [
 
 const OPTIONS = {
   morning:[
-    {id:"castle", label:"🏰 Edinburgh Castle", desc:"Ca. £20 · ~170 kr.", priceDKK:170, priceLow:170, priceHigh:170,
+    {id:"castle", label:"🏰 Edinburgh Castle", desc:"Ca. £20 · ~170 kr.", priceDKK:170, priceLow:170, priceHigh:170, address:"Castlehill, Edinburgh EH1 2NG",
      rating:"4.6", stars:"★★★★★",
      about:"Skotlands mest besøgte attraktion på en vulkanklippe. Hjem for krondiamanter og 1.300 år med historie. Book online!",
      review:"\"Incredible — we loved every bit of history walking through the castle grounds. A must-visit!\"",
@@ -275,7 +287,7 @@ const OPTIONS = {
      ytId:"ph5FbEOm9ro",
      lat:55.9486, lng:-3.1999,
      mapLabel:"Edinburgh Castle"},
-    {id:"holyrood", label:"👑 Palace of Holyroodhouse", desc:"Ca. £18 · ~157 kr.", priceDKK:157, priceLow:157, priceHigh:157,
+    {id:"holyrood", label:"👑 Palace of Holyroodhouse", desc:"Ca. £18 · ~157 kr.", priceDKK:157, priceLow:157, priceHigh:157, address:"Canongate, Edinburgh EH8 8DX",
      rating:"4.5", stars:"★★★★★",
      about:"Kongens officielle skotske residens. Mary Queen of Scots' gemakker og ruinerne af Holyrood Abbey.",
      review:"\"A breathtaking royal experience — 900 years of history at your feet. Truly did not disappoint!\"",
@@ -283,7 +295,7 @@ const OPTIONS = {
      ytId:"CxKWWgtbaus",
      lat:55.9524, lng:-3.1718,
      mapLabel:"Palace of Holyroodhouse"},
-    {id:"arthurs", label:"🌋 Arthur's Seat", desc:"Gratis 🆓", priceDKK:0, priceLow:0, priceHigh:0,
+    {id:"arthurs", label:"🌋 Arthur's Seat", desc:"Gratis 🆓", priceDKK:0, priceLow:0, priceHigh:0, address:"Holyrood Park, Edinburgh EH8 8HG",
      rating:"4.7", stars:"★★★★★",
      about:"Uddød vulkan midt i Edinburgh med fantastisk udsigt over hele byen. Ca. 45–90 min. vandring.",
      review:"\"Breathtaking views — you can see the whole city, the Firth of Forth and beyond. Absolutely free!\"",
@@ -593,13 +605,28 @@ function loadYT(ytId,wrapperId){
   w.innerHTML=`<div class="yt-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe></div>`;
 }
 
-function filterMap(lat,lng,label,el){
-  // Highlight active pin
-  document.querySelectorAll(".map-pin").forEach(p=>p.style.background="rgba(201,168,76,0.08)");
-  el.style.background="rgba(201,168,76,0.25)";
-  // Update map to zoom into selected location
+function filterMap(lat,lng,label,address,el){
+  document.querySelectorAll(".map-pin").forEach(p=>p.classList.remove("active"));
+  el.classList.add("active");
   document.getElementById("map-frame").src=
     `https://maps.google.com/maps?q=${encodeURIComponent(label+", Edinburgh")}&output=embed&z=17`;
+  const input=document.getElementById("map-address-input");
+  const box=document.getElementById("map-address-box");
+  const gmapsLink=document.getElementById("map-gmaps-link");
+  input.value=address;
+  box.classList.add("visible");
+  gmapsLink.href=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+}
+
+function copyAddress(){
+  const input=document.getElementById("map-address-input");
+  navigator.clipboard.writeText(input.value).then(()=>{
+    const btn=document.querySelector(".map-copy-btn");
+    btn.textContent="✅ Kopieret!";
+    setTimeout(()=>{btn.textContent="📋 Kopiér";},2000);
+  }).catch(()=>{
+    input.select(); document.execCommand("copy");
+  });
 }
 
 function tally(slotId){
@@ -734,7 +761,7 @@ function renderResults(){
     // Pin labels — klikbare, filtrerer kortet
     document.getElementById("map-pins").innerHTML=
       mapWinners.map((o,i)=>
-        `<span class="map-pin" onclick="filterMap(${o.lat},${o.lng},'${o.mapLabel.replace(/'/g,"\\'")}',this)"
+        `<span class="map-pin" onclick="filterMap(${o.lat},${o.lng},'${o.mapLabel.replace(/'/g,"\\'")}','${(o.address||o.mapLabel+", Edinburgh").replace(/'/g,"\\'")}',this)"
           style="cursor:pointer">📍 ${o.mapLabel}</span>`
       ).join("");
   } else {
