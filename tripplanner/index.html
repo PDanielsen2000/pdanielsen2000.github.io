@@ -92,7 +92,7 @@
   <h2>👋 Hvem er du?</h2>
   <p class="sub">Skriv dit navn og deltag i afstemningen</p>
   <input type="text" id="name-input" placeholder="Dit navn..." maxlength="24" autocomplete="off">
-  <button class="btn" onclick="alert('knap virker')">Test</button>
+  <button class="btn" onclick="signIn()">Gå med i gruppen →</button>
 </div>
 
 <div id="players-bar"></div>
@@ -204,6 +204,7 @@ document.getElementById("name-input").addEventListener("keydown", e => {
 });
 
 async function signIn() {
+  alert("signIn kaldt!");
   const val = (document.getElementById("name-input").value || "").trim();
   if (!val) {
     document.getElementById("name-input").style.borderColor = "#e76f51";
