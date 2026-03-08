@@ -172,37 +172,46 @@ const OPTIONS = {
   ],
 };
 
-const STORE_KEY = "edinburgh_vote_v1";
+const FB_URL = "https://edinburgh-vote-default-rtdb.europe-west1.firebasedatabase.app/votes.json";
 let state = { players: [], votes: {} };
 let ME = null;
 let pollTimer = null;
 
-function loadState() {
+async function loadState() {
   try {
-    const raw = localStorage.getItem(STORE_KEY);
-    return raw ? JSON.parse(raw) : { players: [], votes: {} };
+    const r = await fetch(FB_URL);
+    const data = await r.json();
+    return data || { players: [], votes: {} };
   } catch { return { players: [], votes: {} }; }
 }
 
-function saveState(s) {
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch {}
+async function saveState(s) {
+  try {
+    await fetch(FB_URL, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(s)
+    });
+  } catch {}
 }
 
 document.getElementById("name-input").addEventListener("keydown", e => {
   if (e.key === "Enter") signIn();
 });
 
-function signIn() {
+async function signIn() {
   const val = (document.getElementById("name-input").value || "").trim();
   if (!val) {
     document.getElementById("name-input").style.borderColor = "#e76f51";
     return;
   }
   ME = val;
-  state = loadState();
+  state = await loadState();
+  if (!state.players) state.players = [];
+  if (!state.votes) state.votes = {};
   if (!state.players.includes(ME)) state.players.push(ME);
   if (!state.votes[ME]) state.votes[ME] = {};
-  saveState(state);
+  await saveState(state);
 
   document.getElementById("signin-screen").style.display = "none";
   document.getElementById("players-bar").style.display   = "flex";
@@ -214,8 +223,8 @@ function signIn() {
 
 function startPolling() {
   if (pollTimer) clearInterval(pollTimer);
-  pollTimer = setInterval(() => {
-    const fresh = loadState();
+  pollTimer = setInterval(async () => {
+    const fresh = await loadState();
     if (JSON.stringify(fresh) !== JSON.stringify(state)) {
       state = fresh;
       render();
@@ -230,18 +239,18 @@ function flash(msg) {
   setTimeout(() => { el.textContent = "● Live"; }, 2000);
 }
 
-function manualRefresh() {
-  state = loadState();
+async function manualRefresh() {
+  state = await loadState();
   render();
   flash("✅ Opdateret!");
 }
 
-function vote(slotId, optId) {
-  state = loadState();
+async function vote(slotId, optId) {
+  state = await loadState();
   if (!state.votes[ME]) state.votes[ME] = {};
   if (state.votes[ME][slotId] === optId) delete state.votes[ME][slotId];
   else state.votes[ME][slotId] = optId;
-  saveState(state);
+  await saveState(state);
   render();
 }
 
