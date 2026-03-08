@@ -211,6 +211,14 @@
       <input type="text" id="name-input" placeholder="Dit navn..." maxlength="24" autocomplete="off">
     </div>
     <button class="btn-primary" onclick="signIn()">Gå med i gruppen →</button>
+    <div id="existing-players-wrap" style="display:none;margin-top:16px;border-top:1px solid rgba(201,168,76,.15);padding-top:14px">
+      <div style="font-size:.75rem;color:var(--mist);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase">Eller vælg fra aktiv session</div>
+      <div id="existing-players-list" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px"></div>
+      <button onclick="signInAsGuest()" style="width:100%;padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--mist);font-size:.85rem;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s"
+        onmouseover="this.style.borderColor='rgba(201,168,76,.4)'" onmouseout="this.style.borderColor='rgba(201,168,76,.2)'">
+        👁️ Fortsæt som gæst (kun se)
+      </button>
+    </div>
   </div>
 </div>
 
