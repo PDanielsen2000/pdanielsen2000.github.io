@@ -488,6 +488,10 @@ async function signIn() {
   ME = val; GUEST = false;
   try {
     state = await loadState();
+    if (state.players.length >= 15 && !state.players.includes(ME)) {
+      alert("⚠️ Maks antal deltagere er nået (15). Kontakt gruppeadmin eller fortsæt som gæst.");
+      return;
+    }
     if (!state.players.includes(ME)) state.players.push(ME);
     if (!state.votes[ME]) state.votes[ME] = {};
     await saveState(state);
@@ -524,7 +528,7 @@ function startPolling() {
     if (JSON.stringify(fresh) !== JSON.stringify(state)) {
       state = fresh; render(); flash("🔄 Ny stemme!");
     }
-  }, 3000);
+  }, 10000); // Poll hvert 10. sekund
 }
 
 function flash(msg) {
