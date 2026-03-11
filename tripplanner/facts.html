@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skotske Fakta 🏴󠁧󠁢󠁳󠁣󠁴󠁧</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --stone:#1a1612;--stone2:#242018;--stone3:#2e2a24;
+    --gold:#c9a84c;--gold2:#e8c97a;
+    --mist:#8a9aaa;--fog:#b0bec8;--text:#f0ece4;
+    --whisky:#a0522d;--whisky2:#cd853f;
+  }
+  body{background:var(--stone);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+
+  .tartan-bg{position:fixed;inset:0;z-index:0;opacity:.04;
+    background-image:
+      repeating-linear-gradient(0deg,transparent,transparent 40px,#4a6741 40px,#4a6741 44px),
+      repeating-linear-gradient(90deg,transparent,transparent 40px,#4a6741 40px,#4a6741 44px),
+      repeating-linear-gradient(0deg,transparent,transparent 20px,#1a3a6a 20px,#1a3a6a 22px),
+      repeating-linear-gradient(90deg,transparent,transparent 20px,#1a3a6a 20px,#1a3a6a 22px)}
+
+  /* TOP BAR */
+  .topbar{background:var(--stone2);border-bottom:1px solid rgba(201,168,76,.2);padding:14px 16px;display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+  .topbar a{color:var(--gold);text-decoration:none;font-size:.85rem;white-space:nowrap}
+  .topbar-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold2);font-weight:700}
+
+  /* HERO */
+  .hero{position:relative;z-index:1;background:linear-gradient(135deg,#0a0e14,#1a1a2e 50%,#2a1a0e);padding:36px 20px 28px;text-align:center}
+  .hero-emoji{font-size:3rem;margin-bottom:10px;display:block;filter:drop-shadow(0 0 16px rgba(201,168,76,.4))}
+  .hero-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold2);text-shadow:0 0 30px rgba(201,168,76,.4);margin-bottom:6px}
+  .hero-sub{color:var(--mist);font-size:.85rem;letter-spacing:1px}
+  .mist-divider{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+  /* WRAP */
+  .wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:24px 14px 60px}
+
+  /* CATEGORY FILTER */
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;justify-content:center}
+  .filter-btn{padding:7px 16px;border-radius:25px;font-size:.8rem;cursor:pointer;border:1px solid rgba(201,168,76,.2);background:transparent;color:var(--mist);font-family:'Inter',sans-serif;transition:all .2s}
+  .filter-btn.active{background:linear-gradient(135deg,var(--gold),var(--whisky2));border-color:transparent;color:#1a1200;font-weight:700}
+
+  /* FACT CARDS */
+  .facts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+
+  .fact-card{background:var(--stone2);border:1px solid rgba(201,168,76,.12);border-radius:14px;padding:18px 16px;transition:all .2s;position:relative;overflow:hidden}
+  .fact-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+  .fact-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--whisky2));opacity:0;transition:opacity .2s}
+  .fact-card:hover::before{opacity:1}
+
+  .fact-emoji{font-size:2rem;margin-bottom:10px;display:block;filter:drop-shadow(0 0 8px rgba(201,168,76,.3))}
+  .fact-cat{font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:6px;font-weight:600}
+  .fact-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--gold2);margin-bottom:8px;line-height:1.3}
+  .fact-body{font-size:.82rem;color:var(--fog);line-height:1.6}
+  .fact-punchline{font-size:.78rem;color:var(--whisky2);font-style:italic;margin-top:8px;border-top:1px solid rgba(201,168,76,.1);padding-top:8px}
+
+  /* COUNT */
+  .fact-count{text-align:center;color:var(--mist);font-size:.78rem;margin-bottom:16px}
+  .fact-count span{color:var(--gold);font-weight:700}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .fact-card{animation:fadeUp .3s ease}
+</style>
+</head>
+<body>
+<div class="tartan-bg"></div>
+
+<div class="topbar">
+  <a href="index.html">← Tilbage</a>
+  <div class="topbar-title">🏴󠁧󠁢󠁳󠁣󠁴󠁧 Skotske Fakta</div>
+</div>
+
+<div class="hero">
+  <span class="hero-emoji">🥃</span>
+  <div class="hero-title">Vidste du det?</div>
+  <div class="hero-sub">Sjove og overraskende fakta om Skotland & Edinburgh</div>
+</div>
+<div class="mist-divider"></div>
+
+<div class="wrap">
+  <div class="filters">
+    <button class="filter-btn active" onclick="filter('all',this)">🏴󠁧󠁢󠁳󠁣󠁴󠁧 Alle</button>
+    <button class="filter-btn" onclick="filter('mad',this)">🥃 Mad & Drikke</button>
+    <button class="filter-btn" onclick="filter('kultur',this)">🎺 Kultur</button>
+    <button class="filter-btn" onclick="filter('lov',this)">😂 Mærkelige love</button>
+  </div>
+  <div class="fact-count">Viser <span id="count">0</span> fakta</div>
+  <div class="facts-grid" id="grid"></div>
+</div>
+
+<script>
+const FACTS = [
+  // MAD & DRIKKE
+  { cat:"mad", emoji:"🥃", title:"Whisky betyder 'livets vand'",
+    body:"Ordet 'whisky' stammer fra det gammele irske 'uisce beatha' — som betyder 'livets vand'. Skotterne tog opskriften fra irske munke i det 15. århundrede og har aldrig set sig tilbage.",
+    punchline:"Og hvem kan bebrejde dem? 🥃" },
+  { cat:"mad", emoji:"🏭", title:"130 destillerier — og tæller",
+    body:"Skotland har over 130 whiskydestillerier, hvilket gør det til landet med den højeste koncentration af whiskyproduktion i verden. Whisky alene genererer £4,25 milliarder om året.",
+    punchline:"Det er en hel del 'livets vand'! 😄" },
+  { cat:"mad", emoji:"🐑", title:"Haggis — nationens stolthed",
+    body:"Haggis er lavet af fårets hjerte, lever og lunger — blandet med havregryn, løg og krydderier. Det er Skotlands nationaldish og fejres hvert år den 25. januar til Burns Night med poesi og bagpipes.",
+    punchline:"Det er ulovligt at importere haggis til USA. Ja, virkelig. 🇺🇸" },
+  { cat:"mad", emoji:"🧡", title:"Irn Bru — Skotlands anden nationaldrink",
+    body:"Næst efter whisky er Irn Bru den mest populære drik i Skotland. Det er en orange sodavand der sælges i 32 varianter — og der sælges cirka 20 dåser i sekundet!",
+    punchline:"Hvad er der egentlig i den? Ingen ved det præcist. 🤷" },
+  { cat:"mad", emoji:"🍫", title:"Den dybstegte Mars bar",
+    body:"Skotterne opfandt den dybstegte Mars bar — en chokoladebar der frituresteges i dej. Det er så ikonisk at det engang blev solgt på NHS som en 'traditionel skotsk ret'.",
+    punchline:"Kardiologerne elskede det. Sagt med ironi. 😂" },
+  { cat:"mad", emoji:"🍛", title:"Chicken Tikka Masala — skotsk opfindelse?",
+    body:"Mange mener at verdens mest populære curry — chicken tikka masala — blev opfundet af en pakistansk kok i Glasgow i 1971, da en kunde klagede over at kyllingen var for tør.",
+    punchline:"Skotland: vi opfinder det, verden spiser det. 🌍" },
+  { cat:"mad", emoji:"🥃", title:"Whisky skal ældes minimum 3 år",
+    body:"Ved skotsk lov SKAL whisky ældes i egetræsfade i minimum tre år for at måtte kalde sig 'Scotch Whisky'. Unge versioner kaldes 'new make spirit' — og smager derefter.",
+    punchline:"Tålmodighed er en skotsk dyd. ⏳" },
+
+  // KULTUR
+  { cat:"kultur", emoji:"🦄", title:"Nationalyret er en enhjørning",
+    body:"Skotlands nationalyr er enhjørningen — det mytiske dyr der symboliserer renhed, styrke og vild uafhængighed. Det har prydet det skotske kongevåben siden det 12. århundrede.",
+    punchline:"Fordi en løve var for kedeligt. 🦄" },
+  { cat:"kultur", emoji:"🐧", title:"Den eneste ridderordnede pingvin i verden",
+    body:"I Edinburgh Zoo bor Sir Nils Olav III — en kejserpingvin der er ridder og brigadechef for den norske kongegarde. Han er blevet forfremmet ved hvert besøg af den norske kongegarde.",
+    punchline:"Han møder dog ikke op til appel om morgenen. 🐧" },
+  { cat:"kultur", emoji:"🏰", title:"Edinburgh er mere besat end Hogwarts",
+    body:"Edinburgh regnes som et af verdens mest hjemsøgte steder. Edinburgh Castle er centrum — folk har hørt en hovedløs tromslager i fangekældrene. Spøgelsesturer er faktisk den næstmest populære turistaktivitet.",
+    punchline:"Vi har bestilt værelse til spøgelset. Det er inkluderet i prisen. 👻" },
+  { cat:"kultur", emoji:"📖", title:"Harry Potter er fra Edinburgh",
+    body:"J.K. Rowling skrev store dele af Harry Potter på Edinburgh-caféer. Kirkegården Greyfriars Kirkyard har en gravsten med navnet 'Tom Riddle' — og du kan besøge den i dag.",
+    punchline:"Voldemorts gravsten er åben for selfies. 🧙" },
+  { cat:"kultur", emoji:"🎪", title:"Verdens største kulturfestival",
+    body:"Edinburgh Fringe Festival er verdens største kunstfestival — større end Cannes og Venedig tilsammen. Over 3.800 shows i 300+ venues over 4 uger hvert august. Over 400.000 besøgende.",
+    punchline:"Og man kan stadig ikke få bord på en god restaurant. 😄" },
+  { cat:"kultur", emoji:"🏗️", title:"Edinburgh er bogstaveligt talt en dobbelt by",
+    body:"Under Edinburghs gader ligger en komplet anden by — Mary King's Close — en hel gade fra 1600-tallet der blev forseglet og glemt i århundreder. I dag kan man besøge den som turist.",
+    punchline:"Stueetagen er fra år 1600. Ikke dårligt. 🏚️" },
+  { cat:"kultur", emoji:"🎺", title:"Sækkepiben er ikke skotsk",
+    body:"Sækkepiben regnes som det mest skotske instrument — men den stammer faktisk fra Centralasien og kom til Skotland via romerne. Samme gælder kilten (fra Irland) og tartanen (fra Centraleuropa).",
+    punchline:"Skotterne er verdensmestre i at tage ejerskab. 😄" },
+  { cat:"kultur", emoji:"🔥", title:"Hogmanay — nytår gjort rigtigt",
+    body:"Skotsk nytår (Hogmanay) er meget mere end champagne og nedtælling. Der er fakkeloptog, bål, fyrværkeri og 'first-footing' — den første gæst af det nye år skal medbringe whisky for at bringe held.",
+    punchline:"Første januar er officiel fridag i Skotland. Selvfølgelig. 🥃" },
+  { cat:"kultur", emoji:"📸", title:"Verdens første farvefoto",
+    body:"Det første farvefoto nogensinde blev taget i Skotland i 1861 af fysikeren James Clerk Maxwell. Han fotograferede — naturligvis — et stykke tartan.",
+    punchline:"Peak Scottish style fra dag ét. 📸" },
+
+  // MÆRKELIGE LOVE
+  { cat:"lov", emoji:"🚪", title:"Du MÅ bruge fremmedes toilet",
+    body:"I Skotland er du lovligt forpligtet til at lade en fremmed bruge dit toilet hvis de banker på og beder om det. Loven stammer fra gammel skotsk gæstfrihed og er stadig gyldig i dag.",
+    punchline:"Undskyld, må jeg bruge dit... ja, det er faktisk loven. 🚽" },
+  { cat:"lov", emoji:"🐟", title:"Laksefiskeri er ulovligt om søndagen",
+    body:"Det er ulovligt at fiske laks og havørred om søndagen i Skotland — og det er desuden ulovligt at 'håndtere en laks under mistænkelige omstændigheder'. Hvad det præcist betyder, har ingen forklaret.",
+    punchline:"Politiet holder øje med dine laks. 👮" },
+  { cat:"lov", emoji:"🐄", title:"Fuld i selskab med en ko",
+    body:"Under Licensing Act 1872 er det ulovligt at være beruset i selskab med en ko, hest, vogn eller dampmotor — eller mens man bærer en ladet pistol. Bøde: £200 eller 51 ugers fængsel.",
+    punchline:"Skriv det ned til lørdagen. 🐄🥴" },
+  { cat:"lov", emoji:"🦈", title:"Hvalernes hoved tilhører kongen",
+    body:"Hvis en hval strander på en skotsk strand, tilhører hovedet automatisk kongen — og halen dronningen. Hvaler klassificeres officielt som 'kongelig fisk' i skotsk lov.",
+    punchline:"Velkomst til Skotland, hvaler. I tilhører kronen nu. 👑" },
+  { cat:"lov", emoji:"🏴󠁧󠁢󠁳󠁣󠁴󠁧", title:"Lion Rampant flaget er teknisk ulovligt",
+    body:"Det uofficielle skotske flag — Lion Rampant med den røde løve — er teknisk set kun tilladt at flye fra kongelige residenser. En parlamentslov fra 1672 gør det ulovligt for alle andre.",
+    punchline:"Det flyver fra hvert eneste souvenirbutik i Edinburgh. Lovbrydere alle sammen. 😅" },
+  { cat:"lov", emoji:"🎯", title:"Du må ikke skyde buer i York",
+    body:"En gammel britisk lov siger at det er lovligt at skyde en waliser med pil og bue inden for Yorks bymure — men kun på en søndag og kun med en bueskydningsbue. Loven er aldrig officielt ophævet.",
+    punchline:"Ikke relevant for Edinburgh, men for sjov fakta. 🏹" },
+  { cat:"lov", emoji:"⚖️", title:"Tre mulige domme i retten",
+    body:"I Skotland kan en jury aflevere tre domme: 'skyldig', 'ikke skyldig' — og 'ikke bevist'. Den tredje betyder: vi tror du gjorde det, men vi kan ikke bevise det. Du slipper, men med skammen.",
+    punchline:"'Ikke bevist' — Skotlands version af 'vi ser dig'. 👀" },
+];
+
+function render(catFilter) {
+  const grid = document.getElementById("grid");
+  const filtered = catFilter === "all" ? FACTS : FACTS.filter(f => f.cat === catFilter);
+  document.getElementById("count").textContent = filtered.length;
+  grid.innerHTML = filtered.map(f => `
+    <div class="fact-card" data-cat="${f.cat}">
+      <span class="fact-emoji">${f.emoji}</span>
+      <div class="fact-cat">${
+        f.cat === "mad" ? "🥃 Mad & Drikke" :
+        f.cat === "kultur" ? "🎺 Kultur & Traditioner" :
+        "😂 Mærkelige Love"
+      }</div>
+      <div class="fact-title">${f.title}</div>
+      <div class="fact-body">${f.body}</div>
+      ${f.punchline ? `<div class="fact-punchline">${f.punchline}</div>` : ""}
+    </div>
+  `).join("");
+}
+
+function filter(cat, btn) {
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  render(cat);
+}
+
+render("all");
+</script>
+</body>
+</html>
