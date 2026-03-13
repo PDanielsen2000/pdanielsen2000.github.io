@@ -1,1 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Compliance Scanner – Partner Demo</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #21262d;
+      --accent: #58a6ff;
+      --accent2: #1f6feb;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --border: #30363d;
+      --radius: 12px;
+      --green: #3fb950;
+      --red: #f85149;
+      --orange: #d29922;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-size: 1rem; font-weight: 700; color: var(--accent);
+      display: flex; align-items: center; gap: 10px; text-decoration: none;
+    }
+    .logo svg { width: 28px; height: 28px; fill: var(--accent); }
+    nav { display: flex; gap: 4px; align-items: center; }
+    nav a {
+      color: var(--muted); text-decoration: none; font-size: 0.8rem;
+      padding: 5px 10px; border-radius: 6px; transition: background .2s, color .2s;
+    }
+    nav a:hover { background: var(--surface2); color: var(--text); }
+
+    .page-wrap { max-width: 640px; margin: 0 auto; padding: 48px 40px 80px; }
+
+    .page-hero { margin-bottom: 36px; text-align: center; }
+    .page-hero h1 {
+      font-size: 2rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #a371f7);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    .page-hero p { color: var(--muted); font-size: 1rem; line-height: 1.6; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px; margin-bottom: 20px;
+    }
+    .card h2 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .card p { font-size: 0.88rem; color: var(--muted); line-height: 1.5; margin-bottom: 16px; }
+
+    label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 5px; font-weight: 500; }
+    input[type="text"], input[type="email"], input[type="url"] {
+      width: 100%; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 0.9rem; outline: none; transition: border-color .2s;
+    }
+    input:focus { border-color: var(--accent); }
+    textarea {
+      width: 100%; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 0.82rem; font-family: 'SF Mono', 'Fira Code', monospace;
+      outline: none; resize: vertical; transition: border-color .2s; line-height: 1.5;
+    }
+    textarea:focus { border-color: var(--accent); }
+    .form-row { margin-bottom: 14px; }
+    .form-row-half { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+
+    .btn-primary {
+      width: 100%; padding: 12px; background: var(--accent2); color: #fff; border: none;
+      border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background .2s;
+    }
+    .btn-primary:hover { background: var(--accent); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-cta {
+      display: inline-block; padding: 12px 28px; background: var(--green); color: #0d1117;
+      border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; text-decoration: none; transition: opacity .2s;
+    }
+    .btn-cta:hover { opacity: 0.9; }
+
+    .btn-secondary {
+      display: inline-block; padding: 10px 20px; background: transparent; color: var(--accent);
+      border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; text-decoration: none; transition: background .2s, border-color .2s;
+    }
+    .btn-secondary:hover { background: var(--surface2); border-color: var(--accent2); }
+
+    .btn-sm {
+      padding: 8px 16px; background: var(--accent2); color: #fff; border: none;
+      border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background .2s;
+    }
+    .btn-sm:hover { background: var(--accent); }
+
+    .progress-bar { width: 100%; height: 4px; background: var(--surface2); border-radius: 4px; overflow: hidden; margin: 16px 0; }
+    .progress-bar-fill {
+      height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent));
+      border-radius: 4px; transition: width .5s ease;
+    }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem;
+      padding: 4px 10px; border-radius: 20px; font-weight: 500;
+    }
+    .status-processing { background: rgba(31,111,235,0.15); color: var(--accent); }
+    .status-complete { background: rgba(63,185,80,0.15); color: var(--green); }
+
+    .dot-pulse { display: inline-flex; gap: 4px; align-items: center; }
+    .dot-pulse span {
+      width: 6px; height: 6px; background: var(--accent); border-radius: 50%;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    .dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+    .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse { 0%,80%,100% { opacity: 0.3; } 40% { opacity: 1; } }
+
+    .scan-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .scan-info-item { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+    .scan-info-item .label { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
+    .scan-info-item .value { font-size: 0.9rem; font-weight: 600; word-break: break-all; }
+
+    .results-ready { text-align: center; padding: 20px 0; }
+    .results-ready .check {
+      width: 56px; height: 56px; border-radius: 50%; background: rgba(63,185,80,0.15);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 28px;
+    }
+    .results-ready h3 { font-size: 1.1rem; margin-bottom: 8px; }
+    .results-ready p { font-size: 0.85rem; color: var(--muted); margin-bottom: 20px; }
+    .results-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+    .consent-row {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 0.78rem; color: var(--muted); margin-top: 12px;
+    }
+    .consent-row input { margin-top: 2px; accent-color: var(--accent); }
+    .consent-row a { color: var(--accent); }
+
+    .step-indicator { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 32px; }
+    .step { display: flex; align-items: center; gap: 0; }
+    .step-dot {
+      width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700; color: var(--muted); background: var(--surface);
+    }
+    .step-dot.active { border-color: var(--accent); color: var(--accent); background: rgba(31,111,235,0.1); }
+    .step-dot.done { border-color: var(--green); color: var(--green); background: rgba(63,185,80,0.1); }
+    .step-line { width: 48px; height: 2px; background: var(--border); }
+    .step-line.done { background: var(--green); }
+
+    /* ── DEMO PANEL ── */
+    .demo-panel {
+      border: 2px dashed var(--orange);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      background: rgba(210,153,34,0.05);
+    }
+    .demo-panel h3 {
+      font-size: 0.85rem; font-weight: 700; color: var(--orange);
+      margin-bottom: 4px; display: flex; align-items: center; gap: 6px;
+    }
+    .demo-panel .hint { font-size: 0.75rem; color: var(--muted); margin-bottom: 12px; }
+    .demo-panel textarea { min-height: 100px; margin-bottom: 10px; }
+    .parse-error { font-size: 0.78rem; color: var(--red); margin-top: 6px; display: none; }
+    .parse-ok { font-size: 0.78rem; color: var(--green); margin-top: 6px; display: none; }
+
+    footer {
+      background: var(--surface); border-top: 1px solid var(--border);
+      text-align: center; padding: 24px; font-size: 0.82rem; color: var(--muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 640px) {
+      header { padding: 14px 16px; }
+      .page-wrap { padding: 32px 16px 60px; }
+      .form-row-half { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- HEADER — ✏️ PARTNER: Update logo, company name, nav links -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<header>
+  <a class="logo" href="#">
+    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38
+        0-.19-.01-.82-.01-1.49C4 14.52 3.48 13.36 3.32 12.75c-.1-.26-.52-1.07-.89-1.28
+        -.3-.17-.74-.59-.01-.6.68-.01 1.17.63 1.33.89.78 1.31 2.02.94 2.52.72
+        .08-.56.3-.94.55-1.16-1.93-.22-3.95-.96-3.95-4.27 0-.94.34-1.71.89-2.31
+        -.09-.22-.39-1.09.08-2.28 0 0 .73-.23 2.38.89a8.3 8.3 0 012.17-.29
+        c.73 0 1.47.1 2.17.29 1.65-1.13 2.38-.89 2.38-.89.47 1.19.17 2.06.08 2.28
+        .56.6.89 1.37.89 2.31 0 3.32-2.03 4.05-3.96 4.27.31.27.59.8.59 1.62
+        0 1.17-.01 2.11-.01 2.4 0 .21.15.46.55.38A8 8 0 0016 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+    PartnerName
+  </a>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Solutions</a>
+    <a href="#">Pricing</a>
+    <a href="#">Knowledge Base</a>
+  </nav>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ── STEP INDICATOR ── -->
+  <div class="step-indicator">
+    <div class="step"><div class="step-dot active" id="dot1">1</div></div>
+    <div class="step-line" id="line1"></div>
+    <div class="step"><div class="step-dot" id="dot2">2</div></div>
+    <div class="step-line" id="line2"></div>
+    <div class="step"><div class="step-dot" id="dot3">3</div></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- STEP 1: DOMAIN INTAKE                                  -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="step1">
+    <div class="page-hero">
+      <h1>Is your website compliant?</h1>
+      <p>Scan your website for cookies and trackers. Find out if you're GDPR and ePrivacy compliant — free and instant.</p>
+    </div>
+
+    <div class="card">
+      <h2>🔍 Start your compliance scan</h2>
+      <div class="form-row">
+        <label for="domain">Website URL</label>
+        <input type="url" id="domain" placeholder="https://www.yourwebsite.com" />
+      </div>
+      <!-- ✏️ PARTNER: Update privacy policy link and company name -->
+      <div class="consent-row">
+        <input type="checkbox" id="consent" />
+        <span>I agree to the <a href="#">Privacy Policy</a>. Data is shared with Usercentrics A/S for scanning. See the <a href="https://www.cookiebot.com/en/privacy-policy/" target="_blank">Cookiebot privacy policy</a>.</span>
+      </div>
+      <br/>
+      <button class="btn-primary" id="btnScan" onclick="startScan()">Scan my website</button>
+    </div>
+
+    <!-- DEMO: Paste POST /Create response -->
+    <div class="demo-panel" id="demoPost">
+      <h3>⚡ Demo Mode — POST /ComplianceOrder/Create response</h3>
+      <div class="hint">Paste the JSON response from your POST request here. The domain field above will be ignored — the order ID from this response drives the demo.</div>
+      <textarea id="postJson" placeholder='{
+  "complianceOrderId": "5cc77445-87ef-410f-a279-13ea5408a164",
+  "complianceTest": {
+    "domain": "https://pdanielsen2000.github.io/",
+    "state": "Initiated",
+    "emailSubmitted": false
+  }
+}'></textarea>
+      <button class="btn-sm" onclick="loadPostResponse()">Load POST response</button>
+      <div class="parse-error" id="postError">⚠ Invalid JSON — please check and try again.</div>
+      <div class="parse-ok" id="postOk">✓ Loaded — order ID and domain set. Click "Scan my website" above to proceed.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- STEP 2: WAITING / LOADER + LEAD CAPTURE                -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="step2" class="hidden">
+
+    <!-- ── LOADER CARD ── -->
+    <div class="card">
+      <h2>
+        <span class="status-badge status-processing" id="statusBadge">
+          <span class="dot-pulse"><span></span><span></span><span></span></span>
+          Scanning
+        </span>
+      </h2>
+
+      <div class="scan-info">
+        <div class="scan-info-item">
+          <div class="label">Domain</div>
+          <div class="value" id="scanDomain">—</div>
+        </div>
+        <div class="scan-info-item">
+          <div class="label">Order ID</div>
+          <div class="value" id="scanOrderId" style="font-size:0.72rem;">—</div>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-bar-fill" id="progressFill" style="width: 15%"></div>
+      </div>
+      <p style="font-size:0.78rem; color:var(--muted); text-align:center;">
+        This usually takes 1–3 minutes. We'll show your results as soon as they're ready.
+      </p>
+    </div>
+
+    <!-- ── EMAIL INTAKE / LEAD CAPTURE FORM (partner-owned) ── -->
+    <div class="card" id="leadCapture">
+      <h2>📬 Get your results by email</h2>
+      <p>While we scan your site, leave your details and we'll send you the full report — plus tips on how to fix any issues.</p>
+      <div class="form-row-half">
+        <div>
+          <label for="firstName">First name</label>
+          <input type="text" id="firstName" placeholder="Jane" />
+        </div>
+        <div>
+          <label for="lastName">Last name</label>
+          <input type="text" id="lastName" placeholder="Doe" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="email">Email address</label>
+        <input type="email" id="email" placeholder="jane@company.com" />
+      </div>
+      <div class="form-row">
+        <label for="company">Company (optional)</label>
+        <input type="text" id="company" placeholder="Acme Inc." />
+      </div>
+      <button class="btn-primary" onclick="submitLead()">Send me the results</button>
+      <p style="font-size:0.72rem; color:var(--muted); margin-top:10px; text-align:center;">
+        <!-- ✏️ PARTNER: This data goes to YOUR CRM, not Cookiebot -->
+        We'll only use this to send your report. No spam.
+      </p>
+    </div>
+
+    <!-- ── EMAIL CONFIRMATION (shown after submit) ── -->
+    <div class="card hidden" id="leadConfirm" style="text-align:center;">
+      <p style="font-size:0.9rem;">✅ &nbsp;Got it! We'll email your results to <strong id="confirmEmail"></strong></p>
+    </div>
+
+    <!-- DEMO: Paste GET response -->
+    <div class="demo-panel" id="demoGet">
+      <h3>⚡ Demo Mode — GET /ComplianceOrder/{id} response</h3>
+      <div class="hint">Paste the JSON response from your GET request. If state is "Completed", the flow advances to the results screen. If still processing, the status updates in place — paste again when ready.</div>
+      <textarea id="getJson" placeholder='Paste your GET /ComplianceOrder/{id} JSON response here...'></textarea>
+      <button class="btn-sm" onclick="loadGetResponse()">Load GET response</button>
+      <div class="parse-error" id="getError">⚠ Invalid JSON — please check and try again.</div>
+      <div class="parse-ok" id="getOk"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- STEP 3: RESULTS READY                                  -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="step3" class="hidden">
+    <div class="card">
+      <div class="results-ready">
+        <div class="check">✓</div>
+        <h3>Your scan is complete!</h3>
+        <p id="resultsSummary">We found compliance issues on <strong id="resultDomain"></strong>.</p>
+
+        <div class="scan-info" style="text-align:left; max-width:380px; margin:0 auto 20px;">
+          <div class="scan-info-item">
+            <div class="label">Trackers found</div>
+            <div class="value" id="resultTrackers">—</div>
+          </div>
+          <div class="scan-info-item">
+            <div class="label">Compliant</div>
+            <div class="value" id="resultCompliant">—</div>
+          </div>
+          <div class="scan-info-item">
+            <div class="label">CMP detected</div>
+            <div class="value" id="resultCmp">—</div>
+          </div>
+          <div class="scan-info-item">
+            <div class="label">Scan date</div>
+            <div class="value" id="resultDate">—</div>
+          </div>
+        </div>
+
+        <div class="results-actions">
+          <a class="btn-cta" id="btnViewReport" href="#" target="_blank">View full report →</a>
+          <!-- ✏️ PARTNER: Replace with your referral signup link -->
+          <a class="btn-secondary" id="btnSignup" href="https://manage.cookiebot.com/goto/signup?rid=COINF" target="_blank">Start free Cookiebot trial</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="text-align:center;">
+      <p style="font-size:0.88rem; margin-bottom:12px;">Need help understanding your results?</p>
+      <!-- ✏️ PARTNER: Link to your own knowledge base / support -->
+      <a class="btn-secondary" href="#" target="_blank">Visit our Knowledge Base</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- FOOTER — ✏️ PARTNER: Update with your company info        -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<footer>
+  &copy; 2026 PartnerName &middot; Powered by <a href="https://www.cookiebot.com" target="_blank">Cookiebot</a> by Usercentrics
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                                -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<script>
+  // ═══════════════════════════════════════════
+  // STATE
+  // ═══════════════════════════════════════════
+  let complianceOrderId = null;
+  let scannedDomain = null;
+
+  // ═══════════════════════════════════════════
+  // DEMO: Load POST /Create response
+  // ═══════════════════════════════════════════
+  function loadPostResponse() {
+    hideMsg('postError'); hideMsg('postOk');
+    try {
+      const data = JSON.parse(document.getElementById('postJson').value.trim());
+      if (!data.complianceOrderId) throw new Error('Missing complianceOrderId');
+      complianceOrderId = data.complianceOrderId;
+      scannedDomain = (data.complianceTest && data.complianceTest.domain) || '';
+      document.getElementById('domain').value = scannedDomain;
+      showMsg('postOk');
+    } catch (e) {
+      showMsg('postError');
+    }
+  }
+
+  // ═══════════════════════════════════════════
+  // STEP 1 → STEP 2: Start scan
+  // ═══════════════════════════════════════════
+  function startScan() {
+    const domain = document.getElementById('domain').value.trim();
+    const consent = document.getElementById('consent').checked;
+    if (!domain) { alert('Please enter a website URL.'); return; }
+    if (!consent) { alert('Please accept the privacy policy to continue.'); return; }
+
+    // ── In production: call POST /ComplianceOrder/Create here ──
+    // const res = await fetch(baseUrl + '/ComplianceOrder/Create', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Ocp-Apim-Subscription-Key': 'your_key'
+    //   },
+    //   body: JSON.stringify({ domain: domain })
+    // });
+    // const data = await res.json();
+    // complianceOrderId = data.complianceOrderId;
+
+    if (!complianceOrderId) {
+      alert('Demo mode: please paste a POST /Create response first and click "Load POST response".');
+      return;
+    }
+
+    scannedDomain = domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    document.getElementById('scanDomain').textContent = scannedDomain;
+    document.getElementById('scanOrderId').textContent = complianceOrderId;
+    document.getElementById('resultDomain').textContent = scannedDomain;
+
+    document.getElementById('step1').classList.add('hidden');
+    document.getElementById('step2').classList.remove('hidden');
+    setStep(2);
+  }
+
+  // ═══════════════════════════════════════════
+  // DEMO: Load GET response
+  // ═══════════════════════════════════════════
+  function loadGetResponse() {
+    hideMsg('getError'); hideMsg('getOk');
+    try {
+      const data = JSON.parse(document.getElementById('getJson').value.trim());
+      if (!data.complianceTest) throw new Error('Missing complianceTest');
+
+      const state = data.complianceTest.state;
+
+      if (state === 'Completed') {
+        document.getElementById('progressFill').style.width = '100%';
+        document.getElementById('getOk').textContent = '✓ State: Completed — loading results...';
+        showMsg('getOk');
+
+        const result = data.complianceTest.result || {};
+        const trackerCount = (result.trackers && result.trackers.length) || 0;
+        const reportUrl = 'https://www.cookiebot.com/en/compliance-test/' + (data.complianceOrderId || complianceOrderId) + '/';
+
+        setTimeout(function() {
+          document.getElementById('resultTrackers').textContent = trackerCount;
+          document.getElementById('resultCompliant').textContent = result.compliant ? 'Yes ✅' : 'No ⚠️';
+          document.getElementById('resultCompliant').style.color = result.compliant ? 'var(--green)' : 'var(--red)';
+          document.getElementById('resultCmp').textContent = result.isCookiebotInstalled ? 'Yes' : 'No';
+          document.getElementById('resultDate').textContent = result.scanTimestamp
+            ? new Date(result.scanTimestamp).toLocaleDateString('en-GB', { year:'numeric', month:'short', day:'numeric' })
+            : '—';
+          document.getElementById('btnViewReport').href = reportUrl;
+
+          document.getElementById('step2').classList.add('hidden');
+          document.getElementById('step3').classList.remove('hidden');
+          setStep(3);
+        }, 800);
+
+      } else {
+        var pct = state === 'Initiated' ? 25 : state === 'Processing' ? 60 : 40;
+        document.getElementById('progressFill').style.width = pct + '%';
+        document.getElementById('getOk').textContent = '✓ State: ' + state + ' — paste the next GET response when ready.';
+        showMsg('getOk');
+      }
+    } catch (e) {
+      showMsg('getError');
+    }
+  }
+
+  // ═══════════════════════════════════════════
+  // LEAD CAPTURE (email intake)
+  // ═══════════════════════════════════════════
+  function submitLead() {
+    var email = document.getElementById('email').value.trim();
+    if (!email) { alert('Please enter your email address.'); return; }
+
+    // ── In production: send to your CRM ──
+    // Data to capture: email, firstName, lastName, company, scannedDomain, complianceOrderId
+    //
+    // Then send your own follow-up email with:
+    //   Report link: https://www.cookiebot.com/en/compliance-test/{complianceOrderId}/
+    //   Signup CTA:  https://manage.cookiebot.com/goto/signup?rid=YOUR_ID
+
+    document.getElementById('confirmEmail').textContent = email;
+    document.getElementById('leadCapture').classList.add('hidden');
+    document.getElementById('leadConfirm').classList.remove('hidden');
+  }
+
+  // ═══════════════════════════════════════════
+  // STEP INDICATOR HELPERS
+  // ═══════════════════════════════════════════
+  function setStep(n) {
+    ['dot1','dot2','dot3'].forEach(function(id, i) {
+      var el = document.getElementById(id);
+      el.className = 'step-dot';
+      if (i + 1 < n) { el.classList.add('done'); el.textContent = '✓'; }
+      else if (i + 1 === n) { el.classList.add('active'); }
+      else { el.textContent = i + 1; }
+    });
+    document.getElementById('line1').className = 'step-line' + (n > 1 ? ' done' : '');
+    document.getElementById('line2').className = 'step-line' + (n > 2 ? ' done' : '');
+  }
+
+  function showMsg(id) { document.getElementById(id).style.display = 'block'; }
+  function hideMsg(id) { document.getElementById(id).style.display = 'none'; }
+</script>
+
+</body>
+</html>
