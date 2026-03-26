@@ -3,48 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>US Privacy Compliance Check – Cookiebot</title>
+<title>Free CCPA/CPRA Compliance Check – Cookiebot by Usercentrics</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#f4f5f7;color:#1a1a2e;-webkit-font-smoothing:antialiased;line-height:1.6;min-height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#fff;color:#1a1a2e;-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:#1a73e8;text-decoration:none}
 
-.nav{background:#1b2a4a;height:52px;display:flex;align-items:center;padding:0 24px;gap:8px;position:sticky;top:0;z-index:20}
-.nav-icon{width:24px;height:24px;border-radius:5px;background:#1a73e8;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:10px}
-.nav-brand{color:#fff;font-weight:700;font-size:14px}
-.nav-sep{width:1px;height:24px;background:#2d3f5e;margin:0 12px}
-.nav-domain{color:#94a3b8;font-size:12px;font-family:monospace}
-.nav-right{margin-left:auto;display:flex;gap:4px}
-.np{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
-.np.off{border:2px solid #2d3f5e;color:#475569;background:transparent}
-.np.on{border:2px solid #1a73e8;color:#fff;background:#1a73e8}
-.np.ok{border:2px solid #22c55e;color:#fff;background:#22c55e}
+/* NAV */
+.nav{background:#1b2a4a;height:64px;display:flex;align-items:center;padding:0 32px;gap:12px;position:sticky;top:0;z-index:50}
+.nav-logo{height:28px}
+.nav-links{margin-left:auto;display:flex;gap:20px;align-items:center}
+.nav-link{color:#94a3b8;font-size:13px;font-weight:500;transition:color .15s}
+.nav-link:hover{color:#fff}
+.nav-cta{background:#1a73e8;color:#fff;padding:8px 20px;border-radius:6px;font-size:13px;font-weight:700;transition:background .15s}
+.nav-cta:hover{background:#1557b0}
 
-.wrap{max-width:720px;margin:0 auto;padding:32px 20px 60px}
+/* HERO */
+.hero{background:linear-gradient(180deg,#1b2a4a 0%,#0f1629 100%);padding:80px 32px 60px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(180deg,transparent,#fff);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:20px}
+.hero h1{font-size:40px;font-weight:800;max-width:720px;margin:0 auto 16px;line-height:1.15;letter-spacing:-.02em}
+.hero h1 span{color:#60a5fa}
+.hero .sub{font-size:17px;color:#94a3b8;max-width:560px;margin:0 auto 36px;line-height:1.6}
 
-/* INTRO */
-.intro-card{background:#fff;border-radius:16px;box-shadow:0 2px 16px rgba(0,0,0,.06);padding:48px 40px;text-align:center}
-.intro-card h1{font-size:28px;font-weight:800;margin-bottom:8px}
-.intro-card .sub{font-size:14px;color:#6b7280;margin-bottom:28px;max-width:420px;margin-left:auto;margin-right:auto}
-.url-wrap{display:flex;gap:0;max-width:480px;margin:0 auto 24px}
+/* SCANNER INPUT */
+.scanner-box{background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.2);padding:32px;max-width:560px;margin:0 auto;position:relative;z-index:2;text-align:left}
+.scanner-box h3{font-size:18px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
+.scanner-box .sc-sub{font-size:13px;color:#6b7280;margin-bottom:18px}
+.url-wrap{display:flex;gap:0}
 .url-in{flex:1;padding:14px 18px;border:2px solid #e4e7ec;border-radius:10px 0 0 10px;font-size:15px;outline:none;color:#1a1a2e}
 .url-in:focus{border-color:#1a73e8}
 .url-in::placeholder{color:#c4c9d2}
-.url-btn{padding:14px 28px;background:#1a73e8;color:#fff;border:none;border-radius:0 10px 10px 0;font-size:15px;font-weight:700;cursor:pointer}
+.url-btn{padding:14px 28px;background:#1a73e8;color:#fff;border:none;border-radius:0 10px 10px 0;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap}
 .url-btn:hover{background:#1557b0}
-.checks{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
-.chk-item{display:flex;align-items:center;gap:6px;font-size:13px;color:#4b5563}
-.chk-item .cd{width:7px;height:7px;border-radius:50%;background:#1a73e8}
+.sc-checks{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap}
+.sc-chk{display:flex;align-items:center;gap:5px;font-size:11px;color:#6b7280}
+.sc-chk .dot{width:6px;height:6px;border-radius:50%;background:#1a73e8}
+
+/* TRUST BAR */
+.trust{background:#fff;padding:32px 32px 0;text-align:center}
+.trust-inner{max-width:700px;margin:0 auto;display:flex;justify-content:center;gap:40px;flex-wrap:wrap;padding:20px 0;border-bottom:1px solid #ebedf0}
+.trust-item{text-align:center}
+.trust-num{font-size:28px;font-weight:800;color:#1a1a2e}
+.trust-lbl{font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+
+/* SECTION */
+.section{max-width:720px;margin:0 auto;padding:40px 20px 20px}
+.section h2{font-size:24px;font-weight:800;color:#1a1a2e;margin-bottom:6px}
+.section .sec-sub{font-size:14px;color:#6b7280;margin-bottom:20px}
+
+/* WHY SECTION */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+.why-card{padding:20px;border-radius:10px;border:1px solid #ebedf0}
+.why-card .wc-icon{font-size:28px;margin-bottom:8px}
+.why-card h4{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
+.why-card p{font-size:12px;color:#6b7280;line-height:1.6}
 
 /* CARD */
-.card{background:#fff;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.05);margin-bottom:20px;overflow:hidden}
+.card{background:#fff;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.05);margin-bottom:20px;overflow:hidden;border:1px solid #ebedf0}
 .card-header{padding:20px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #ebedf0}
 .card-step{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
 .card-step.active{background:#1a73e8;color:#fff}
 .card-step.done{background:#22c55e;color:#fff}
-.card-title{font-size:16px;font-weight:700}
+.card-title{font-size:16px;font-weight:700;color:#1a1a2e}
 .card-subtitle{font-size:12px;color:#6b7280}
 .card-body{padding:20px 24px}
 .card-body p{font-size:13px;color:#4b5563;margin-bottom:12px}
+
+/* PROGRESS PILLS */
+.prog-bar{display:flex;align-items:center;gap:8px;margin-bottom:24px;justify-content:center}
+.prog-pill{padding:6px 16px;border-radius:20px;font-size:11px;font-weight:700;transition:all .2s}
+.prog-pill.off{background:#f4f5f7;color:#9ca3af;border:1px solid #e4e7ec}
+.prog-pill.on{background:#1a73e8;color:#fff;border:1px solid #1a73e8}
+.prog-pill.ok{background:#22c55e;color:#fff;border:1px solid #22c55e}
 
 /* SCAN ANIM */
 .scan-anim{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#f8f9fb;border-radius:8px;margin-bottom:16px}
@@ -59,23 +90,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .cat-dot.mkt{background:#ef4444}.cat-dot.stat{background:#f59e0b}.cat-dot.nec{background:#22c55e}.cat-dot.pref{background:#3b82f6}
 .cat-name{font-size:13px;font-weight:700;color:#1a1a2e}
 .cat-count{font-size:12px;font-weight:700;color:#6b7280}
-.cat-note{font-size:10px;color:#6b7280;font-style:italic;margin-left:auto}
+.cat-note{font-size:10px;color:#9ca3af;font-style:italic;margin-left:auto}
 
-/* SERVICE ITEM */
 .svc-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;background:#f8f9fb;margin-bottom:4px;animation:fadeIn .3s;font-size:12px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .svc-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
 .svc-icon.mkt{background:#fee2e2;color:#dc2626}.svc-icon.stat{background:#fef3c7;color:#d97706}.svc-icon.nec{background:#d1fae5;color:#059669}.svc-icon.pref{background:#dbeafe;color:#2563eb}
-.svc-name{font-weight:600;color:#1a1a2e;flex:1}
-.svc-domain{font-size:10px;color:#1a73e8;font-family:monospace}
+.svc-name{font-weight:600;color:#1a1a2e;flex:1}.svc-domain{font-size:10px;color:#1a73e8;font-family:monospace}
 .svc-status{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;flex-shrink:0;display:inline-flex;align-items:center;gap:4px}
 .svc-status.firing{background:#fef2f2;color:#dc2626}
 .svc-status.stopped{background:#f0fdf4;color:#16a34a}
 .svc-status.ok{background:#f0fdf4;color:#16a34a}
 .st-dot{width:5px;height:5px;border-radius:50%}
-
-/* NEC DIMMING — necessary services appear lighter/muted */
-.cat-group.nec-group .svc-item{background:#fafbfc;opacity:.7}
+.cat-group.nec-group .svc-item{background:#fafbfc;opacity:.65}
 .cat-group.nec-group .svc-name{color:#6b7280}
 
 /* VERDICT */
@@ -84,8 +111,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .verdict.fail{background:#fef2f2;border:1px solid #fecaca}
 .verdict.info{background:#eff6ff;border:1px solid #bfdbfe}
 .v-icon{width:24px;height:24px;flex-shrink:0}
-.v-text{flex:1}
-.v-title{font-size:13px;font-weight:700}
+.v-text{flex:1}.v-title{font-size:13px;font-weight:700}
 .verdict.pass .v-title{color:#166534}.verdict.fail .v-title{color:#991b1b}.verdict.info .v-title{color:#1e40af}
 .v-detail{font-size:12px;margin-top:2px}
 .verdict.pass .v-detail{color:#15803d}.verdict.fail .v-detail{color:#b91c1c}.verdict.info .v-detail{color:#1d4ed8}
@@ -105,8 +131,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .cmp-table th{padding:8px 12px;text-align:left;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;font-weight:600;background:#fafbfc;border-bottom:2px solid #ebedf0}
 .cmp-table td{padding:8px 12px;border-bottom:1px solid #f3f4f6}
 .cmp-table tr:last-child td{border-bottom:none}
-.cmp-table tr.nec-row{opacity:.6}
-.cmp-cat-header td{background:#f8f9fb;font-weight:700;font-size:11px;padding:6px 12px;color:#4b5563}
+.cmp-table tr.nec-row{opacity:.55}
 
 /* RISK */
 .risk-lg{display:inline-flex;align-items:center;gap:10px;border-radius:24px;padding:12px 28px;font-weight:700;font-size:18px;margin:12px 0}
@@ -114,334 +139,169 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Ar
 .risk-lg.medium{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
 .risk-lg.low{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
 
-/* CTA */
-.cta-box{background:linear-gradient(135deg,#1b2a4a 0%,#1a73e8 100%);border-radius:12px;padding:28px 24px;text-align:center;margin-top:20px}
-.cta-box h3{color:#fff;font-size:18px;font-weight:800;margin-bottom:4px}
-.cta-box p{color:#bfdbfe;font-size:13px;margin-bottom:18px}
-.cta-box .btn{background:#fff;color:#1b2a4a;padding:12px 32px;font-size:14px}
+/* CTA BOX */
+.cta-box{background:linear-gradient(135deg,#1b2a4a 0%,#1a73e8 100%);border-radius:12px;padding:32px;text-align:center;margin-top:24px}
+.cta-box h3{color:#fff;font-size:20px;font-weight:800;margin-bottom:6px}
+.cta-box p{color:#bfdbfe;font-size:13px;margin-bottom:20px;max-width:440px;margin-left:auto;margin-right:auto}
+.cta-box .btn-w{background:#fff;color:#1b2a4a;padding:14px 36px;border-radius:8px;font-size:15px;font-weight:700;border:none;cursor:pointer;display:inline-block}
+.cta-box .btn-w:hover{background:#f0f0f0}
 
-/* BTN */
+/* FOOTER */
+.footer{background:#1b2a4a;padding:40px 32px;text-align:center;margin-top:60px}
+.footer p{color:#64748b;font-size:12px}
+.footer a{color:#94a3b8}
+
+/* BUTTONS */
 .btn{padding:10px 22px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .12s;display:inline-flex;align-items:center;gap:6px}
 .btn-p{background:#1a73e8;color:#fff}.btn-p:hover{background:#1557b0}
 .btn-s{background:#f4f5f7;color:#4b5563;border:1px solid #e4e7ec}.btn-s:hover{background:#ebedf0}
 .btn-row{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
 
 .hidden{display:none!important}
+
+@media(max-width:640px){
+  .hero h1{font-size:28px}
+  .why-grid{grid-template-columns:1fr}
+  .nav{padding:0 16px}
+  .hero{padding:48px 20px 40px}
+}
 </style>
 </head>
 <body>
 
-<div class="nav">
-  <div class="nav-icon">C</div>
-  <span class="nav-brand">Cookiebot™</span>
-  <div class="nav-sep"></div>
-  <span class="nav-domain" id="nav-domain">US Privacy Compliance Check</span>
-  <div class="nav-right" id="nav-pills"></div>
+<!-- NAV -->
+<nav class="nav">
+  <svg class="nav-logo" viewBox="0 0 180 28" fill="none"><rect width="28" height="28" rx="6" fill="#1a73e8"/><path d="M8 14.5a6.5 6.5 0 0112.74-2" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><circle cx="14" cy="14.5" r="2.5" fill="#fff"/><text x="36" y="20" fill="#fff" font-family="system-ui" font-weight="700" font-size="17">Cookiebot™</text><text x="142" y="20" fill="#7b8ba3" font-family="system-ui" font-size="10">by Usercentrics</text></svg>
+  <div class="nav-links">
+    <a class="nav-link" href="https://www.cookiebot.com/us/what-is-ccpa/" target="_blank">CCPA Guide</a>
+    <a class="nav-link" href="https://www.cookiebot.com/us/pricing/" target="_blank">Pricing</a>
+    <a class="nav-cta" href="https://admin.cookiebot.com/signup" target="_blank">Start Free</a>
+  </div>
+</nav>
+
+<!-- LANDING PAGE (shown before scan) -->
+<div id="landing">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">⚠️ CCPA/CPRA enforcement is accelerating — fines up to $7,500 per violation</div>
+    <h1>Is your website <span>compliant</span> with US privacy law?</h1>
+    <p class="sub">Scan your website for free. We'll detect your CMP, third-party services, "Do Not Sell" link, and whether your site actually honors the GPC opt-out signal.</p>
+
+    <div class="scanner-box">
+      <h3>Free US compliance check</h3>
+      <p class="sc-sub">Enter your URL — results in under 30 seconds.</p>
+      <div class="url-wrap">
+        <input class="url-in" id="urlin" placeholder="https://www.yoursite.com" autofocus>
+        <button class="url-btn" onclick="startScan()">Scan my site</button>
+      </div>
+      <div class="sc-checks">
+        <div class="sc-chk"><span class="dot"></span> CMP detection</div>
+        <div class="sc-chk"><span class="dot"></span> Service inventory</div>
+        <div class="sc-chk"><span class="dot"></span> DNS link check</div>
+        <div class="sc-chk"><span class="dot"></span> GPC signal test</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUST -->
+  <div class="trust">
+    <div class="trust-inner">
+      <div class="trust-item"><div class="trust-num">2.4M</div><div class="trust-lbl">Websites & apps</div></div>
+      <div class="trust-item"><div class="trust-num">8.8B</div><div class="trust-lbl">Monthly consents</div></div>
+      <div class="trust-item"><div class="trust-num">47+</div><div class="trust-lbl">Languages</div></div>
+      <div class="trust-item"><div class="trust-num">600K+</div><div class="trust-lbl">Customers</div></div>
+    </div>
+  </div>
+
+  <!-- WHY THIS MATTERS -->
+  <div class="section">
+    <h2>Why US compliance matters now</h2>
+    <p class="sec-sub">California's CCPA/CPRA is actively enforced — and more states are following. Website owners face real financial risk.</p>
+    <div class="why-grid">
+      <div class="why-card"><div class="wc-icon">💰</div><h4>Fines up to $7,500 per violation</h4><p>The California AG and CPPA are actively pursuing enforcement. Each intentional violation can cost $7,500 — and that's per consumer, per incident.</p></div>
+      <div class="why-card"><div class="wc-icon">🔗</div><h4>"Do Not Sell" link required</h4><p>Websites must display a clear "Do Not Sell or Share My Personal Information" link. Missing it is the most common violation flagged in enforcement actions.</p></div>
+      <div class="why-card"><div class="wc-icon">🛡️</div><h4>GPC signal is legally binding</h4><p>Under CPRA, websites must honor the Global Privacy Control browser signal as a valid opt-out. Most sites don't — and don't even know it.</p></div>
+      <div class="why-card"><div class="wc-icon">📈</div><h4>20 states and counting</h4><p>California, Colorado, Connecticut, Virginia, Utah, Texas, Florida, Montana, and more. US privacy legislation is accelerating — compliance is a moving target.</p></div>
+    </div>
+  </div>
 </div>
 
-<div class="wrap"><div id="content"></div></div>
+<!-- SCAN RESULTS (shown after scan starts) -->
+<div id="scan-area" class="hidden">
+  <div class="section" style="padding-top:32px">
+    <div class="prog-bar" id="prog-bar"></div>
+    <div id="scan-content"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>© 2026 Cookiebot™ by Usercentrics. <a href="https://www.cookiebot.com/us/privacy-policy/" target="_blank">Privacy Policy</a> · <a href="https://www.cookiebot.com/us/terms-of-service/" target="_blank">Terms</a></p>
+</div>
 
 <script>
-var PROXY='';
-
-var KS={'google-analytics.com':{n:'Google Analytics',c:'stat'},'googletagmanager.com':{n:'Google Tag Manager',c:'stat'},'analytics.google.com':{n:'Google Analytics',c:'stat'},'doubleclick.net':{n:'DoubleClick',c:'mkt'},'googlesyndication.com':{n:'Google Ads',c:'mkt'},'googleadservices.com':{n:'Google Ads',c:'mkt'},'adservice.google.com':{n:'Google Ads',c:'mkt'},'facebook.net':{n:'Meta / Facebook',c:'mkt'},'facebook.com':{n:'Meta / Facebook',c:'mkt'},'fbcdn.net':{n:'Meta CDN',c:'mkt'},'linkedin.com':{n:'LinkedIn',c:'mkt'},'ads.linkedin.com':{n:'LinkedIn Ads',c:'mkt'},'tiktok.com':{n:'TikTok',c:'mkt'},'twitter.com':{n:'X / Twitter',c:'mkt'},'t.co':{n:'X / Twitter',c:'mkt'},'bing.com':{n:'Microsoft Bing',c:'mkt'},'bat.bing.com':{n:'Bing Ads',c:'mkt'},'clarity.ms':{n:'Microsoft Clarity',c:'stat'},'hotjar.com':{n:'Hotjar',c:'stat'},'hubspot.com':{n:'HubSpot',c:'mkt'},'pinterest.com':{n:'Pinterest',c:'mkt'},'reddit.com':{n:'Reddit',c:'mkt'},'snapchat.com':{n:'Snapchat',c:'mkt'},'criteo.com':{n:'Criteo',c:'mkt'},'criteo.net':{n:'Criteo',c:'mkt'},'taboola.com':{n:'Taboola',c:'mkt'},'outbrain.com':{n:'Outbrain',c:'mkt'},'amplitude.com':{n:'Amplitude',c:'stat'},'segment.com':{n:'Segment',c:'stat'},'mixpanel.com':{n:'Mixpanel',c:'stat'},'fullstory.com':{n:'FullStory',c:'stat'},'youtube.com':{n:'YouTube',c:'mkt'},'vimeo.com':{n:'Vimeo',c:'stat'},'stripe.com':{n:'Stripe',c:'nec'},'cookiebot.com':{n:'Cookiebot',c:'nec'},'usercentrics.eu':{n:'Usercentrics',c:'nec'},'onetrust.com':{n:'OneTrust',c:'nec'},'cookielaw.org':{n:'OneTrust',c:'nec'},'newrelic.com':{n:'New Relic',c:'nec'},'nr-data.net':{n:'New Relic',c:'nec'},'sentry.io':{n:'Sentry',c:'nec'},'cloudflare.com':{n:'Cloudflare',c:'nec'},'cloudflareinsights.com':{n:'Cloudflare',c:'nec'},'intercom.io':{n:'Intercom',c:'pref'},'zendesk.com':{n:'Zendesk',c:'pref'},'drift.com':{n:'Drift',c:'pref'}};
-
-var catMeta={
-  mkt:{name:'Marketing',dot:'mkt',color:'#ef4444',note:'Must stop when GPC opt-out is active'},
-  stat:{name:'Statistics',dot:'stat',color:'#f59e0b',note:'Should stop when GPC opt-out is active'},
-  pref:{name:'Preferences',dot:'pref',color:'#3b82f6',note:'May continue based on configuration'},
-  nec:{name:'Necessary',dot:'nec',color:'#22c55e',note:'Always allowed to fire — essential for site function'}
-};
+var KS={'google-analytics.com':{n:'Google Analytics',c:'stat'},'googletagmanager.com':{n:'Google Tag Manager',c:'stat'},'doubleclick.net':{n:'DoubleClick',c:'mkt'},'googlesyndication.com':{n:'Google Ads',c:'mkt'},'googleadservices.com':{n:'Google Ads',c:'mkt'},'facebook.net':{n:'Meta / Facebook',c:'mkt'},'facebook.com':{n:'Meta / Facebook',c:'mkt'},'linkedin.com':{n:'LinkedIn',c:'mkt'},'ads.linkedin.com':{n:'LinkedIn Ads',c:'mkt'},'tiktok.com':{n:'TikTok',c:'mkt'},'twitter.com':{n:'X / Twitter',c:'mkt'},'bing.com':{n:'Microsoft Bing',c:'mkt'},'bat.bing.com':{n:'Bing Ads',c:'mkt'},'clarity.ms':{n:'Microsoft Clarity',c:'stat'},'hotjar.com':{n:'Hotjar',c:'stat'},'hubspot.com':{n:'HubSpot',c:'mkt'},'pinterest.com':{n:'Pinterest',c:'mkt'},'reddit.com':{n:'Reddit',c:'mkt'},'criteo.com':{n:'Criteo',c:'mkt'},'criteo.net':{n:'Criteo',c:'mkt'},'taboola.com':{n:'Taboola',c:'mkt'},'amplitude.com':{n:'Amplitude',c:'stat'},'segment.com':{n:'Segment',c:'stat'},'mixpanel.com':{n:'Mixpanel',c:'stat'},'fullstory.com':{n:'FullStory',c:'stat'},'youtube.com':{n:'YouTube',c:'mkt'},'vimeo.com':{n:'Vimeo',c:'stat'},'stripe.com':{n:'Stripe',c:'nec'},'cookiebot.com':{n:'Cookiebot',c:'nec'},'usercentrics.eu':{n:'Usercentrics',c:'nec'},'onetrust.com':{n:'OneTrust',c:'nec'},'cookielaw.org':{n:'OneTrust',c:'nec'},'newrelic.com':{n:'New Relic',c:'nec'},'sentry.io':{n:'Sentry',c:'nec'},'cloudflare.com':{n:'Cloudflare',c:'nec'},'intercom.io':{n:'Intercom',c:'pref'},'zendesk.com':{n:'Zendesk',c:'pref'}};
+var catMeta={mkt:{name:'Marketing',dot:'mkt',note:'Must stop with GPC'},stat:{name:'Statistics',dot:'stat',note:'Should stop with GPC'},pref:{name:'Preferences',dot:'pref',note:'May continue'},nec:{name:'Necessary',dot:'nec',note:'Always allowed'}};
 var catOrder=['mkt','stat','pref','nec'];
+var S={domain:'',step:0,normalSvcs:[],gpcSvcs:[],dnsFound:false,gpcDeclared:false,gpcWellKnown:null,gpcSupported:false,cmp:null};
 
-var S={domain:'',url:'',step:0,normalSvcs:[],gpcSvcs:[],dnsFound:false,gpcDeclared:false,gpcWellKnown:null,gpcSupported:false};
+// Simulations (replace with real proxy calls)
+function simScan(d,gpc,cb){var pool=[{n:'Google Analytics',c:'stat',d:'google-analytics.com',h:false},{n:'Google Tag Manager',c:'stat',d:'googletagmanager.com',h:false},{n:'Google Ads',c:'mkt',d:'googleadservices.com',h:false},{n:'DoubleClick',c:'mkt',d:'doubleclick.net',h:false},{n:'Meta / Facebook',c:'mkt',d:'facebook.net',h:true},{n:'LinkedIn Ads',c:'mkt',d:'ads.linkedin.com',h:true},{n:'Hotjar',c:'stat',d:'hotjar.com',h:true},{n:'HubSpot',c:'mkt',d:'hubspot.com',h:false},{n:'Criteo',c:'mkt',d:'criteo.com',h:true},{n:'Cloudflare',c:'nec',d:'cloudflare.com',h:false},{n:'Stripe',c:'nec',d:'stripe.com',h:false},{n:'New Relic',c:'nec',d:'newrelic.com',h:false},{n:'Intercom',c:'pref',d:'intercom.io',h:true},{n:'Zendesk',c:'pref',d:'zendesk.com',h:false}];var ct=7+Math.floor(Math.random()*5);var sh=pool.sort(function(){return .5-Math.random()}).slice(0,ct);if(gpc)sh=sh.filter(function(s){return !s.h||s.c==='nec'});var i=0,r=[];function nx(){if(i>=sh.length){cb(r);return}r.push({name:sh[i].n,cat:sh[i].c,domain:sh[i].d});i++;setTimeout(nx,200+Math.random()*300)}setTimeout(nx,500)}
+function simCmp(d,cb){var c=[{name:'OneTrust',vendor:'OneTrust',domain:'cookielaw.org'},{name:'TrustArc',vendor:'TrustArc',domain:'trustarc.com'},{name:'Sourcepoint',vendor:'Sourcepoint',domain:'privacy-mgmt.com'},{name:'Didomi',vendor:'Didomi',domain:'didomi.io'},{name:'Cookiebot',vendor:'Usercentrics',domain:'cookiebot.com',ours:true},{name:'Ketch',vendor:'Ketch',domain:'global.ketchcdn.com'},null,null];setTimeout(function(){cb(c[Math.floor(Math.random()*c.length)])},1000)}
+function simGpcWk(d,cb){setTimeout(function(){cb(Math.random()>.6?{gpc:true}:null)},700)}
 
-// ═══ SIMULATE ═══
-function simulateScan(domain,isGpc,cb){
-  var pool=[
-    {n:'Google Analytics',c:'stat',d:'google-analytics.com',h:false},
-    {n:'Google Tag Manager',c:'stat',d:'googletagmanager.com',h:false},
-    {n:'Google Ads',c:'mkt',d:'googleadservices.com',h:false},
-    {n:'DoubleClick',c:'mkt',d:'doubleclick.net',h:false},
-    {n:'Meta / Facebook',c:'mkt',d:'facebook.net',h:true},
-    {n:'LinkedIn Ads',c:'mkt',d:'ads.linkedin.com',h:true},
-    {n:'Hotjar',c:'stat',d:'hotjar.com',h:true},
-    {n:'HubSpot',c:'mkt',d:'hubspot.com',h:false},
-    {n:'Criteo',c:'mkt',d:'criteo.com',h:true},
-    {n:'Cloudflare',c:'nec',d:'cloudflare.com',h:false},
-    {n:'Stripe',c:'nec',d:'stripe.com',h:false},
-    {n:'New Relic',c:'nec',d:'newrelic.com',h:false},
-    {n:'Intercom',c:'pref',d:'intercom.io',h:true},
-    {n:'Zendesk',c:'pref',d:'zendesk.com',h:false},
-  ];
-  var count=7+Math.floor(Math.random()*5);
-  var shuffled=pool.sort(function(){return .5-Math.random()});
-  var selected=shuffled.slice(0,count);
-  if(isGpc) selected=selected.filter(function(s){return !s.h||s.c==='nec'});
+// Helpers
+function verdictHtml(t,title,detail){var icons={pass:'<svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#22c55e"/><path d="M7 12.5l3 3 5.5-5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',fail:'<svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#ef4444"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>',info:'<svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3b82f6"/><rect x="11" y="7" width="2" height="6" rx="1" fill="#fff"/><rect x="11" y="15" width="2" height="2" rx="1" fill="#fff"/></svg>'};return '<div class="verdict '+t+'">'+icons[t]+'<div class="v-text"><div class="v-title">'+title+'</div><div class="v-detail">'+detail+'</div></div></div>'}
+function svcItem(s,st){return '<div class="svc-item"><div class="svc-icon '+s.cat+'">'+s.name.charAt(0)+'</div><div style="flex:1"><div class="svc-name">'+s.name+'</div><div class="svc-domain">'+s.domain+'</div></div>'+(st||'')+'</div>'}
+function groupedHtml(svcs,showStatus,gpcSvcs){var g={};svcs.forEach(function(s){if(!g[s.cat])g[s.cat]=[];g[s.cat].push(s)});var h='';catOrder.forEach(function(cat){var l=g[cat];if(!l||!l.length)return;var m=catMeta[cat];h+='<div class="cat-group'+(cat==='nec'?' nec-group':'')+'"><div class="cat-head"><span class="cat-dot '+m.dot+'"></span><span class="cat-name">'+m.name+'</span><span class="cat-count">'+l.length+'</span><span class="cat-note">'+m.note+'</span></div>';l.forEach(function(s){var st='';if(showStatus&&cat!=='nec'){var inG=gpcSvcs&&gpcSvcs.find(function(g){return g.name===s.name});st=inG?'<span class="svc-status firing"><span class="st-dot" style="background:#ef4444"></span>Ignoring GPC</span>':'<span class="svc-status stopped"><span class="st-dot" style="background:#22c55e"></span>Honoring</span>'}if(cat==='nec')st='<span class="svc-status ok"><span class="st-dot" style="background:#22c55e"></span>Essential</span>';h+=svcItem(s,st)});h+='</div>'});return h}
 
-  var i=0,results=[];
-  function next(){
-    if(i>=selected.length){cb(results);return}
-    results.push({name:selected[i].n,cat:selected[i].c,domain:selected[i].d});
-    i++;
-    setTimeout(next,250+Math.random()*400);
-  }
-  setTimeout(next,600);
-}
+function updateProg(){var labels=['CMP','Services','GPC Test','Results'];var h='';for(var i=1;i<=4;i++){var cls=i<S.step?'ok':i===S.step?'on':'off';h+='<div class="prog-pill '+cls+'">'+(i<S.step?'✓ ':'')+labels[i-1]+'</div>'}document.getElementById('prog-bar').innerHTML=h}
 
-function simulateGpcWellKnown(domain,cb){
-  // In production: fetch https://domain/.well-known/gpc.json via proxy
-  // Simulate: ~40% chance it exists
-  setTimeout(function(){
-    var found=Math.random()>0.6;
-    cb(found?{gpc:true,lastUpdate:'2025-06-01'}:null);
-  },800);
-}
+function goStep(n){S.step=n;updateProg();var c=document.getElementById('scan-content');if(n===1)renderCmp(c);else if(n===2)renderSvcs(c);else if(n===3)renderGpc(c);else if(n===4)renderResults(c);c.scrollIntoView({behavior:'smooth',block:'start'})}
 
-// ═══ RENDER HELPERS ═══
-function svcItemHtml(s,statusHtml){
-  var cls=s.cat;
-  return '<div class="svc-item"><div class="svc-icon '+cls+'">'+s.name.charAt(0)+'</div><div style="flex:1"><div class="svc-name">'+s.name+'</div><div class="svc-domain">'+s.domain+'</div></div>'+(statusHtml||'')+'</div>';
-}
+function startScan(){var v=document.getElementById('urlin').value.trim();if(!v)return;if(v.indexOf('http')!==0)v='https://'+v;S.domain=v.replace(/^https?:\/\//,'').replace(/\/+$/,'');document.getElementById('landing').classList.add('hidden');document.getElementById('scan-area').classList.remove('hidden');goStep(1)}
 
-function groupByCategory(svcs){
-  var groups={};
-  svcs.forEach(function(s){if(!groups[s.cat])groups[s.cat]=[];groups[s.cat].push(s)});
-  return groups;
-}
+function renderCmp(c){c.innerHTML='<div class="card"><div class="card-header"><div class="card-step active">1</div><div><div class="card-title">Detecting consent management platform</div><div class="card-subtitle">Scanning '+S.domain+' for CMP scripts, TCF & GPP APIs</div></div></div><div class="card-body"><div class="scan-anim" id="cmp-anim"><div class="spinner"></div><div class="scan-text">Analyzing <strong>'+S.domain+'</strong>…</div></div><div id="cmp-checks"><div style="margin:4px 0"><span class="spinner" style="width:12px;height:12px;border-width:2px;margin-right:6px;display:inline-block;vertical-align:middle"></span><span style="font-size:12px;color:#6b7280">Checking __tcfapi / __gpp…</span></div></div><div id="cmp-result"></div><div id="cmp-next" class="hidden"></div></div></div>';
+simCmp(S.domain,function(cmp){S.cmp=cmp;document.getElementById('cmp-anim').innerHTML='<svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#22c55e"/><path d="M6 10.5l2.5 2.5L14 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="scan-text"><strong>Detection complete</strong></div>';document.getElementById('cmp-checks').innerHTML='';var r=document.getElementById('cmp-result');if(cmp){var isO=cmp.ours;r.innerHTML='<div style="display:flex;align-items:center;gap:14px;padding:18px 20px;background:'+(isO?'#f0fdf4;border:1px solid #bbf7d0':'#fffbeb;border:1px solid #fde68a')+';border-radius:10px;margin:12px 0"><div style="width:44px;height:44px;border-radius:10px;background:'+(isO?'#22c55e':'#f59e0b')+';display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="color:#fff;font-weight:800;font-size:18px">'+(isO?'✓':'!')+'</span></div><div><div style="font-size:15px;font-weight:700;color:'+(isO?'#166534':'#92400e')+'">'+cmp.name+(isO?'':' <span style="font-weight:500">(by '+cmp.vendor+')</span>')+'</div><div style="font-size:12px;color:'+(isO?'#15803d':'#a16207')+';margin-top:2px">'+(isO?'Your website uses a Usercentrics CMP. Let\'s verify it\'s configured for US compliance.':'A third-party CMP is installed. Let\'s check if it\'s properly handling CCPA/CPRA requirements.')+'</div></div></div>'}else{r.innerHTML='<div style="display:flex;align-items:center;gap:14px;padding:18px 20px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;margin:12px 0"><div style="width:44px;height:44px;border-radius:10px;background:#ef4444;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="color:#fff;font-weight:800;font-size:18px">✗</span></div><div><div style="font-size:15px;font-weight:700;color:#991b1b">No CMP detected</div><div style="font-size:12px;color:#b91c1c;margin-top:2px">No consent management platform found. Managing CCPA/CPRA compliance without a CMP is extremely difficult.</div></div></div>'}document.getElementById('cmp-next').classList.remove('hidden');document.getElementById('cmp-next').innerHTML='<div class="btn-row"><button class="btn btn-p" onclick="goStep(2)">Next: Detect Services →</button></div>'})}
 
-function renderGroupedFeed(containerId,svcs,showStatus,gpcSvcs){
-  var el=document.getElementById(containerId);if(!el)return;
-  var groups=groupByCategory(svcs);
-  var html='';
-  catOrder.forEach(function(cat){
-    var list=groups[cat];if(!list||!list.length)return;
-    var m=catMeta[cat];
-    html+='<div class="cat-group'+(cat==='nec'?' nec-group':'')+'">';
-    html+='<div class="cat-head"><span class="cat-dot '+m.dot+'"></span><span class="cat-name">'+m.name+'</span><span class="cat-count">'+list.length+'</span><span class="cat-note">'+m.note+'</span></div>';
-    list.forEach(function(s){
-      var st='';
-      if(showStatus&&cat!=='nec'){
-        var inGpc=gpcSvcs&&gpcSvcs.find(function(g){return g.name===s.name});
-        if(inGpc) st='<span class="svc-status firing"><span class="st-dot" style="background:#ef4444"></span>Ignoring GPC</span>';
-        else st='<span class="svc-status stopped"><span class="st-dot" style="background:#22c55e"></span>Honoring GPC</span>';
-      }
-      if(cat==='nec') st='<span class="svc-status ok"><span class="st-dot" style="background:#22c55e"></span>Essential</span>';
-      html+=svcItemHtml(s,st);
-    });
-    html+='</div>';
-  });
-  el.innerHTML=html;
-}
+function renderSvcs(c){var cmpNote=S.cmp?'Scanning alongside <strong>'+S.cmp.name+'</strong>':'No CMP — scanning raw';c.innerHTML='<div class="card"><div class="card-header"><div class="card-step active">2</div><div><div class="card-title">Detecting third-party services</div><div class="card-subtitle">'+cmpNote+'</div></div></div><div class="card-body"><div class="scan-anim" id="svc-anim"><div class="spinner"></div><div class="scan-text">Scanning <strong>'+S.domain+'</strong> as a California visitor…</div></div><div id="svc-feed"></div><div id="svc-verdicts"></div><div id="svc-next" class="hidden"></div></div></div>';var done=0;function chk(){done++;if(done<3)return;document.getElementById('svc-anim').innerHTML='<svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#22c55e"/><path d="M6 10.5l2.5 2.5L14 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="scan-text"><strong>'+S.normalSvcs.length+' services detected</strong></div>';var v='';v+=S.dnsFound?verdictHtml('pass','"Do Not Sell or Share" link found','Detected in footer.'):verdictHtml('fail','No "Do Not Sell" link found','Required under CCPA/CPRA.');v+=S.gpcWellKnown&&S.gpcWellKnown.gpc?verdictHtml('pass','GPC declared via /.well-known/gpc.json','Site formally declares GPC support per W3C spec.'):verdictHtml('info','No /.well-known/gpc.json found','Optional but recommended per W3C GPC specification.');if(S.gpcWellKnown&&S.gpcWellKnown.gpc)S.gpcDeclared=true;document.getElementById('svc-verdicts').innerHTML=v;document.getElementById('svc-next').classList.remove('hidden');document.getElementById('svc-next').innerHTML='<div class="btn-row"><button class="btn btn-s" onclick="goStep(1)">← Back</button><button class="btn btn-p" onclick="goStep(3)">Next: Test GPC Signal →</button></div>'}
+simScan(S.domain,false,function(r){S.normalSvcs=r;document.getElementById('svc-feed').innerHTML=groupedHtml(r,false);S.dnsFound=Math.random()>.4;chk()});simGpcWk(S.domain,function(r){S.gpcWellKnown=r;chk()});setTimeout(chk,1800)}
 
-function verdictHtml(type,title,detail){
-  var icons={
-    pass:'<svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#22c55e"/><path d="M7 12.5l3 3 5.5-5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    fail:'<svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#ef4444"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>',
-    info:'<svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#3b82f6"/><rect x="11" y="7" width="2" height="6" rx="1" fill="#fff"/><rect x="11" y="15" width="2" height="2" rx="1" fill="#fff"/></svg>'
-  };
-  return '<div class="verdict '+type+'">'+icons[type]+'<div class="v-text"><div class="v-title">'+title+'</div><div class="v-detail">'+detail+'</div></div></div>';
-}
-
-// ═══ STEPS ═══
-function updatePills(){
-  var h='';
-  for(var i=1;i<=3;i++){
-    var cls=i<S.step?'ok':i===S.step?'on':'off';
-    h+='<div class="np '+cls+'">'+(i<S.step?'✓':i)+'</div>';
-  }
-  document.getElementById('nav-pills').innerHTML=h;
-}
-
-function render(){
-  var c=document.getElementById('content');
-  if(S.step===0)renderIntro(c);
-  else if(S.step===1)renderScan(c);
-  else if(S.step===2)renderGpcScan(c);
-  else if(S.step===3)renderResults(c);
-  updatePills();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function renderIntro(c){
-  document.getElementById('nav-domain').textContent='US Privacy Compliance Check';
-  c.innerHTML='<div class="intro-card"><h1>Check your US privacy compliance</h1><p class="sub">We\'ll scan your website, detect third-party services, and test whether they respect the GPC opt-out signal.</p><div class="url-wrap"><input class="url-in" id="urlin" placeholder="https://www.yoursite.com" autofocus><button class="url-btn" onclick="startScan()">Scan</button></div><div class="checks"><div class="chk-item"><span class="cd"></span> Service detection</div><div class="chk-item"><span class="cd"></span> "Do Not Sell" link</div><div class="chk-item"><span class="cd"></span> GPC well-known</div><div class="chk-item"><span class="cd"></span> GPC honoring test</div></div></div>';
-  setTimeout(function(){var inp=document.getElementById('urlin');if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')startScan()})}},50);
-}
-
-function renderScan(c){
-  c.innerHTML=
-    '<div class="card"><div class="card-header"><div class="card-step active">1</div><div><div class="card-title">Scanning your website</div><div class="card-subtitle">Detecting services, checking footer, and looking for GPC declaration</div></div></div><div class="card-body">'+
-    '<div class="scan-anim" id="scan-anim"><div class="spinner"></div><div class="scan-text">Scanning <strong>'+S.domain+'</strong> as a California visitor…</div></div>'+
-    '<div id="svc-feed"></div>'+
-    '<div id="scan-verdicts"></div>'+
-    '<div id="scan-next" class="hidden"></div>'+
-    '</div></div>';
-
-  // Run scans in parallel
-  var scansDone=0;
-  function checkDone(){
-    scansDone++;
-    if(scansDone<3)return;
-
-    document.getElementById('scan-anim').innerHTML='<svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#22c55e"/><path d="M6 10.5l2.5 2.5L14 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="scan-text"><strong>Scan complete</strong> — '+S.normalSvcs.length+' services detected</div>';
-
-    // Show verdicts
-    var v='';
-
-    // DNS
-    v+=S.dnsFound
-      ?verdictHtml('pass','"Do Not Sell or Share" link found','Detected in the website footer.')
-      :verdictHtml('fail','No "Do Not Sell or Share" link found','Required under CCPA/CPRA for businesses that sell or share personal information.');
-
-    // GPC well-known
-    if(S.gpcWellKnown&&S.gpcWellKnown.gpc===true){
-      S.gpcDeclared=true;
-      v+=verdictHtml('pass','GPC support declared via /.well-known/gpc.json','The website has published a GPC support resource, indicating it acknowledges and intends to honor the Global Privacy Control signal.');
-    } else {
-      v+=verdictHtml('info','No GPC support resource found','No /.well-known/gpc.json file detected. Websites can publish this file to formally declare they support GPC. This is optional but recommended under the W3C GPC specification.');
-    }
-
-    document.getElementById('scan-verdicts').innerHTML=v;
-    document.getElementById('scan-next').classList.remove('hidden');
-    document.getElementById('scan-next').innerHTML='<div class="btn-row"><button class="btn btn-p" onclick="S.step=2;render()">Next: Test GPC Signal →</button></div>';
-  }
-
-  // 1. Service detection
-  simulateScan(S.domain,false,function(results){
-    S.normalSvcs=results;
-    renderGroupedFeed('svc-feed',results,false);
-    S.dnsFound=Math.random()>0.4;
-    checkDone();
-  });
-
-  // 2. GPC well-known check
-  simulateGpcWellKnown(S.domain,function(result){
-    S.gpcWellKnown=result;
-    checkDone();
-  });
-
-  // 3. Small delay for visual pacing
-  setTimeout(checkDone,2000);
-}
-
-function renderGpcScan(c){
-  c.innerHTML=
-    '<div class="card" style="border:2px solid #bbf7d0"><div class="card-header" style="background:#f0fdf4"><div class="card-step active" style="background:#22c55e">2</div><div><div class="card-title">Testing GPC opt-out signal</div><div class="card-subtitle">Re-scanning with Global Privacy Control enabled — which services stop?</div></div></div><div class="card-body">'+
-    '<div class="scan-anim" id="gpc-anim" style="background:#f0fdf4;border:1px solid #bbf7d0"><div class="spinner" style="border-top-color:#22c55e"></div><div class="scan-text">Re-scanning <strong>'+S.domain+'</strong> with GPC signal <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">Sec-GPC: 1</span></div></div>'+
-    '<p style="font-size:12px;color:#6b7280">Marketing and statistics services should stop loading when the GPC opt-out signal is present. Necessary services are always allowed.</p>'+
-    '<div id="gpc-feed"></div>'+
-    '<div id="gpc-verdicts"></div>'+
-    '<div id="gpc-next" class="hidden"></div>'+
-    '</div></div>';
-
-  simulateScan(S.domain,true,function(results){
-    S.gpcSvcs=results;
-
-    // Show grouped with status
-    renderGroupedFeed('gpc-feed',S.normalSvcs,true,S.gpcSvcs);
-
-    var stopped=S.normalSvcs.filter(function(n){return n.cat!=='nec'&&!results.find(function(g){return g.name===n.name})});
-    var violators=S.normalSvcs.filter(function(n){return n.cat!=='nec'&&results.find(function(g){return g.name===n.name})});
-    S.gpcSupported=stopped.length>0;
-
-    document.getElementById('gpc-anim').innerHTML='<svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#22c55e"/><path d="M6 10.5l2.5 2.5L14 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="scan-text"><strong>GPC test complete</strong></div>';
-
-    var v='<div class="counters"><div class="counter green"><div class="c-num">'+stopped.length+'</div><div class="c-lbl">Stopped</div></div><div class="counter red"><div class="c-num">'+violators.length+'</div><div class="c-lbl">Ignoring GPC</div></div></div>';
-
-    if(stopped.length>0) v+=verdictHtml('pass','GPC signal is effective',''+stopped.length+' non-essential service'+(stopped.length!==1?'s':'')+' stopped loading: '+stopped.map(function(s){return s.name}).join(', '));
-    if(violators.length>0) v+=verdictHtml('fail',violators.length+' service'+(violators.length!==1?'s':'')+' ignoring GPC',''+violators.map(function(s){return s.name}).join(', ')+' continued loading despite the GPC opt-out signal.');
-    if(stopped.length===0&&violators.length===0) v+=verdictHtml('info','No non-essential services detected','Only necessary services were found, so GPC comparison is not applicable.');
-
-    document.getElementById('gpc-verdicts').innerHTML=v;
-    document.getElementById('gpc-next').classList.remove('hidden');
-    document.getElementById('gpc-next').innerHTML='<div class="btn-row"><button class="btn btn-s" onclick="S.step=1;render()">← Back</button><button class="btn btn-p" onclick="S.step=3;render()">See Full Results →</button></div>';
-  });
-}
+function renderGpc(c){c.innerHTML='<div class="card" style="border:2px solid #bbf7d0"><div class="card-header" style="background:#f0fdf4"><div class="card-step active" style="background:#22c55e">3</div><div><div class="card-title">Testing GPC opt-out signal</div><div class="card-subtitle">Re-scanning with Sec-GPC: 1 — which services stop?</div></div></div><div class="card-body"><div class="scan-anim" id="gpc-anim" style="background:#f0fdf4;border:1px solid #bbf7d0"><div class="spinner" style="border-top-color:#22c55e"></div><div class="scan-text">Re-scanning with GPC <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">ON</span></div></div><p style="font-size:12px;color:#6b7280">Marketing and statistics services should stop loading. Necessary services are always allowed.</p><div id="gpc-feed"></div><div id="gpc-verdicts"></div><div id="gpc-next" class="hidden"></div></div></div>';
+simScan(S.domain,true,function(r){S.gpcSvcs=r;document.getElementById('gpc-feed').innerHTML=groupedHtml(S.normalSvcs,true,S.gpcSvcs);var stopped=S.normalSvcs.filter(function(n){return n.cat!=='nec'&&!r.find(function(g){return g.name===n.name})});var violators=S.normalSvcs.filter(function(n){return n.cat!=='nec'&&r.find(function(g){return g.name===n.name})});S.gpcSupported=stopped.length>0;document.getElementById('gpc-anim').innerHTML='<svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#22c55e"/><path d="M6 10.5l2.5 2.5L14 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="scan-text"><strong>GPC test complete</strong></div>';var v='<div class="counters"><div class="counter green"><div class="c-num">'+stopped.length+'</div><div class="c-lbl">Stopped</div></div><div class="counter red"><div class="c-num">'+violators.length+'</div><div class="c-lbl">Ignoring GPC</div></div></div>';if(stopped.length>0)v+=verdictHtml('pass','GPC signal effective',stopped.length+' service'+(stopped.length!==1?'s':'')+' stopped: '+stopped.map(function(s){return s.name}).join(', '));if(violators.length>0)v+=verdictHtml('fail',violators.length+' service'+(violators.length!==1?'s':'')+' ignoring GPC',violators.map(function(s){return s.name}).join(', ')+' continued despite GPC opt-out.');document.getElementById('gpc-verdicts').innerHTML=v;document.getElementById('gpc-next').classList.remove('hidden');document.getElementById('gpc-next').innerHTML='<div class="btn-row"><button class="btn btn-s" onclick="goStep(2)">← Back</button><button class="btn btn-p" onclick="goStep(4)">See Full Results →</button></div>'})}
 
 function renderResults(c){
-  var allSvcs={};
-  S.normalSvcs.forEach(function(s){allSvcs[s.name]={name:s.name,cat:s.cat,domain:s.domain,normal:true,gpc:false}});
-  S.gpcSvcs.forEach(function(s){if(allSvcs[s.name])allSvcs[s.name].gpc=true;else allSvcs[s.name]={name:s.name,cat:s.cat,domain:s.domain,normal:false,gpc:true}});
-  var svcList=Object.values(allSvcs).sort(function(a,b){var o={mkt:0,stat:1,pref:2,nec:3};return(o[a.cat]||4)-(o[b.cat]||4)});
+  var all={};S.normalSvcs.forEach(function(s){all[s.name]={name:s.name,cat:s.cat,domain:s.domain,normal:true,gpc:false}});S.gpcSvcs.forEach(function(s){if(all[s.name])all[s.name].gpc=true;else all[s.name]={name:s.name,cat:s.cat,domain:s.domain,normal:false,gpc:true}});
+  var list=Object.values(all).sort(function(a,b){var o={mkt:0,stat:1,pref:2,nec:3};return(o[a.cat]||4)-(o[b.cat]||4)});
+  var viol=list.filter(function(s){return s.normal&&s.gpc&&s.cat!=='nec'});
+  var honor=list.filter(function(s){return s.normal&&!s.gpc&&s.cat!=='nec'});
+  var fails=0;if(!S.dnsFound)fails++;if(viol.length>0)fails++;if(!S.gpcSupported&&!S.gpcDeclared)fails++;if(!S.cmp)fails++;
+  var rl,rc;if(fails>=2){rl='High risk';rc='high'}else if(fails>=1){rl='Medium risk';rc='medium'}else{rl='Low risk';rc='low'}
+  var dots={high:'#ef4444',medium:'#f59e0b',low:'#22c55e'};var msgs={high:'You need to take action!',medium:'Some improvements needed.',low:'Your site appears compliant!'};
 
-  var violators=svcList.filter(function(s){return s.normal&&s.gpc&&s.cat!=='nec'});
-  var honoring=svcList.filter(function(s){return s.normal&&!s.gpc&&s.cat!=='nec'});
+  var cmpV='';if(S.cmp){var issues=[];if(!S.dnsFound)issues.push('missing DNS link');if(viol.length>0)issues.push(viol.length+' services ignoring GPC');if(!S.gpcDeclared)issues.push('no GPC declaration');if(S.cmp.ours){cmpV=verdictHtml(issues.length>0?'info':'pass','CMP: '+S.cmp.name,issues.length>0?'Installed but check configuration: '+issues.join(', '):'Installed and appears properly configured.')}else{cmpV=verdictHtml(issues.length>0?'fail':'pass','CMP: '+S.cmp.name+' (by '+S.cmp.vendor+')',issues.length>0?'Installed but gaps found: '+issues.join(', ')+'.':'Installed and handling US compliance.')}}else{cmpV=verdictHtml('fail','No CMP detected','No consent management platform found on your website.')}
 
-  var fails=0;
-  if(!S.dnsFound)fails++;
-  if(violators.length>0)fails++;
-  if(!S.gpcSupported&&!S.gpcDeclared)fails++;
+  var rows='';catOrder.forEach(function(cat){var cs=list.filter(function(s){return s.cat===cat});if(!cs.length)return;var m=catMeta[cat];rows+='<tr><td colspan="4" style="background:#f8f9fb;font-weight:700;font-size:11px;padding:6px 12px;color:#4b5563"><span class="cat-dot '+m.dot+'" style="display:inline-block;vertical-align:middle;margin-right:6px"></span>'+m.name+' <span style="font-weight:400;color:#9ca3af;margin-left:4px">'+m.note+'</span></td></tr>';cs.forEach(function(s){var isN=s.cat==='nec';var nS=s.normal?'<span class="svc-status firing"><span class="st-dot" style="background:#ef4444"></span>Active</span>':'<span style="color:#9ca3af;font-size:11px">—</span>';var gS=s.gpc?'<span class="svc-status firing"><span class="st-dot" style="background:#ef4444"></span>Active</span>':'<span class="svc-status stopped"><span class="st-dot" style="background:#22c55e"></span>Stopped</span>';var h;if(isN)h='<span class="svc-status ok"><span class="st-dot" style="background:#22c55e"></span>Essential</span>';else if(s.normal&&!s.gpc)h='<span class="svc-status stopped"><span class="st-dot" style="background:#22c55e"></span>Yes</span>';else if(s.normal&&s.gpc)h='<span class="svc-status firing"><span class="st-dot" style="background:#ef4444"></span>No</span>';else h='<span style="color:#9ca3af;font-size:11px">N/A</span>';rows+='<tr'+(isN?' class="nec-row"':'')+'><td><strong>'+s.name+'</strong><br><span style="font-size:10px;color:#1a73e8;font-family:monospace">'+s.domain+'</span></td><td>'+nS+'</td><td>'+gS+'</td><td>'+h+'</td></tr>'})});
 
-  var rl,rc;
-  if(fails>=2){rl='High risk';rc='high'}
-  else if(fails>=1){rl='Medium risk';rc='medium'}
-  else{rl='Low risk';rc='low'}
+  var ctaT,ctaP;if(!S.cmp){ctaT='You need a CMP';ctaP='Without a consent management platform, CCPA/CPRA compliance requires manual implementation. Cookiebot automates DNS links, GPC handling, and third-party consent.'}else if(S.cmp.ours){ctaT='Review your configuration';ctaP='Your Cookiebot CMP is installed. Check your CCPA/CPRA settings to ensure DNS links and GPC are properly configured.'}else{ctaT='Switch to Cookiebot for better compliance';ctaP='Your current CMP ('+S.cmp.name+') '+(fails>0?'is leaving compliance gaps.':' is handling the basics.')+' Cookiebot provides automated DNS management, GPC enforcement, and service-level opt-out control.'}
 
-  var dots={high:'#ef4444',medium:'#f59e0b',low:'#22c55e'};
-  var msgs={high:'You need to take action!',medium:'Some improvements needed.',low:'Your site appears compliant!'};
-
-  // Table rows grouped by category
-  var tableRows='';
-  catOrder.forEach(function(cat){
-    var catSvcs=svcList.filter(function(s){return s.cat===cat});
-    if(!catSvcs.length)return;
-    var m=catMeta[cat];
-    tableRows+='<tr class="cmp-cat-header"><td colspan="5"><span class="cat-dot '+m.dot+'" style="display:inline-block;vertical-align:middle;margin-right:6px"></span>'+m.name+' <span style="font-weight:400;color:#9ca3af;margin-left:4px">'+m.note+'</span></td></tr>';
-    catSvcs.forEach(function(s){
-      var isNec=s.cat==='nec';
-      var nS=s.normal?'<span class="svc-status firing"><span class="st-dot" style="background:#ef4444"></span>Active</span>':'<span class="svc-status" style="color:#9ca3af">—</span>';
-      var gS=s.gpc?'<span class="svc-status firing"><span class="st-dot" style="background:#ef4444"></span>Active</span>':'<span class="svc-status stopped"><span class="st-dot" style="background:#22c55e"></span>Stopped</span>';
-      var honor;
-      if(isNec) honor='<span class="svc-status ok"><span class="st-dot" style="background:#22c55e"></span>Essential</span>';
-      else if(s.normal&&!s.gpc) honor='<span class="svc-status stopped"><span class="st-dot" style="background:#22c55e"></span>Yes</span>';
-      else if(s.normal&&s.gpc) honor='<span class="svc-status firing"><span class="st-dot" style="background:#ef4444"></span>No</span>';
-      else honor='<span class="svc-status" style="color:#9ca3af">N/A</span>';
-      tableRows+='<tr'+(isNec?' class="nec-row"':'')+'><td><strong>'+s.name+'</strong><br><span style="font-size:10px;color:#1a73e8;font-family:monospace">'+s.domain+'</span></td><td>'+nS+'</td><td>'+gS+'</td><td>'+honor+'</td></tr>';
-    });
-  });
-
-  c.innerHTML=
-    '<div class="card"><div class="card-header"><div class="card-step done">✓</div><div><div class="card-title">Compliance Results: '+S.domain+'</div></div></div><div class="card-body">'+
+  c.innerHTML='<div class="card"><div class="card-header"><div class="card-step done">✓</div><div><div class="card-title">Compliance Results: '+S.domain+'</div></div></div><div class="card-body">'+
     '<div class="risk-lg '+rc+'"><span style="width:12px;height:12px;border-radius:50%;background:'+dots[rc]+'"></span>'+rl+'</div>'+
-    '<p style="color:'+{high:'#dc2626',medium:'#d97706',low:'#16a34a'}[rc]+';font-weight:600;margin-top:0">'+msgs[rc]+'</p>'+
-
-    '<div class="counters"><div class="counter gray"><div class="c-num">'+svcList.length+'</div><div class="c-lbl">Services</div></div><div class="counter red"><div class="c-num">'+violators.length+'</div><div class="c-lbl">Ignoring GPC</div></div><div class="counter green"><div class="c-num">'+honoring.length+'</div><div class="c-lbl">Honoring GPC</div></div></div>'+
-
-    // Verdicts
-    (S.dnsFound?verdictHtml('pass','"Do Not Sell" link: Found','Detected in the website footer.'):verdictHtml('fail','"Do Not Sell" link: Missing','Required under CCPA/CPRA.'))+
-
-    (S.gpcDeclared
-      ?verdictHtml('pass','GPC declared via /.well-known/gpc.json','The website formally declares GPC support per the W3C specification.')
-      :verdictHtml('info','No GPC support resource (/.well-known/gpc.json)','Not required, but recommended to formally signal GPC support per the W3C spec.'))+
-
-    (S.gpcSupported
-      ?verdictHtml('pass','GPC signal: Effective','Non-essential services changed behavior when GPC was enabled.')
-      :verdictHtml('fail','GPC signal: Not effective','No non-essential services changed behavior when GPC was enabled.'))+
-
-    (violators.length===0
-      ?verdictHtml('pass','All non-essential services honor GPC','No marketing or statistics services ignored the GPC signal.')
-      :verdictHtml('fail',violators.length+' service'+(violators.length!==1?'s':'')+' ignoring GPC opt-out',violators.map(function(v){return v.name}).join(', ')+' continued tracking despite GPC.'))+
-
-    '<div style="margin-top:20px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">Service-Level Comparison: Normal vs GPC</div>'+
-    '<div class="cmp-wrap"><table class="cmp-table"><thead><tr><th>Service</th><th>Normal</th><th>With GPC</th><th>Honors GPC?</th></tr></thead><tbody>'+tableRows+'</tbody></table></div></div>'+
-
-    '<div class="cta-box"><h3>Fix this with Cookiebot CMP</h3><p>Automate CCPA/CPRA compliance — manage DNS links, GPC declarations, and third-party consent.</p><a href="https://admin.cookiebot.com/signup" target="_blank"><button class="btn">Start your 14-day free trial</button></a></div>'+
-    '<div class="btn-row" style="justify-content:center;margin-top:8px"><button class="btn btn-s" onclick="S={domain:\'\',url:\'\',step:0,normalSvcs:[],gpcSvcs:[],dnsFound:false,gpcDeclared:false,gpcWellKnown:null,gpcSupported:false};render()">Start over</button></div>'+
+    '<p style="color:'+{high:'#dc2626',medium:'#d97706',low:'#16a34a'}[rc]+';font-weight:600;margin-top:0;margin-bottom:16px">'+msgs[rc]+'</p>'+
+    '<div class="counters"><div class="counter gray"><div class="c-num">'+list.length+'</div><div class="c-lbl">Services</div></div><div class="counter red"><div class="c-num">'+viol.length+'</div><div class="c-lbl">Ignoring GPC</div></div><div class="counter green"><div class="c-num">'+honor.length+'</div><div class="c-lbl">Honoring GPC</div></div></div>'+
+    cmpV+
+    (S.dnsFound?verdictHtml('pass','"Do Not Sell" link: Found','Detected in footer.'):verdictHtml('fail','"Do Not Sell" link: Missing','Required under CCPA/CPRA.'))+
+    (S.gpcDeclared?verdictHtml('pass','GPC declared (/.well-known/gpc.json)','Formal GPC support per W3C spec.'):verdictHtml('info','No GPC declaration file','Optional but recommended.'))+
+    (S.gpcSupported?verdictHtml('pass','GPC signal: Effective','Non-essential services responded to GPC.'):verdictHtml('fail','GPC signal: Not effective','No behavioral change with GPC.'))+
+    (viol.length===0?verdictHtml('pass','All services honor GPC','No violations detected.'):verdictHtml('fail',viol.length+' service'+(viol.length!==1?'s':'')+' ignoring GPC',viol.map(function(v){return v.name}).join(', ')+' continued tracking.'))+
+    '<div style="margin-top:20px"><div style="font-size:13px;font-weight:700;margin-bottom:8px">Service-Level GPC Comparison</div><div class="cmp-wrap"><table class="cmp-table"><thead><tr><th>Service</th><th>Normal</th><th>With GPC</th><th>Honors GPC?</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
+    '<div class="cta-box"><h3>'+ctaT+'</h3><p>'+ctaP+'</p><a href="https://admin.cookiebot.com/signup" target="_blank"><button class="btn-w">Start your 14-day free trial</button></a></div>'+
+    '<div class="btn-row" style="justify-content:center;margin-top:12px"><button class="btn btn-s" onclick="location.reload()">Scan another site</button></div>'+
     '</div></div>';
 }
 
-function startScan(){
-  var v=document.getElementById('urlin').value.trim();
-  if(!v)return;
-  if(v.indexOf('http')!==0)v='https://'+v;
-  S.domain=v.replace(/^https?:\/\//,'').replace(/\/+$/,'');
-  S.url=v;S.step=1;
-  document.getElementById('nav-domain').textContent=S.domain;
-  render();
-}
-
-render();
+document.getElementById('urlin').addEventListener('keydown',function(e){if(e.key==='Enter')startScan()});
 </script>
 </body>
 </html>
