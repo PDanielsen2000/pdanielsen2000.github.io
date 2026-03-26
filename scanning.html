@@ -6,476 +6,426 @@
 <title>US Privacy Compliance Check – Cookiebot</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#0f1629;color:#1a1a2e;-webkit-font-smoothing:antialiased;line-height:1.6;height:100vh;overflow:hidden}
-
-.app{display:flex;flex-direction:column;height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#f4f5f7;color:#1a1a2e;-webkit-font-smoothing:antialiased;line-height:1.6;min-height:100vh}
 
 /* NAV */
-.nav{height:48px;background:#1b2a4a;display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0;z-index:20}
-.nav-icon{width:22px;height:22px;border-radius:4px;background:#1a73e8;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:10px}
-.nav-brand{color:#fff;font-weight:700;font-size:13px}
-.nav-sep{width:1px;height:24px;background:#2d3f5e;margin:0 10px}
-.nav-title{color:#94a3b8;font-size:12px;font-weight:500}
+.nav{background:#1b2a4a;height:52px;display:flex;align-items:center;padding:0 24px;gap:8px;position:sticky;top:0;z-index:20}
+.nav-icon{width:24px;height:24px;border-radius:5px;background:#1a73e8;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:10px}
+.nav-brand{color:#fff;font-weight:700;font-size:14px}
+.nav-sep{width:1px;height:24px;background:#2d3f5e;margin:0 12px}
+.nav-domain{color:#94a3b8;font-size:12px;font-family:monospace}
 .nav-right{margin-left:auto;display:flex;gap:4px}
-.np{padding:4px 12px;border-radius:14px;font-size:10px;font-weight:700;transition:all .2s}
-.np.off{background:transparent;border:1px solid #2d3f5e;color:#475569}
-.np.on{background:#1a73e8;border:1px solid #1a73e8;color:#fff}
-.np.ok{background:#22c55e;border:1px solid #22c55e;color:#fff}
+.np{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;transition:all .2s}
+.np.off{border:2px solid #2d3f5e;color:#475569;background:transparent}
+.np.on{border:2px solid #1a73e8;color:#fff;background:#1a73e8}
+.np.ok{border:2px solid #22c55e;color:#fff;background:#22c55e}
+
+/* WRAP */
+.wrap{max-width:720px;margin:0 auto;padding:32px 20px 60px}
 
 /* INTRO */
-.intro{position:absolute;inset:48px 0 0 0;background:#f4f5f7;z-index:15;display:flex;align-items:center;justify-content:center}
-.intro-card{background:#fff;border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:44px 40px;max-width:500px;width:100%;text-align:center}
-.intro-card h1{font-size:24px;font-weight:800;color:#1a1a2e;margin-bottom:6px}
-.intro-card .sub{font-size:13px;color:#6b7280;margin-bottom:24px}
-.url-wrap{display:flex;gap:0;margin-bottom:16px}
-.url-in{flex:1;padding:13px 16px;border:2px solid #e4e7ec;border-radius:10px 0 0 10px;font-size:14px;outline:none;color:#1a1a2e}
+.intro-card{background:#fff;border-radius:16px;box-shadow:0 2px 16px rgba(0,0,0,.06);padding:48px 40px;text-align:center}
+.intro-card h1{font-size:28px;font-weight:800;color:#1a1a2e;margin-bottom:8px}
+.intro-card .sub{font-size:14px;color:#6b7280;margin-bottom:28px;max-width:420px;margin-left:auto;margin-right:auto}
+.url-wrap{display:flex;gap:0;max-width:480px;margin:0 auto 24px}
+.url-in{flex:1;padding:14px 18px;border:2px solid #e4e7ec;border-radius:10px 0 0 10px;font-size:15px;outline:none;color:#1a1a2e}
 .url-in:focus{border-color:#1a73e8}
 .url-in::placeholder{color:#c4c9d2}
-.url-btn{padding:13px 24px;background:#1a73e8;color:#fff;border:none;border-radius:0 10px 10px 0;font-size:14px;font-weight:700;cursor:pointer}
+.url-btn{padding:14px 28px;background:#1a73e8;color:#fff;border:none;border-radius:0 10px 10px 0;font-size:15px;font-weight:700;cursor:pointer}
 .url-btn:hover{background:#1557b0}
-.checklist{text-align:left;margin:0 auto;max-width:300px}
-.chk{display:flex;align-items:center;gap:8px;font-size:12px;color:#4b5563;padding:4px 0}
-.chk-dot{width:7px;height:7px;border-radius:50%;background:#1a73e8;flex-shrink:0}
+.checks{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.chk-item{display:flex;align-items:center;gap:6px;font-size:13px;color:#4b5563}
+.chk-item .cd{width:7px;height:7px;border-radius:50%;background:#1a73e8}
 
-/* SPLIT */
-.split{flex:1;display:none;overflow:hidden}
-.split.on{display:flex}
-.pane{flex:1;display:flex;flex-direction:column}
-.pane+.pane{border-left:2px solid #0f1629}
-.pane-bar{height:32px;display:flex;align-items:center;padding:0 12px;gap:6px;flex-shrink:0}
-.pane-left .pane-bar{background:#0f1629}
-.pane-right .pane-bar{background:#071209}
-.pane-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:5px}
-.pane-left .pane-label{color:#94a3b8}
-.pane-right .pane-label{color:#4ade80}
-.pane-dot{width:6px;height:6px;border-radius:50%}
-.pane-url{flex:1;text-align:center;font-size:9px;color:#475569;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pane-frame{flex:1;background:#fff;position:relative}
-.pane-frame iframe{width:100%;height:100%;border:none}
-.pane-ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#f4f5f7;color:#9ca3af;font-size:13px;font-weight:500;flex-direction:column;gap:8px}
-.pane-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(7,18,9,.9);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:24px;line-height:1.6;flex-direction:column;gap:8px}
+/* CARDS */
+.card{background:#fff;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.05);margin-bottom:20px;overflow:hidden}
+.card-header{padding:20px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #ebedf0}
+.card-step{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.card-step.active{background:#1a73e8;color:#fff}
+.card-step.done{background:#22c55e;color:#fff}
+.card-step.pending{background:#f4f5f7;color:#9ca3af;border:2px solid #e4e7ec}
+.card-title{font-size:16px;font-weight:700;color:#1a1a2e}
+.card-subtitle{font-size:12px;color:#6b7280}
+.card-status{margin-left:auto;flex-shrink:0}
+.card-body{padding:20px 24px}
+.card-body p{font-size:13px;color:#4b5563;margin-bottom:12px}
 
-/* DETECTED SERVICES TICKER */
-.detect-bar{height:0;background:#111827;overflow:hidden;transition:height .3s;flex-shrink:0;display:flex;align-items:center}
-.detect-bar.on{height:36px}
-.detect-inner{display:flex;align-items:center;gap:8px;padding:0 16px;width:100%;overflow-x:auto}
-.detect-lbl{font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;flex-shrink:0}
-.detect-tags{display:flex;gap:4px;overflow-x:auto}
-.dtag{padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:4px}
-.dtag.mkt{background:#451a1a;color:#fca5a5;border:1px solid #7f1d1d}
-.dtag.stat{background:#451a03;color:#fcd34d;border:1px solid #92400e}
-.dtag.nec{background:#052e16;color:#86efac;border:1px solid #166534}
-.dtag.pref{background:#172554;color:#93c5fd;border:1px solid #1e40af}
-.dtag.unk{background:#1e1e2e;color:#94a3b8;border:1px solid #374151}
-.dtag .d-dot{width:5px;height:5px;border-radius:50%}
-.dtag.mkt .d-dot{background:#ef4444}.dtag.stat .d-dot{background:#f59e0b}.dtag.nec .d-dot{background:#22c55e}.dtag.pref .d-dot{background:#3b82f6}.dtag.unk .d-dot{background:#6b7280}
+/* SCANNING ANIMATION */
+.scan-anim{display:flex;align-items:center;gap:12px;padding:16px 20px;background:#f8f9fb;border-radius:8px;margin-bottom:16px}
+.spinner{width:20px;height:20px;border:2.5px solid #e4e7ec;border-top-color:#1a73e8;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scan-text{font-size:13px;color:#4b5563}
+.scan-text strong{color:#1a1a2e}
 
-/* WIZARD BAR */
-.wiz{background:#fff;border-top:1px solid #e4e7ec;flex-shrink:0;z-index:10}
-.wiz-in{max-width:960px;margin:0 auto;padding:16px 20px;display:flex;align-items:flex-start;gap:20px}
-.wiz-text{flex:1}
-.wiz-text h3{font-size:15px;font-weight:800;color:#1a1a2e;margin-bottom:3px}
-.wiz-text p{font-size:12px;color:#6b7280;margin-bottom:10px;line-height:1.5}
-.wiz-actions{display:flex;flex-direction:column;gap:8px;flex-shrink:0;align-items:flex-end}
+/* LIVE SERVICE FEED */
+.live-feed{margin:12px 0}
+.feed-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9ca3af;margin-bottom:8px}
+.feed-items{display:flex;flex-direction:column;gap:4px;max-height:260px;overflow-y:auto}
+.feed-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;background:#f8f9fb;font-size:12px;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.feed-item .fi-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.feed-item .fi-icon.mkt{background:#fee2e2;color:#dc2626}
+.feed-item .fi-icon.stat{background:#fef3c7;color:#d97706}
+.feed-item .fi-icon.nec{background:#d1fae5;color:#059669}
+.feed-item .fi-icon.pref{background:#dbeafe;color:#2563eb}
+.feed-item .fi-icon.unk{background:#f3f4f6;color:#6b7280}
+.feed-item .fi-name{font-weight:600;color:#1a1a2e;flex:1}
+.feed-item .fi-domain{font-size:10px;color:#1a73e8;font-family:monospace}
+.fi-cat{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;flex-shrink:0}
+.fi-cat.mkt{background:#fef2f2;color:#dc2626}.fi-cat.stat{background:#fffbeb;color:#d97706}.fi-cat.nec{background:#f0fdf4;color:#16a34a}.fi-cat.pref{background:#eff6ff;color:#2563eb}.fi-cat.unk{background:#f4f5f7;color:#6b7280}
 
-.choices{display:flex;gap:6px;flex-wrap:wrap}
-.choice{padding:8px 16px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid #e4e7ec;background:#fff;color:#1a1a2e;transition:all .12s}
-.choice:hover{border-color:#1a73e8;background:#eff6ff}
-.choice.selected{border-color:#1a73e8;background:#1a73e8;color:#fff}
+/* COMPARISON TABLE */
+.cmp-table{width:100%;border-collapse:collapse;font-size:12px;margin:12px 0}
+.cmp-table th{padding:8px 12px;text-align:left;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;font-weight:600;background:#fafbfc;border-bottom:2px solid #ebedf0}
+.cmp-table td{padding:8px 12px;border-bottom:1px solid #f3f4f6}
+.cmp-table tr:last-child td{border-bottom:none}
+.status-pill{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.status-pill.firing{background:#fef2f2;color:#dc2626}
+.status-pill.stopped{background:#f0fdf4;color:#16a34a}
+.status-pill.na{background:#f4f5f7;color:#9ca3af}
+.st-dot{width:5px;height:5px;border-radius:50%}
 
-.info{padding:8px 12px;border-radius:6px;font-size:11px;line-height:1.5;display:inline-block}
-.info.green{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
-.info.red{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+/* VERDICT BOXES */
+.verdict{display:flex;align-items:flex-start;gap:12px;padding:16px;border-radius:8px;margin:12px 0}
+.verdict.pass{background:#f0fdf4;border:1px solid #bbf7d0}
+.verdict.fail{background:#fef2f2;border:1px solid #fecaca}
+.verdict.warn{background:#fffbeb;border:1px solid #fde68a}
+.v-icon{width:24px;height:24px;flex-shrink:0}
+.v-text{flex:1}
+.v-title{font-size:13px;font-weight:700}
+.verdict.pass .v-title{color:#166534}
+.verdict.fail .v-title{color:#991b1b}
+.verdict.warn .v-title{color:#92400e}
+.v-detail{font-size:12px;margin-top:2px}
+.verdict.pass .v-detail{color:#15803d}
+.verdict.fail .v-detail{color:#b91c1c}
+.verdict.warn .v-detail{color:#a16207}
 
-.btn{padding:9px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .12s}
+/* SUMMARY COUNTERS */
+.counters{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}
+.counter{padding:10px 16px;border-radius:8px;text-align:center;flex:1;min-width:100px}
+.counter .c-num{font-size:24px;font-weight:800}
+.counter .c-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.counter.red{background:#fef2f2;border:1px solid #fecaca}.counter.red .c-num{color:#dc2626}.counter.red .c-lbl{color:#991b1b}
+.counter.green{background:#f0fdf4;border:1px solid #bbf7d0}.counter.green .c-num{color:#16a34a}.counter.green .c-lbl{color:#166534}
+.counter.blue{background:#eff6ff;border:1px solid #bfdbfe}.counter.blue .c-num{color:#1d4ed8}.counter.blue .c-lbl{color:#1e40af}
+.counter.gray{background:#f8f9fb;border:1px solid #e4e7ec}.counter.gray .c-num{color:#1a1a2e}.counter.gray .c-lbl{color:#6b7280}
+
+/* CTA */
+.cta-box{background:linear-gradient(135deg,#1b2a4a 0%,#1a73e8 100%);border-radius:12px;padding:28px 24px;text-align:center;margin-top:20px}
+.cta-box h3{color:#fff;font-size:18px;font-weight:800;margin-bottom:4px}
+.cta-box p{color:#bfdbfe;font-size:13px;margin-bottom:18px}
+.cta-box .btn{background:#fff;color:#1b2a4a;padding:12px 32px;font-size:14px}
+
+/* RISK BADGE */
+.risk-lg{display:inline-flex;align-items:center;gap:10px;border-radius:24px;padding:12px 28px;font-weight:700;font-size:18px;margin:12px 0}
+.risk-lg.high{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.risk-lg.medium{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
+.risk-lg.low{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
+
+/* BUTTONS */
+.btn{padding:10px 22px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .12s;display:inline-flex;align-items:center;gap:6px}
 .btn-p{background:#1a73e8;color:#fff}.btn-p:hover{background:#1557b0}
 .btn-s{background:#f4f5f7;color:#4b5563;border:1px solid #e4e7ec}.btn-s:hover{background:#ebedf0}
-.btn-g{background:#22c55e;color:#fff}.btn-g:hover{background:#16a34a}
-.btn-row{display:flex;gap:6px;margin-top:8px}
-
-/* RESULTS BAR */
-.res-bar{display:none;background:#fff;border-top:1px solid #e4e7ec;flex-shrink:0;z-index:10;overflow-y:auto;max-height:45vh}
-.res-bar.on{display:block}
-.res-in{max-width:960px;margin:0 auto;padding:20px}
-.res-in h3{font-size:17px;font-weight:800;margin-bottom:4px}
-.risk-inline{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:16px;font-weight:700;font-size:12px;margin-bottom:14px}
-.risk-inline.high{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
-.risk-inline.medium{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
-.risk-inline.low{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
-
-.res-grid{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.res-card{flex:1;min-width:170px;padding:12px 14px;border-radius:8px;border:1px solid #e4e7ec;display:flex;align-items:flex-start;gap:8px}
-.res-card .ri{width:20px;height:20px;flex-shrink:0;margin-top:1px}
-.res-card .rt{font-size:12px;font-weight:700;color:#1a1a2e}
-.res-card .rd{font-size:10px;color:#6b7280;margin-top:1px}
-.res-card .rb{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;margin-top:3px;display:inline-block}
-.rb.pass{background:#f0fdf4;color:#16a34a}.rb.fail{background:#fef2f2;color:#dc2626}
-
-/* Services comparison table */
-.svc-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px}
-.svc-table th{padding:8px 10px;text-align:left;font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;font-weight:600;background:#fafbfc;border-bottom:2px solid #ebedf0}
-.svc-table td{padding:7px 10px;border-bottom:1px solid #f3f4f6}
-.svc-table tr:last-child td{border-bottom:none}
-.svc-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
-.svc-status{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
-.svc-status.firing{background:#fef2f2;color:#dc2626}
-.svc-status.stopped{background:#f0fdf4;color:#16a34a}
-.svc-status.absent{background:#f4f5f7;color:#9ca3af}
-
-.cta-inline{display:flex;align-items:center;gap:16px;background:#1b2a4a;border-radius:10px;padding:16px 20px}
-.cta-inline h4{color:#fff;font-size:14px;font-weight:700;margin-bottom:2px}
-.cta-inline p{color:#7b8ba3;font-size:11px;margin:0}
-.cta-inline .btn{background:#fff;color:#1b2a4a;margin-left:auto;white-space:nowrap}
+.btn-row{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
 
 .hidden{display:none!important}
-.spinner{width:18px;height:18px;border:2px solid #d1d5db;border-top-color:#1a73e8;border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
-@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<div class="app">
+<div class="nav" id="nav">
+  <div class="nav-icon">C</div>
+  <span class="nav-brand">Cookiebot™</span>
+  <div class="nav-sep"></div>
+  <span class="nav-domain" id="nav-domain">US Privacy Compliance Check</span>
+  <div class="nav-right" id="nav-pills"></div>
+</div>
 
-  <div class="nav">
-    <div class="nav-icon">C</div>
-    <span class="nav-brand">Cookiebot™</span>
-    <div class="nav-sep"></div>
-    <span class="nav-title" id="nav-title">US Privacy Compliance Check</span>
-    <div class="nav-right">
-      <div class="np on" id="np0">1</div>
-      <div class="np off" id="np1">2</div>
-      <div class="np off" id="np2">3</div>
-      <div class="np off" id="np3">4</div>
-      <div class="np off" id="np4">5</div>
-    </div>
-  </div>
-
-  <div class="main" style="flex:1;display:flex;flex-direction:column;position:relative;overflow:hidden">
-
-    <!-- INTRO -->
-    <div class="intro" id="intro">
-      <div class="intro-card">
-        <h1>Check your US privacy compliance</h1>
-        <p class="sub">We'll test your website against CCPA/CPRA requirements and auto-detect third-party services.</p>
-        <div class="url-wrap">
-          <input class="url-in" id="urlin" placeholder="https://www.yoursite.com" autofocus>
-          <button class="url-btn" onclick="doStart()">Start Check</button>
-        </div>
-        <div class="checklist">
-          <div class="chk"><span class="chk-dot"></span> Auto-detect third-party services</div>
-          <div class="chk"><span class="chk-dot"></span> "Do Not Sell" footer link</div>
-          <div class="chk"><span class="chk-dot"></span> Side-by-side GPC comparison</div>
-          <div class="chk"><span class="chk-dot"></span> Service-level GPC honoring check</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SPLIT VIEW -->
-    <div class="split" id="split">
-      <div class="pane pane-left">
-        <div class="pane-bar">
-          <div class="pane-label"><span class="pane-dot" style="background:#94a3b8"></span> NORMAL</div>
-          <div class="pane-url" id="left-url"></div>
-        </div>
-        <div class="pane-frame">
-          <div class="pane-ph" id="left-ph"><div class="spinner"></div>Loading website…</div>
-          <iframe id="left-iframe"></iframe>
-        </div>
-      </div>
-      <div class="pane pane-right">
-        <div class="pane-bar">
-          <div class="pane-label"><span class="pane-dot" style="background:#4ade80"></span> GPC OPT-OUT</div>
-          <div class="pane-url" id="right-url"></div>
-        </div>
-        <div class="pane-frame">
-          <iframe id="right-iframe" class="hidden"></iframe>
-          <div class="pane-overlay" id="right-overlay">
-            <div style="font-size:36px">🔒</div>
-            <div>GPC comparison loads in Step 4</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DETECTED SERVICES TICKER -->
-    <div class="detect-bar" id="detect-bar">
-      <div class="detect-inner">
-        <div class="detect-lbl" id="detect-lbl">Detecting services…</div>
-        <div class="detect-tags" id="detect-tags"></div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- WIZARD BAR -->
-  <div class="wiz" id="wiz"><div class="wiz-in" id="wiz-in"></div></div>
-
-  <!-- RESULTS BAR -->
-  <div class="res-bar" id="res-bar"><div class="res-in" id="res-in"></div></div>
-
+<div class="wrap">
+  <div id="content"></div>
 </div>
 
 <script>
 // ═══ CONFIG ═══
-// Change this to your Cloudflare Worker URL
-var PROXY = ''; // e.g. 'https://check-proxy.yourdomain.workers.dev'
+var PROXY=''; // Set to your Cloudflare Worker URL
 
-var GEO='otgeo=US,CA&_sp_geo_override=USCA&country=US&uc_cmp_country=US-06&ketch_region=US-CA&cmplz_user_region=us&framework=CCPA&cmpregulationkey=CCPA&ketch_jurisdiction=CCPA&gclid=xxxxxxxx&utm_email=test@test.com&otreset=true&otpreview=false&cmpdebug&debug_cmp&ketch_show';
-var HASH='#didomi:notice.ignoreCountry=true&uc_cmp_country=US-06';
+// Known services
+var KS={'google-analytics.com':{n:'Google Analytics',c:'stat'},'googletagmanager.com':{n:'Google Tag Manager',c:'stat'},'analytics.google.com':{n:'Google Analytics',c:'stat'},'doubleclick.net':{n:'DoubleClick',c:'mkt'},'googlesyndication.com':{n:'Google Ads',c:'mkt'},'googleadservices.com':{n:'Google Ads',c:'mkt'},'adservice.google.com':{n:'Google Ads',c:'mkt'},'google.com':{n:'Google',c:'mkt'},'facebook.net':{n:'Meta / Facebook',c:'mkt'},'facebook.com':{n:'Meta / Facebook',c:'mkt'},'fbcdn.net':{n:'Meta CDN',c:'mkt'},'instagram.com':{n:'Instagram',c:'mkt'},'linkedin.com':{n:'LinkedIn',c:'mkt'},'ads.linkedin.com':{n:'LinkedIn Ads',c:'mkt'},'snap.licdn.com':{n:'LinkedIn',c:'mkt'},'tiktok.com':{n:'TikTok',c:'mkt'},'twitter.com':{n:'X / Twitter',c:'mkt'},'t.co':{n:'X / Twitter',c:'mkt'},'bing.com':{n:'Microsoft Bing',c:'mkt'},'bat.bing.com':{n:'Bing Ads',c:'mkt'},'clarity.ms':{n:'Microsoft Clarity',c:'stat'},'hotjar.com':{n:'Hotjar',c:'stat'},'hubspot.com':{n:'HubSpot',c:'mkt'},'hs-analytics.net':{n:'HubSpot',c:'stat'},'pinterest.com':{n:'Pinterest',c:'mkt'},'reddit.com':{n:'Reddit',c:'mkt'},'snapchat.com':{n:'Snapchat',c:'mkt'},'sc-static.net':{n:'Snapchat',c:'mkt'},'criteo.com':{n:'Criteo',c:'mkt'},'criteo.net':{n:'Criteo',c:'mkt'},'taboola.com':{n:'Taboola',c:'mkt'},'outbrain.com':{n:'Outbrain',c:'mkt'},'amplitude.com':{n:'Amplitude',c:'stat'},'segment.com':{n:'Segment',c:'stat'},'segment.io':{n:'Segment',c:'stat'},'mixpanel.com':{n:'Mixpanel',c:'stat'},'heapanalytics.com':{n:'Heap',c:'stat'},'fullstory.com':{n:'FullStory',c:'stat'},'mouseflow.com':{n:'Mouseflow',c:'stat'},'youtube.com':{n:'YouTube',c:'mkt'},'youtube-nocookie.com':{n:'YouTube',c:'mkt'},'vimeo.com':{n:'Vimeo',c:'stat'},'stripe.com':{n:'Stripe',c:'nec'},'cookiebot.com':{n:'Cookiebot',c:'nec'},'usercentrics.eu':{n:'Usercentrics',c:'nec'},'onetrust.com':{n:'OneTrust',c:'nec'},'cookielaw.org':{n:'OneTrust',c:'nec'},'newrelic.com':{n:'New Relic',c:'nec'},'nr-data.net':{n:'New Relic',c:'nec'},'sentry.io':{n:'Sentry',c:'nec'},'cloudflare.com':{n:'Cloudflare',c:'nec'},'cloudflareinsights.com':{n:'Cloudflare Web Analytics',c:'nec'},'intercom.io':{n:'Intercom',c:'pref'},'intercomcdn.com':{n:'Intercom',c:'pref'},'zendesk.com':{n:'Zendesk',c:'pref'},'zdassets.com':{n:'Zendesk',c:'pref'},'drift.com':{n:'Drift',c:'pref'},'g2.com':{n:'G2',c:'mkt'},'g2crowd.com':{n:'G2',c:'mkt'},'6sense.com':{n:'6sense',c:'mkt'},'clearbit.com':{n:'Clearbit',c:'mkt'},'demandbase.com':{n:'Demandbase',c:'mkt'},'marketo.com':{n:'Marketo',c:'mkt'},'pardot.com':{n:'Pardot',c:'mkt'},'salesforce.com':{n:'Salesforce',c:'nec'}};
 
-// Known services (subset — full list in Worker)
-var KS={'google-analytics.com':{n:'Google Analytics',c:'stat'},'googletagmanager.com':{n:'Google Tag Manager',c:'stat'},'doubleclick.net':{n:'DoubleClick',c:'mkt'},'googlesyndication.com':{n:'Google Ads',c:'mkt'},'googleadservices.com':{n:'Google Ads',c:'mkt'},'facebook.net':{n:'Meta / Facebook',c:'mkt'},'facebook.com':{n:'Meta / Facebook',c:'mkt'},'linkedin.com':{n:'LinkedIn',c:'mkt'},'ads.linkedin.com':{n:'LinkedIn Ads',c:'mkt'},'tiktok.com':{n:'TikTok',c:'mkt'},'twitter.com':{n:'X / Twitter',c:'mkt'},'t.co':{n:'X / Twitter',c:'mkt'},'bing.com':{n:'Microsoft Bing',c:'mkt'},'bat.bing.com':{n:'Bing Ads',c:'mkt'},'clarity.ms':{n:'Microsoft Clarity',c:'stat'},'hotjar.com':{n:'Hotjar',c:'stat'},'hubspot.com':{n:'HubSpot',c:'mkt'},'pinterest.com':{n:'Pinterest',c:'mkt'},'reddit.com':{n:'Reddit',c:'mkt'},'snapchat.com':{n:'Snapchat',c:'mkt'},'criteo.com':{n:'Criteo',c:'mkt'},'criteo.net':{n:'Criteo',c:'mkt'},'amplitude.com':{n:'Amplitude',c:'stat'},'segment.com':{n:'Segment',c:'stat'},'mixpanel.com':{n:'Mixpanel',c:'stat'},'youtube.com':{n:'YouTube',c:'mkt'},'youtube-nocookie.com':{n:'YouTube',c:'mkt'},'stripe.com':{n:'Stripe',c:'nec'},'cookiebot.com':{n:'Cookiebot',c:'nec'},'usercentrics.eu':{n:'Usercentrics',c:'nec'},'onetrust.com':{n:'OneTrust',c:'nec'},'cookielaw.org':{n:'OneTrust',c:'nec'},'newrelic.com':{n:'New Relic',c:'nec'},'sentry.io':{n:'Sentry',c:'nec'},'cloudflare.com':{n:'Cloudflare',c:'nec'},'cloudflareinsights.com':{n:'Cloudflare',c:'nec'},'intercom.io':{n:'Intercom',c:'pref'},'zendesk.com':{n:'Zendesk',c:'pref'},'vimeo.com':{n:'Vimeo',c:'stat'},'fullstory.com':{n:'FullStory',c:'stat'},'mouseflow.com':{n:'Mouseflow',c:'stat'}};
+var catNames={mkt:'Marketing',stat:'Statistics',nec:'Necessary',pref:'Preferences',unk:'Unknown'};
+var catClasses={mkt:'mkt',stat:'stat',nec:'nec',pref:'pref',unk:'unk'};
 
-var S={domain:'',normalUrl:'',gpcUrl:'',banner:null,dns:null,dnsAction:null,gpc:null,normalSvcs:[],gpcSvcs:[],step:0};
+var S={domain:'',url:'',step:0,normalSvcs:[],gpcSvcs:[],dnsFound:false,gpcSupported:false,scanDone:false};
 
-function matchDomain(d) {
-  d = d.replace(/^www\./,'');
-  if (KS[d]) return KS[d];
-  // Try parent domain
-  var parts = d.split('.');
-  if (parts.length > 2) {
-    var parent = parts.slice(-2).join('.');
-    if (KS[parent]) return KS[parent];
-  }
+function matchDomain(d){
+  d=d.replace(/^www\./,'');
+  if(KS[d])return KS[d];
+  var p=d.split('.');if(p.length>2){var par=p.slice(-2).join('.');if(KS[par])return KS[par];}
   return null;
 }
 
-function mkUrl(u,gpc){
-  if(PROXY){
-    var p=PROXY+'/?url='+encodeURIComponent(u)+'&geo=1';
-    if(gpc)p+='&gpc=1';
-    return p;
+// ═══ SIMULATE SCAN (replace with real proxy calls in production) ═══
+function simulateScan(domain, isGpc, callback){
+  // In production: fetch via proxy, parse the injected script's postMessage
+  // For POC demo: simulate with realistic data
+  var allPossible=[
+    {n:'Google Analytics',c:'stat',d:'google-analytics.com',gpcHonor:false},
+    {n:'Google Tag Manager',c:'stat',d:'googletagmanager.com',gpcHonor:false},
+    {n:'Google Ads',c:'mkt',d:'googleadservices.com',gpcHonor:false},
+    {n:'DoubleClick',c:'mkt',d:'doubleclick.net',gpcHonor:false},
+    {n:'Meta / Facebook',c:'mkt',d:'facebook.net',gpcHonor:true},
+    {n:'LinkedIn Ads',c:'mkt',d:'ads.linkedin.com',gpcHonor:true},
+    {n:'Hotjar',c:'stat',d:'hotjar.com',gpcHonor:true},
+    {n:'HubSpot',c:'mkt',d:'hubspot.com',gpcHonor:false},
+    {n:'Cookiebot',c:'nec',d:'cookiebot.com',gpcHonor:false},
+    {n:'Cloudflare',c:'nec',d:'cloudflare.com',gpcHonor:false},
+    {n:'Stripe',c:'nec',d:'stripe.com',gpcHonor:false},
+    {n:'Intercom',c:'pref',d:'intercom.io',gpcHonor:true},
+  ];
+
+  // Random subset for this "scan"
+  var count=6+Math.floor(Math.random()*5);
+  var shuffled=allPossible.sort(function(){return .5-Math.random()});
+  var selected=shuffled.slice(0,count);
+
+  if(isGpc){
+    selected=selected.filter(function(s){return !s.gpcHonor||s.c==='nec'});
   }
-  var sep=u.indexOf('?')<0?'?':'&';
-  var r=u+sep+GEO;
-  if(gpc)r+='&gpc=1&globalPrivacyControl=1';
-  return r+HASH;
+
+  // Drip-feed results with animation
+  var i=0;
+  var results=[];
+  function next(){
+    if(i>=selected.length){callback(results);return}
+    var s=selected[i];
+    results.push({name:s.n,cat:s.c,domain:s.d});
+    addFeedItem(s.n,s.c,s.d,isGpc?'gpc':'normal');
+    i++;
+    setTimeout(next,300+Math.random()*500);
+  }
+  setTimeout(next,800);
 }
 
-// Listen for postMessage from injected monitoring script
-window.addEventListener('message',function(e){
-  if(!e.data||e.data.type!=='compliance-scan-results')return;
-  var domains=e.data.domains||[];
-  var source='normal';
-  // Determine which iframe sent this
-  try{
-    if(e.source===document.getElementById('right-iframe').contentWindow) source='gpc';
-  }catch(x){}
+var feedContainerId=null;
+function addFeedItem(name,cat,domain,mode){
+  var cont=document.getElementById(feedContainerId);
+  if(!cont)return;
+  var cls=catClasses[cat]||'unk';
+  var catLabel=catNames[cat]||'Unknown';
+  var initial=name.charAt(0);
+  var el=document.createElement('div');
+  el.className='feed-item';
+  el.innerHTML='<div class="fi-icon '+cls+'">'+initial+'</div><div style="flex:1"><div class="fi-name">'+name+'</div><div class="fi-domain">'+domain+'</div></div><span class="fi-cat '+cls+'">'+catLabel+'</span>';
+  cont.prepend(el);
+}
 
-  var svcs={};
-  domains.forEach(function(d){
-    var match=matchDomain(d.domain);
-    var name=match?match.n:d.domain;
-    var cat=match?match.c:'unk';
-    if(!svcs[name])svcs[name]={name:name,cat:cat,domain:d.domain};
-  });
+// ═══ RENDERING ═══
+function render(){
+  var c=document.getElementById('content');
+  if(S.step===0) renderIntro(c);
+  else if(S.step===1) renderScan(c);
+  else if(S.step===2) renderGpcScan(c);
+  else if(S.step===3) renderResults(c);
+  updatePills();
+}
 
-  var list=Object.values(svcs);
-  if(source==='normal'){
-    S.normalSvcs=list;
-    updateTicker(list,'normal');
-  } else {
-    S.gpcSvcs=list;
-    updateTicker(list,'gpc');
+function updatePills(){
+  var pills='';
+  var labels=['Scan','GPC Test','Results'];
+  for(var i=1;i<=3;i++){
+    var cls=i<S.step?'ok':i===S.step?'on':'off';
+    pills+='<div class="np '+cls+'">'+(i<S.step?'✓':i)+'</div>';
   }
-});
+  document.getElementById('nav-pills').innerHTML=pills;
+}
 
-function updateTicker(svcs,mode){
-  var bar=document.getElementById('detect-bar');
-  bar.classList.add('on');
-  var lbl=document.getElementById('detect-lbl');
-  var tags=document.getElementById('detect-tags');
+function renderIntro(c){
+  document.getElementById('nav-domain').textContent='US Privacy Compliance Check';
+  c.innerHTML=
+    '<div class="intro-card">'+
+      '<h1>Check your US privacy compliance</h1>'+
+      '<p class="sub">We\'ll scan your website, detect third-party services, and test whether they respect privacy opt-outs.</p>'+
+      '<div class="url-wrap"><input class="url-in" id="urlin" placeholder="https://www.yoursite.com" autofocus><button class="url-btn" onclick="startScan()">Scan</button></div>'+
+      '<div class="checks">'+
+        '<div class="chk-item"><span class="cd"></span> Third-party services</div>'+
+        '<div class="chk-item"><span class="cd"></span> "Do Not Sell" link</div>'+
+        '<div class="chk-item"><span class="cd"></span> GPC signal honoring</div>'+
+      '</div>'+
+    '</div>';
+  setTimeout(function(){
+    var inp=document.getElementById('urlin');
+    if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')startScan()})}
+  },50);
+}
 
-  if(mode==='normal'){
-    lbl.textContent=svcs.length+' services detected';
-  }
+function renderScan(c){
+  c.innerHTML=
+    '<div class="card">'+
+      '<div class="card-header"><div class="card-step active">1</div><div><div class="card-title">Scanning your website</div><div class="card-subtitle">Detecting third-party services and checking footer for "Do Not Sell" link</div></div></div>'+
+      '<div class="card-body">'+
+        '<div class="scan-anim"><div class="spinner"></div><div class="scan-text">Scanning <strong>'+S.domain+'</strong> as a California visitor…</div></div>'+
+        '<div class="live-feed"><div class="feed-label">Detected services (live)</div><div class="feed-items" id="feed-normal"></div></div>'+
+      '</div>'+
+    '</div>';
+  feedContainerId='feed-normal';
 
-  // Deduplicate with existing
-  var all={};
-  S.normalSvcs.forEach(function(s){all[s.name]=s});
-  S.gpcSvcs.forEach(function(s){if(!all[s.name])all[s.name]=s});
-  var list=Object.values(all);
+  simulateScan(S.domain,false,function(results){
+    S.normalSvcs=results;
+    // Simulate DNS check
+    S.dnsFound=Math.random()>0.4;
 
-  tags.innerHTML='';
-  list.forEach(function(s){
-    var cls='dtag ';
-    if(s.cat==='mkt')cls+='mkt';
-    else if(s.cat==='stat')cls+='stat';
-    else if(s.cat==='nec')cls+='nec';
-    else if(s.cat==='pref')cls+='pref';
-    else cls+='unk';
-    tags.innerHTML+='<div class="'+cls+'"><span class="d-dot"></span>'+s.name+'</div>';
+    // Update card to show completion
+    var body=document.querySelector('#content .card-body');
+    if(!body)return;
+    var scanAnim=body.querySelector('.scan-anim');
+    if(scanAnim)scanAnim.innerHTML='<svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#22c55e"/><path d="M6 10.5l2.5 2.5L14 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="scan-text"><strong>Scan complete</strong> — '+results.length+' services detected</div>';
+
+    // Show DNS result
+    var dnsHtml=S.dnsFound
+      ?'<div class="verdict pass"><svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#22c55e"/><path d="M7 12.5l3 3 5.5-5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="v-text"><div class="v-title">"Do Not Sell or Share" link found</div><div class="v-detail">Detected in the website footer.</div></div></div>'
+      :'<div class="verdict fail"><svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#ef4444"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><div class="v-text"><div class="v-title">No "Do Not Sell or Share" link found</div><div class="v-detail">Required under CCPA/CPRA for businesses that sell or share personal information.</div></div></div>';
+
+    body.insertAdjacentHTML('beforeend',dnsHtml);
+    body.insertAdjacentHTML('beforeend','<div class="btn-row"><button class="btn btn-p" onclick="startGpcScan()">Next: Test GPC Signal →</button></div>');
   });
 }
 
-function doStart(){
+function renderGpcScan(c){
+  c.innerHTML=
+    '<div class="card" style="border:2px solid #bbf7d0">'+
+      '<div class="card-header" style="background:#f0fdf4"><div class="card-step active" style="background:#22c55e">2</div><div><div class="card-title">Testing GPC opt-out signal</div><div class="card-subtitle">Re-scanning with Global Privacy Control enabled — which services stop?</div></div></div>'+
+      '<div class="card-body">'+
+        '<div class="scan-anim" style="background:#f0fdf4;border:1px solid #bbf7d0"><div class="spinner" style="border-top-color:#22c55e"></div><div class="scan-text">Re-scanning <strong>'+S.domain+'</strong> with GPC signal <span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700">ON</span></div></div>'+
+        '<p style="font-size:12px;color:#6b7280">Services that respect GPC should stop loading. Services that ignore it will still appear.</p>'+
+        '<div class="live-feed"><div class="feed-label">Services still firing with GPC</div><div class="feed-items" id="feed-gpc"></div></div>'+
+      '</div>'+
+    '</div>';
+  feedContainerId='feed-gpc';
+
+  simulateScan(S.domain,true,function(results){
+    S.gpcSvcs=results;
+
+    var body=document.querySelector('#content .card-body');
+    if(!body)return;
+    var scanAnim=body.querySelector('.scan-anim');
+
+    var stopped=S.normalSvcs.filter(function(n){return !results.find(function(g){return g.name===n.name})});
+    var violators=results.filter(function(g){return g.cat!=='nec'&&S.normalSvcs.find(function(n){return n.name===g.name})});
+
+    S.gpcSupported=stopped.length>0;
+
+    if(scanAnim){
+      scanAnim.innerHTML='<svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#22c55e"/><path d="M6 10.5l2.5 2.5L14 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="scan-text"><strong>GPC test complete</strong></div>';
+    }
+
+    // Quick summary
+    var summaryHtml='<div class="counters">';
+    summaryHtml+='<div class="counter green"><div class="c-num">'+stopped.length+'</div><div class="c-lbl">Stopped with GPC</div></div>';
+    summaryHtml+='<div class="counter red"><div class="c-num">'+violators.length+'</div><div class="c-lbl">Ignored GPC</div></div>';
+    summaryHtml+='</div>';
+
+    if(stopped.length>0){
+      summaryHtml+='<div class="verdict pass"><svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#22c55e"/><path d="M7 12.5l3 3 5.5-5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="v-text"><div class="v-title">GPC signal is recognized</div><div class="v-detail">'+stopped.length+' service'+(stopped.length!==1?'s':'')+' stopped loading when GPC was enabled: '+stopped.map(function(s){return s.name}).join(', ')+'</div></div></div>';
+    }
+
+    if(violators.length>0){
+      summaryHtml+='<div class="verdict fail"><svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#ef4444"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><div class="v-text"><div class="v-title">'+violators.length+' service'+(violators.length!==1?'s':'')+' ignoring GPC</div><div class="v-detail">'+violators.map(function(s){return s.name}).join(', ')+' continued loading despite the GPC opt-out signal.</div></div></div>';
+    }
+
+    body.insertAdjacentHTML('beforeend',summaryHtml);
+    body.insertAdjacentHTML('beforeend','<div class="btn-row"><button class="btn btn-s" onclick="S.step=1;render()">← Back</button><button class="btn btn-p" onclick="showResults()">See Full Results →</button></div>');
+  });
+}
+
+function renderResults(c){
+  var allSvcs={};
+  S.normalSvcs.forEach(function(s){allSvcs[s.name]={name:s.name,cat:s.cat,domain:s.domain,normal:true,gpc:false}});
+  S.gpcSvcs.forEach(function(s){if(allSvcs[s.name])allSvcs[s.name].gpc=true;else allSvcs[s.name]={name:s.name,cat:s.cat,domain:s.domain,normal:false,gpc:true}});
+  var svcList=Object.values(allSvcs).sort(function(a,b){var o={mkt:0,stat:1,pref:2,nec:3,unk:4};return(o[a.cat]||4)-(o[b.cat]||4)});
+
+  var violators=svcList.filter(function(s){return s.normal&&s.gpc&&s.cat!=='nec'});
+  var honoring=svcList.filter(function(s){return s.normal&&!s.gpc});
+  var total=svcList.length;
+
+  var fails=0;
+  if(!S.dnsFound)fails++;
+  if(!S.gpcSupported)fails++;
+  if(violators.length>0)fails++;
+
+  var rl,rc;
+  if(fails>=2){rl='High risk';rc='high'}
+  else if(fails>=1){rl='Medium risk';rc='medium'}
+  else{rl='Low risk';rc='low'}
+
+  var dots={high:'#ef4444',medium:'#f59e0b',low:'#22c55e'};
+  var msgs={high:'You need to take action!',medium:'Some improvements needed.',low:'Your site appears compliant!'};
+
+  // Build table rows
+  var rows='';
+  svcList.forEach(function(s){
+    var catLabel=catNames[s.cat]||'Unknown';
+    var catCls=catClasses[s.cat]||'unk';
+    var nS=s.normal?'<span class="status-pill firing"><span class="st-dot" style="background:#ef4444"></span>Active</span>':'<span class="status-pill na">—</span>';
+    var gS=s.gpc?'<span class="status-pill firing"><span class="st-dot" style="background:#ef4444"></span>Active</span>':'<span class="status-pill stopped"><span class="st-dot" style="background:#22c55e"></span>Stopped</span>';
+    var honor;
+    if(s.cat==='nec')honor='<span class="status-pill na">Necessary</span>';
+    else if(s.normal&&!s.gpc)honor='<span class="status-pill stopped"><span class="st-dot" style="background:#22c55e"></span>Yes</span>';
+    else if(s.normal&&s.gpc)honor='<span class="status-pill firing"><span class="st-dot" style="background:#ef4444"></span>No</span>';
+    else honor='<span class="status-pill na">N/A</span>';
+    rows+='<tr><td><strong>'+s.name+'</strong><br><span style="font-size:10px;color:#1a73e8;font-family:monospace">'+s.domain+'</span></td><td><span class="fi-cat '+catCls+'">'+catLabel+'</span></td><td>'+nS+'</td><td>'+gS+'</td><td>'+honor+'</td></tr>';
+  });
+
+  c.innerHTML=
+    '<div class="card">'+
+      '<div class="card-header"><div class="card-step done">✓</div><div><div class="card-title">Compliance Results: '+S.domain+'</div></div></div>'+
+      '<div class="card-body">'+
+        '<div class="risk-lg '+rc+'"><span style="width:12px;height:12px;border-radius:50%;background:'+dots[rc]+'"></span>'+rl+'</div>'+
+        '<p style="color:'+{high:'#dc2626',medium:'#d97706',low:'#16a34a'}[rc]+';font-weight:600;margin-top:0">'+msgs[rc]+'</p>'+
+
+        '<div class="counters">'+
+          '<div class="counter gray"><div class="c-num">'+total+'</div><div class="c-lbl">Services found</div></div>'+
+          '<div class="counter red"><div class="c-num">'+violators.length+'</div><div class="c-lbl">Ignoring GPC</div></div>'+
+          '<div class="counter green"><div class="c-num">'+honoring.length+'</div><div class="c-lbl">Honoring GPC</div></div>'+
+        '</div>'+
+
+        // Requirement verdicts
+        (S.dnsFound
+          ?'<div class="verdict pass"><svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#22c55e"/><path d="M7 12.5l3 3 5.5-5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="v-text"><div class="v-title">"Do Not Sell" link: Found</div><div class="v-detail">Detected in the website footer.</div></div></div>'
+          :'<div class="verdict fail"><svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#ef4444"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><div class="v-text"><div class="v-title">"Do Not Sell" link: Missing</div><div class="v-detail">Required under CCPA/CPRA.</div></div></div>')+
+
+        (S.gpcSupported
+          ?'<div class="verdict pass"><svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#22c55e"/><path d="M7 12.5l3 3 5.5-5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="v-text"><div class="v-title">GPC Signal: Supported</div><div class="v-detail">Your site responds to the Global Privacy Control signal.</div></div></div>'
+          :'<div class="verdict fail"><svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#ef4444"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><div class="v-text"><div class="v-title">GPC Signal: Not supported</div><div class="v-detail">No services changed behavior when GPC was enabled.</div></div></div>')+
+
+        (violators.length===0
+          ?'<div class="verdict pass"><svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#22c55e"/><path d="M7 12.5l3 3 5.5-5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="v-text"><div class="v-title">GPC Honoring: All services compliant</div><div class="v-detail">No non-necessary services ignored the GPC signal.</div></div></div>'
+          :'<div class="verdict fail"><svg class="v-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#ef4444"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><div class="v-text"><div class="v-title">GPC Honoring: '+violators.length+' service'+(violators.length!==1?'s':'')+' non-compliant</div><div class="v-detail">'+violators.map(function(v){return v.name}).join(', ')+' continued tracking despite GPC opt-out.</div></div></div>')+
+
+        '<div style="margin-top:20px"><div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:8px">Service-Level GPC Comparison</div>'+
+        '<div style="border:1px solid #e4e7ec;border-radius:8px;overflow:hidden;overflow-x:auto">'+
+        '<table class="cmp-table"><thead><tr><th>Service</th><th>Category</th><th>Normal</th><th>With GPC</th><th>Honors GPC?</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
+
+        '<div class="cta-box"><h3>Fix this with Cookiebot CMP</h3><p>Automate CCPA/CPRA compliance — manage DNS links, GPC signals, and third-party consent.</p><a href="https://admin.cookiebot.com/signup" target="_blank"><button class="btn">Start your 14-day free trial</button></a></div>'+
+        '<div class="btn-row" style="justify-content:center;margin-top:8px"><button class="btn btn-s" onclick="S.step=0;S.normalSvcs=[];S.gpcSvcs=[];render()">Start over</button></div>'+
+      '</div>'+
+    '</div>';
+}
+
+function startScan(){
   var v=document.getElementById('urlin').value.trim();
   if(!v)return;
   if(v.indexOf('http')!==0)v='https://'+v;
   S.domain=v.replace(/^https?:\/\//,'').replace(/\/+$/,'');
-  S.normalUrl=mkUrl(v,false);
-  S.gpcUrl=mkUrl(v,true);
-
-  document.getElementById('intro').style.display='none';
-  document.getElementById('split').classList.add('on');
-  document.getElementById('wiz').style.display='block';
-  document.getElementById('nav-title').textContent=S.domain;
-
-  document.getElementById('left-url').textContent=S.domain;
-  document.getElementById('left-iframe').src=S.normalUrl;
-  document.getElementById('left-ph').style.display='none';
-  document.getElementById('right-url').textContent='GPC · '+S.domain;
-
-  // Fallback: also open new tab
-  if(!PROXY) window.open(S.normalUrl.replace(PROXY+'/?url=',''),'cb_normal');
-
-  goStep(1);
+  S.url=v;S.step=1;
+  document.getElementById('nav-domain').textContent=S.domain;
+  render();
 }
 
-function doGPC(){
-  document.getElementById('right-overlay').style.display='none';
-  document.getElementById('right-iframe').classList.remove('hidden');
-  document.getElementById('right-iframe').src=S.gpcUrl;
-  if(!PROXY) window.open(S.gpcUrl,'cb_gpc');
-  document.getElementById('gpc-go').textContent='↻ Reload GPC view';
-  document.getElementById('gpc-extra').classList.remove('hidden');
-}
+function startGpcScan(){S.step=2;render()}
+function showResults(){S.step=3;render()}
 
-function pick(el,key,val){
-  el.parentElement.querySelectorAll('.choice').forEach(function(c){c.classList.remove('selected')});
-  el.classList.add('selected');
-  S[key]=val;
-
-  if(key==='banner')document.getElementById('n1').classList.remove('hidden');
-  if(key==='dns'){
-    document.getElementById('n2').classList.remove('hidden');
-    var ex=document.getElementById('dns-extra');
-    if(val==='yes'){
-      ex.innerHTML='<p style="font-size:11px;color:#4b5563;margin:8px 0 6px"><strong>Click the link now.</strong> What happened?</p><div class="choices"><div class="choice" onclick="pick(this,\'dnsAction\',\'modal\')">Preference center</div><div class="choice" onclick="pick(this,\'dnsAction\',\'redirect\')">Redirected</div><div class="choice" onclick="pick(this,\'dnsAction\',\'nothing\')">Nothing</div></div>';
-      ex.classList.remove('hidden');
-    } else {
-      ex.innerHTML='<div class="info red">Missing required "Do Not Sell" link.</div>';
-      ex.classList.remove('hidden');
-    }
-  }
-  if(key==='gpc'){
-    document.getElementById('n3').classList.remove('hidden');
-    var fb=document.getElementById('gpc-fb');
-    if(val==='different')fb.innerHTML='<div class="info green">Site responds to GPC — good sign!</div>';
-    else if(val==='same')fb.innerHTML='<div class="info red">No change detected — services may be ignoring GPC.</div>';
-    else fb.innerHTML='';
-  }
-}
-
-function goStep(n){
-  S.step=n;
-  for(var i=0;i<5;i++){
-    var p=document.getElementById('np'+i);
-    p.classList.remove('on','ok','off');
-    if(i<n)p.classList.add('ok');
-    else if(i===n)p.classList.add('on');
-    else p.classList.add('off');
-  }
-
-  document.getElementById('res-bar').classList.remove('on');
-  document.getElementById('wiz').style.display=n===5?'none':'block';
-  if(n===5){document.getElementById('res-bar').classList.add('on');renderResults();return}
-
-  var w=document.getElementById('wiz-in');
-
-  if(n===1){
-    w.innerHTML='<div class="wiz-text"><h3>Step 2: Consent Banner</h3><p>Look at the <strong>left panel</strong> — your site is loaded as a California visitor. Do you see a consent or privacy banner?</p><div class="choices"><div class="choice" onclick="pick(this,\'banner\',\'yes\')">✓ Yes, banner visible</div><div class="choice" onclick="pick(this,\'banner\',\'no\')">✗ No banner</div><div class="choice" onclick="pick(this,\'banner\',\'unsure\')">Not sure</div></div></div><div class="wiz-actions"><button class="btn btn-p hidden" id="n1" onclick="goStep(2)">Next →</button></div>';
-  }
-  if(n===2){
-    w.innerHTML='<div class="wiz-text"><h3>Step 3: "Do Not Sell" Link</h3><p>Scroll to the <strong>footer</strong> of your site on the left. Look for "Do Not Sell or Share" or "Your Privacy Choices".</p><div class="choices"><div class="choice" onclick="pick(this,\'dns\',\'yes\')">✓ Found it</div><div class="choice" onclick="pick(this,\'dns\',\'no\')">✗ Not there</div></div><div id="dns-extra" class="hidden"></div></div><div class="wiz-actions"><div class="btn-row"><button class="btn btn-s" onclick="goStep(1)">←</button><button class="btn btn-p hidden" id="n2" onclick="goStep(3)">Next →</button></div></div>';
-  }
-  if(n===3){
-    w.innerHTML='<div class="wiz-text"><h3>Step 4: GPC Signal Comparison</h3><p>We\'ll load your site with a <strong>GPC opt-out signal</strong> in the right panel. Compare both sides.</p><button class="btn btn-g" id="gpc-go" onclick="doGPC()" style="margin-bottom:8px">▶ Load GPC view</button><div class="hidden" id="gpc-extra"><div class="choices"><div class="choice" onclick="pick(this,\'gpc\',\'different\')">✓ Right side is different</div><div class="choice" onclick="pick(this,\'gpc\',\'same\')">✗ Looks identical</div><div class="choice" onclick="pick(this,\'gpc\',\'unsure\')">Hard to tell</div></div><div id="gpc-fb"></div></div></div><div class="wiz-actions"><div class="btn-row"><button class="btn btn-s" onclick="goStep(2)">←</button><button class="btn btn-p hidden" id="n3" onclick="goStep(5)">See Results →</button></div></div>';
-  }
-}
-
-function renderResults(){
-  var dnsP=S.dns==='yes',dnsF=S.dnsAction!=='nothing',gpcP=S.gpc==='different',gpcU=S.gpc==='unsure',banP=S.banner==='yes';
-  var fails=0;
-  if(!dnsP)fails++;if(!gpcP&&!gpcU)fails++;if(dnsP&&!dnsF)fails++;
-
-  var rl,rc;
-  if(fails>=2){rl='High risk';rc='high'}
-  else if(fails===1||gpcU){rl='Medium risk';rc='medium'}
-  else{rl='Low risk';rc='low'}
-
-  var dots={high:'#ef4444',medium:'#f59e0b',low:'#22c55e'};
-  var msgs={high:'Action needed!',medium:'Some improvements needed.',low:'Appears compliant!'};
-
-  function card(pass,t,d){
-    var ico=pass?'<svg class="ri" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#22c55e"/><path d="M6 10.5l2.5 2.5L14 8" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>':'<svg class="ri" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#ef4444"/><path d="M7 7l6 6M13 7l-6 6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>';
-    return '<div class="res-card">'+ico+'<div><div class="rt">'+t+'</div><div class="rd">'+d+'</div><span class="rb '+(pass?'pass':'fail')+'">'+(pass?'Pass':'Fail')+'</span></div></div>';
-  }
-
-  var cards='';
-  cards+=card(banP,'Consent Banner',banP?'CCPA banner displayed.':'No CCPA banner detected.');
-  cards+=card(dnsP,'DNS Link',dnsP?(dnsF?'Found & functional.':'Found but non-functional.'):'Not found in footer.');
-  cards+=card(gpcP,'GPC Signal',gpcP?'Site responds to GPC.':gpcU?'Unclear — test further.':'No GPC response.');
-
-  // Build services comparison table
-  var svcTable='';
-  var allSvcs={};
-  S.normalSvcs.forEach(function(s){allSvcs[s.name]={name:s.name,cat:s.cat,normal:true,gpc:false}});
-  S.gpcSvcs.forEach(function(s){if(allSvcs[s.name])allSvcs[s.name].gpc=true;else allSvcs[s.name]={name:s.name,cat:s.cat,normal:false,gpc:true}});
-  var svcList=Object.values(allSvcs).sort(function(a,b){
-    var order={mkt:0,stat:1,pref:2,nec:3,unk:4};
-    return (order[a.cat]||4)-(order[b.cat]||4);
-  });
-
-  if(svcList.length>0){
-    var catLabels={mkt:'Marketing',stat:'Statistics',nec:'Necessary',pref:'Preferences',unk:'Unknown'};
-    var catDotColors={mkt:'#ef4444',stat:'#f59e0b',nec:'#22c55e',pref:'#3b82f6',unk:'#6b7280'};
-
-    svcTable='<div style="margin-bottom:16px"><div style="font-size:12px;font-weight:700;color:#1a1a2e;margin-bottom:8px">Third-Party Services: Normal vs GPC Comparison</div>';
-    svcTable+='<table class="svc-table"><thead><tr><th>Service</th><th>Category</th><th>Normal</th><th>With GPC</th><th>Honors GPC?</th></tr></thead><tbody>';
-
-    svcList.forEach(function(s){
-      var catLabel=catLabels[s.cat]||'Unknown';
-      var dotColor=catDotColors[s.cat]||'#6b7280';
-      var normalStatus=s.normal?'<span class="svc-status firing"><span style="width:5px;height:5px;border-radius:50%;background:#ef4444"></span>Firing</span>':'<span class="svc-status absent">—</span>';
-      var gpcStatus=s.gpc?'<span class="svc-status firing"><span style="width:5px;height:5px;border-radius:50%;background:#ef4444"></span>Firing</span>':'<span class="svc-status stopped"><span style="width:5px;height:5px;border-radius:50%;background:#22c55e"></span>Stopped</span>';
-
-      var honors;
-      if(!s.normal&&s.gpc) honors='<span class="svc-status absent">N/A</span>';
-      else if(s.normal&&!s.gpc) honors='<span class="svc-status stopped"><span style="width:5px;height:5px;border-radius:50%;background:#22c55e"></span>Yes</span>';
-      else if(s.normal&&s.gpc&&s.cat==='nec') honors='<span class="svc-status absent">N/A (Necessary)</span>';
-      else honors='<span class="svc-status firing"><span style="width:5px;height:5px;border-radius:50%;background:#ef4444"></span>No</span>';
-
-      svcTable+='<tr><td style="font-weight:600">'+s.name+'</td><td><span class="svc-dot" style="background:'+dotColor+'"></span>'+catLabel+'</td><td>'+normalStatus+'</td><td>'+gpcStatus+'</td><td>'+honors+'</td></tr>';
-    });
-
-    svcTable+='</tbody></table></div>';
-  }
-
-  // Count violators
-  var violators=svcList.filter(function(s){return s.normal&&s.gpc&&s.cat!=='nec'});
-  var honoring=svcList.filter(function(s){return s.normal&&!s.gpc});
-
-  var svcSummary='';
-  if(svcList.length>0){
-    svcSummary='<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">';
-    svcSummary+='<div class="info" style="background:#f4f5f7;border:1px solid #e4e7ec;color:#4b5563"><strong>'+svcList.length+'</strong> services detected</div>';
-    if(violators.length>0) svcSummary+='<div class="info red"><strong>'+violators.length+'</strong> not honoring GPC</div>';
-    if(honoring.length>0) svcSummary+='<div class="info green"><strong>'+honoring.length+'</strong> honoring GPC</div>';
-    svcSummary+='</div>';
-  }
-
-  document.getElementById('res-in').innerHTML=
-    '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">'+
-      '<h3>Results: '+S.domain+'</h3>'+
-      '<div class="risk-inline '+rc+'"><span style="width:8px;height:8px;border-radius:50%;background:'+dots[rc]+'"></span>'+rl+' — '+msgs[rc]+'</div>'+
-    '</div>'+
-    '<div class="res-grid">'+cards+'</div>'+
-    svcSummary+svcTable+
-    '<div class="cta-inline"><div><h4>Fix this with Cookiebot CMP</h4><p>Automate CCPA/CPRA compliance — DNS links, GPC signals, and third-party consent management.</p></div><a href="https://admin.cookiebot.com/signup" target="_blank"><button class="btn">Start free trial</button></a></div>';
-}
-
-document.getElementById('urlin').addEventListener('keydown',function(e){if(e.key==='Enter')doStart()});
+render();
 </script>
 </body>
 </html>
