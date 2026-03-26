@@ -6,417 +6,369 @@
 <title>US Privacy Compliance Check – Cookiebot</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#1a1a2e;color:#1a1a2e;-webkit-font-smoothing:antialiased;line-height:1.6;height:100vh;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#0f1629;color:#1a1a2e;-webkit-font-smoothing:antialiased;line-height:1.6;height:100vh;overflow:hidden}
 
 /* LAYOUT */
-.layout{display:flex;height:100vh;width:100vw}
-.site-area{flex:1;display:flex;flex-direction:column;background:#1a1a2e;position:relative}
-.panel{width:380px;min-width:380px;background:#fff;display:flex;flex-direction:column;box-shadow:-4px 0 24px rgba(0,0,0,.15);z-index:10;position:relative}
+.app{display:flex;flex-direction:column;height:100vh}
 
-/* SITE AREA */
-.site-bar{height:44px;background:#0f1629;display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0}
-.site-dots{display:flex;gap:6px}
-.site-dots span{width:10px;height:10px;border-radius:50%}
-.site-url-bar{flex:1;background:#1b2a4a;border-radius:6px;padding:6px 14px;font-size:12px;color:#8a96a8;font-family:monospace;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.site-iframe-wrap{flex:1;position:relative;background:#fff}
-.site-iframe{width:100%;height:100%;border:none}
-.site-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#6b7280;background:#f4f5f7}
-.site-placeholder svg{opacity:.4}
-.site-placeholder p{font-size:14px;font-weight:500}
-.site-placeholder .big{font-size:20px;font-weight:700;color:#1a1a2e}
+/* TOP NAV */
+.nav{height:52px;background:#1b2a4a;display:flex;align-items:center;padding:0 20px;gap:8px;flex-shrink:0;z-index:20}
+.nav-icon{width:24px;height:24px;border-radius:5px;background:#1a73e8;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:11px}
+.nav-brand{color:#fff;font-weight:700;font-size:14px}
+.nav-sub{color:#7b8ba3;font-size:10px;margin-left:2px}
+.nav-sep{width:1px;height:28px;background:#2d3f5e;margin:0 12px}
+.nav-title{color:#94a3b8;font-size:13px;font-weight:500}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nav-step-pills{display:flex;gap:4px}
+.nav-pill{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.nav-pill.inactive{background:#1b2a4a;border:1px solid #2d3f5e;color:#64748b}
+.nav-pill.active{background:#1a73e8;border:1px solid #1a73e8;color:#fff}
+.nav-pill.done{background:#22c55e;border:1px solid #22c55e;color:#fff}
 
-/* GPC overlay indicator */
-.gpc-indicator{position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:8px;background:#1b2a4a;color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;z-index:5;box-shadow:0 2px 12px rgba(0,0,0,.3);display:none}
-.gpc-indicator .pulse{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* MAIN AREA */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
 
-/* PANEL */
-.panel-nav{height:60px;background:#1b2a4a;display:flex;align-items:center;padding:0 20px;gap:8px;flex-shrink:0}
-.panel-nav-icon{width:24px;height:24px;border-radius:5px;background:#1a73e8;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:11px}
-.panel-nav-brand{color:#fff;font-weight:700;font-size:14px}
-.panel-nav-sub{color:#7b8ba3;font-size:10px}
-
-.panel-body{flex:1;overflow-y:auto;padding:0}
-.panel-step{padding:24px 22px;display:none}
-.panel-step.active{display:block}
-
-/* PROGRESS */
-.progress{display:flex;align-items:center;padding:16px 22px;border-bottom:1px solid #ebedf0;gap:0;flex-shrink:0}
-.pg-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid #d1d5db;color:#9ca3af;background:#fff;transition:all .3s;flex-shrink:0}
-.pg-dot.active{background:#1a73e8;border-color:#1a73e8;color:#fff}
-.pg-dot.done{background:#22c55e;border-color:#22c55e;color:#fff}
-.pg-line{flex:1;height:2px;background:#e4e7ec;margin:0 4px;transition:background .3s}
-.pg-line.done{background:#22c55e}
-
-/* TYPOGRAPHY */
-.step-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#1a73e8;margin-bottom:6px}
-.panel-step h2{font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:10px;line-height:1.3}
-.panel-step p{font-size:13px;color:#4b5563;margin-bottom:14px;line-height:1.6}
-.panel-step .small{font-size:12px;color:#6b7280}
-
-/* INPUT */
-.url-wrap{display:flex;gap:0;margin-bottom:16px}
-.url-in{flex:1;padding:12px 14px;border:2px solid #e4e7ec;border-radius:8px 0 0 8px;font-size:14px;outline:none;color:#1a1a2e}
+/* INTRO OVERLAY */
+.intro{position:absolute;inset:0;background:#f4f5f7;z-index:15;display:flex;align-items:center;justify-content:center}
+.intro-card{background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:48px 44px;max-width:520px;width:100%;text-align:center}
+.intro-card h1{font-size:26px;font-weight:800;color:#1a1a2e;margin-bottom:8px}
+.intro-card .sub{font-size:14px;color:#6b7280;margin-bottom:28px}
+.url-wrap{display:flex;gap:0;margin-bottom:20px}
+.url-in{flex:1;padding:14px 18px;border:2px solid #e4e7ec;border-radius:10px 0 0 10px;font-size:15px;outline:none;color:#1a1a2e}
 .url-in:focus{border-color:#1a73e8}
-.url-in::placeholder{color:#9ca3af}
-.url-btn{padding:12px 20px;background:#1a73e8;color:#fff;border:none;border-radius:0 8px 8px 0;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.url-in::placeholder{color:#c4c9d2}
+.url-btn{padding:14px 28px;background:#1a73e8;color:#fff;border:none;border-radius:0 10px 10px 0;font-size:15px;font-weight:700;cursor:pointer}
 .url-btn:hover{background:#1557b0}
+.checklist{text-align:left;margin:0 auto;max-width:320px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;color:#4b5563;padding:5px 0}
+.chk-dot{width:8px;height:8px;border-radius:50%;background:#1a73e8;flex-shrink:0}
 
-/* CHOICES */
-.choices{display:flex;flex-direction:column;gap:8px;margin:14px 0}
-.choice{padding:11px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:2px solid #e4e7ec;background:#fff;color:#1a1a2e;transition:all .15s;text-align:left}
+/* SPLIT VIEW */
+.split{flex:1;display:none;position:relative}
+.split.on{display:flex}
+
+.pane{flex:1;display:flex;flex-direction:column;position:relative}
+.pane+.pane{border-left:2px solid #1b2a4a}
+
+.pane-bar{height:36px;display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0}
+.pane-left .pane-bar{background:#0f1629}
+.pane-right .pane-bar{background:#0a1a0f}
+.pane-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.pane-left .pane-label{color:#94a3b8}
+.pane-right .pane-label{color:#4ade80}
+.pane-url{flex:1;text-align:center;font-size:10px;color:#475569;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pane-dot{width:7px;height:7px;border-radius:50%}
+
+.pane-frame{flex:1;background:#fff;position:relative}
+.pane-frame iframe{width:100%;height:100%;border:none}
+.pane-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#f4f5f7;color:#9ca3af;font-size:13px;font-weight:500}
+.pane-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(15,22,41,.85);color:#fff;font-size:14px;font-weight:600;text-align:center;padding:24px;line-height:1.6;display:none}
+
+/* BOTTOM WIZARD BAR */
+.wizard-bar{background:#fff;border-top:1px solid #e4e7ec;padding:0;flex-shrink:0;z-index:10}
+.wiz-inner{max-width:960px;margin:0 auto;padding:20px 24px}
+.wiz-inner h3{font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:4px}
+.wiz-inner p{font-size:13px;color:#6b7280;margin-bottom:14px;line-height:1.6}
+
+.choices{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.choice{padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:2px solid #e4e7ec;background:#fff;color:#1a1a2e;transition:all .15s}
 .choice:hover{border-color:#1a73e8;background:#eff6ff}
 .choice.selected{border-color:#1a73e8;background:#1a73e8;color:#fff}
 
-/* INFO BOX */
-.info{padding:12px 16px;border-radius:8px;font-size:12px;line-height:1.6;margin:12px 0}
-.info.blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.info{padding:10px 14px;border-radius:7px;font-size:12px;line-height:1.6;margin-bottom:12px;display:inline-block}
 .info.green{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
 .info.red{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
-.info.amber{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
 
-/* BUTTONS */
-.btn{padding:10px 22px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .15s}
+.btn-row{display:flex;gap:8px;align-items:center}
+.btn{padding:10px 24px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .15s}
 .btn-p{background:#1a73e8;color:#fff}.btn-p:hover{background:#1557b0}
-.btn-s{background:#f4f5f7;color:#1a1a2e;border:1px solid #e4e7ec}.btn-s:hover{background:#ebedf0}
-.btn-row{display:flex;gap:8px;margin-top:18px}
+.btn-s{background:#f4f5f7;color:#4b5563;border:1px solid #e4e7ec}.btn-s:hover{background:#ebedf0}
+.btn-g{background:#22c55e;color:#fff}.btn-g:hover{background:#16a34a}
 
-/* RESULTS */
-.r-row{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid #f3f4f6}
-.r-row:last-child{border-bottom:none}
-.r-icon{width:24px;height:24px;flex-shrink:0;margin-top:1px}
-.r-info{flex:1}
-.r-title{font-size:13px;font-weight:700;color:#1a1a2e}
-.r-detail{font-size:11px;color:#6b7280;margin-top:2px;line-height:1.5}
-.r-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;flex-shrink:0}
-.r-badge.pass{background:#f0fdf4;color:#16a34a}
-.r-badge.fail{background:#fef2f2;color:#dc2626}
-
-.risk-badge{display:inline-flex;align-items:center;gap:8px;border-radius:20px;padding:8px 20px;font-weight:700;font-size:14px;margin:8px 0}
-.risk-high{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
-.risk-medium{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
-.risk-low{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
-
-/* CTA */
-.cta-box{background:#1b2a4a;border-radius:10px;padding:22px;text-align:center;margin-top:20px}
-.cta-box h3{color:#fff;font-size:16px;font-weight:800;margin-bottom:4px}
-.cta-box p{color:#7b8ba3;font-size:12px;margin-bottom:16px}
-.cta-box .btn{background:#fff;color:#1b2a4a;padding:11px 28px;font-size:13px}
-.cta-box .btn:hover{background:#f0f0f0}
+/* RESULTS BAR */
+.results-bar{display:none;background:#fff;border-top:1px solid #e4e7ec;flex-shrink:0;z-index:10}
+.results-bar.on{display:block}
+.res-inner{max-width:960px;margin:0 auto;padding:20px 24px}
+.res-inner h3{font-size:18px;font-weight:800;margin-bottom:12px}
+.risk-inline{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;border-radius:20px;font-weight:700;font-size:13px;margin-bottom:12px}
+.risk-inline.high{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.risk-inline.medium{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
+.risk-inline.low{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
+.res-grid{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.res-card{flex:1;min-width:180px;padding:14px 16px;border-radius:8px;border:1px solid #e4e7ec;display:flex;align-items:flex-start;gap:10px}
+.res-card .r-icon{width:22px;height:22px;flex-shrink:0}
+.res-card .r-title{font-size:12px;font-weight:700;color:#1a1a2e}
+.res-card .r-detail{font-size:11px;color:#6b7280;margin-top:2px}
+.res-card .r-badge{padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;margin-top:4px;display:inline-block}
+.r-badge.pass{background:#f0fdf4;color:#16a34a}.r-badge.fail{background:#fef2f2;color:#dc2626}
+.cta-inline{display:flex;align-items:center;gap:16px;background:#1b2a4a;border-radius:10px;padding:18px 24px}
+.cta-inline h4{color:#fff;font-size:15px;font-weight:700;margin-bottom:2px}
+.cta-inline p{color:#7b8ba3;font-size:12px;margin:0}
+.cta-inline .btn{background:#fff;color:#1b2a4a;margin-left:auto;white-space:nowrap}
 
 .hidden{display:none!important}
-
-/* CHECKLIST */
-.checklist{margin:12px 0}
-.check-item{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:#4b5563;padding:4px 0}
-.check-item svg{flex-shrink:0}
 </style>
 </head>
 <body>
 
-<div class="layout">
+<div class="app">
 
-  <!-- LEFT: SITE AREA -->
-  <div class="site-area">
-    <div class="site-bar">
-      <div class="site-dots">
-        <span style="background:#f87171"></span>
-        <span style="background:#fbbf24"></span>
-        <span style="background:#34d399"></span>
-      </div>
-      <div class="site-url-bar" id="site-url-bar">Enter a URL to begin</div>
-    </div>
-    <div class="site-iframe-wrap">
-      <div class="site-placeholder" id="site-placeholder">
-        <svg width="64" height="64" viewBox="0 0 64 64" fill="none"><rect x="6" y="12" width="52" height="40" rx="6" stroke="#9ca3af" stroke-width="2.5"/><circle cx="24" cy="30" r="6" stroke="#9ca3af" stroke-width="2.5"/><path d="M6 44l16-12 10 8 14-12 12 10" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <p class="big">Your website preview</p>
-        <p>Enter your domain in the panel to get started →</p>
-      </div>
-      <iframe class="site-iframe hidden" id="site-iframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-      <div class="gpc-indicator" id="gpc-indicator">
-        <span class="pulse"></span>
-        GPC Signal Active — Simulating opt-out
+  <!-- NAV -->
+  <div class="nav">
+    <div class="nav-icon">C</div>
+    <span class="nav-brand">Cookiebot™</span>
+    <div class="nav-sep"></div>
+    <span class="nav-title" id="nav-title">US Privacy Compliance Check</span>
+    <div class="nav-right">
+      <div class="nav-step-pills" id="nav-pills">
+        <div class="nav-pill active" id="np0">1. Enter URL</div>
+        <div class="nav-pill inactive" id="np1">2. Banner</div>
+        <div class="nav-pill inactive" id="np2">3. DNS Link</div>
+        <div class="nav-pill inactive" id="np3">4. GPC Test</div>
+        <div class="nav-pill inactive" id="np4">5. Results</div>
       </div>
     </div>
   </div>
 
-  <!-- RIGHT: WIZARD PANEL -->
-  <div class="panel">
-    <div class="panel-nav">
-      <div class="panel-nav-icon">C</div>
-      <span class="panel-nav-brand">Cookiebot™</span>
-      <span class="panel-nav-sub">US Compliance Check</span>
-    </div>
+  <!-- MAIN -->
+  <div class="main">
 
-    <div class="progress">
-      <div class="pg-dot active" id="d0">1</div><div class="pg-line" id="l0"></div>
-      <div class="pg-dot" id="d1">2</div><div class="pg-line" id="l1"></div>
-      <div class="pg-dot" id="d2">3</div><div class="pg-line" id="l2"></div>
-      <div class="pg-dot" id="d3">4</div><div class="pg-line" id="l3"></div>
-      <div class="pg-dot" id="d4">5</div>
-    </div>
-
-    <div class="panel-body">
-
-      <!-- STEP 0: URL INPUT -->
-      <div class="panel-step active" id="s0">
-        <div class="step-label">Step 1 of 5</div>
-        <h2>Check your US privacy compliance</h2>
-        <p>Enter your website URL and we'll walk you through a CCPA/CPRA compliance check — step by step.</p>
+    <!-- INTRO -->
+    <div class="intro" id="intro">
+      <div class="intro-card">
+        <h1>Check your US privacy compliance</h1>
+        <p class="sub">Enter your website URL — we'll test it step by step against CCPA/CPRA requirements.</p>
         <div class="url-wrap">
-          <input class="url-in" id="urlin" placeholder="https://example.com" autofocus>
-          <button class="url-btn" onclick="doStart()">Check</button>
+          <input class="url-in" id="urlin" placeholder="https://www.yoursite.com" autofocus>
+          <button class="url-btn" onclick="doStart()">Start Check</button>
         </div>
         <div class="checklist">
-          <div class="check-item"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#1a73e8" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="#1a73e8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>"Do Not Sell" footer link</div>
-          <div class="check-item"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#1a73e8" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="#1a73e8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>GPC signal recognition</div>
-          <div class="check-item"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#1a73e8" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="#1a73e8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Consent banner behavior</div>
-          <div class="check-item"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#1a73e8" stroke-width="1.5" fill="none"/><path d="M5 8l2 2 4-4" stroke="#1a73e8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>DNS opt-out functionality</div>
-        </div>
-        <p class="small">We'll open your website on the left, simulating a visitor from California.</p>
-      </div>
-
-      <!-- STEP 1: SITE LOADED -->
-      <div class="panel-step" id="s1">
-        <div class="step-label">Step 2 of 5</div>
-        <h2>Your site as seen from California</h2>
-        <p>We've loaded your website with parameters that simulate a California visitor. Your CMP should now show CCPA/CPRA-specific behavior.</p>
-        <div class="info blue">
-          <strong>Look at your website on the left.</strong> You should see it as a California visitor would.
-        </div>
-        <p>Do you see a consent banner or privacy notice on the page?</p>
-        <div class="choices" id="c1">
-          <div class="choice" onclick="pick(this,'c1','yes')">✓ Yes, I see a consent banner</div>
-          <div class="choice" onclick="pick(this,'c1','no')">✗ No, no banner appeared</div>
-          <div class="choice" onclick="pick(this,'c1','unsure')">? Not sure / Can't tell</div>
-        </div>
-        <div class="btn-row">
-          <button class="btn btn-p hidden" id="n1" onclick="go(2)">Next →</button>
+          <div class="chk"><span class="chk-dot"></span> "Do Not Sell" footer link detection</div>
+          <div class="chk"><span class="chk-dot"></span> GPC opt-out signal response</div>
+          <div class="chk"><span class="chk-dot"></span> Consent banner for California visitors</div>
+          <div class="chk"><span class="chk-dot"></span> Side-by-side normal vs. GPC comparison</div>
         </div>
       </div>
-
-      <!-- STEP 2: DNS CHECK -->
-      <div class="panel-step" id="s2">
-        <div class="step-label">Step 3 of 5</div>
-        <h2>"Do Not Sell" link check</h2>
-        <p>CCPA/CPRA requires a visible link in your footer:</p>
-        <div class="info amber">
-          <strong>Scroll to the bottom</strong> of your website on the left. Look for a link that says:<br><br>
-          • "Do Not Sell or Share My Personal Information"<br>
-          • "Your Privacy Choices"<br>
-          • Or similar opt-out language
-        </div>
-        <p>Did you find the link?</p>
-        <div class="choices" id="c2">
-          <div class="choice" onclick="pick(this,'c2','yes')">✓ Yes, I found it</div>
-          <div class="choice" onclick="pick(this,'c2','no')">✗ No, there's no such link</div>
-        </div>
-
-        <div class="hidden" id="dns-followup">
-          <p style="margin-top:14px"><strong>Click that link now</strong> on your website. What happened?</p>
-          <div class="choices" id="c2b">
-            <div class="choice" onclick="pick(this,'c2b','modal')">Privacy preference center opened</div>
-            <div class="choice" onclick="pick(this,'c2b','redirect')">Redirected to another page</div>
-            <div class="choice" onclick="pick(this,'c2b','nothing')">Nothing happened</div>
-          </div>
-        </div>
-
-        <div class="hidden info red" id="dns-fail">
-          <strong>Compliance gap:</strong> No "Do Not Sell or Share" link detected. This is required under CCPA/CPRA for businesses that sell or share personal information.
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-s" onclick="go(1)">← Back</button>
-          <button class="btn btn-p hidden" id="n2" onclick="go(3)">Next →</button>
-        </div>
-      </div>
-
-      <!-- STEP 3: GPC TEST -->
-      <div class="panel-step" id="s3">
-        <div class="step-label">Step 4 of 5</div>
-        <h2>GPC signal test</h2>
-        <p>The <strong>Global Privacy Control</strong> is a browser signal that says "do not sell or share my data." Your site must honor it under CCPA/CPRA.</p>
-        <div class="info blue">
-          We'll reload your website simulating a GPC opt-out signal. Watch the left panel for any changes.
-        </div>
-        <button class="btn btn-p" id="gpc-btn" onclick="doGPC()" style="margin-bottom:16px">
-          ▶ Reload with GPC signal
-        </button>
-
-        <div class="hidden" id="gpc-done">
-          <p>Compare what you see now with before. Do you notice any differences? For example:</p>
-          <p class="small" style="margin-bottom:14px">• Fewer widgets or embeds loading<br>• A different consent banner state<br>• An opt-out confirmation message</p>
-          <div class="choices" id="c3">
-            <div class="choice" onclick="pick(this,'c3','different')">✓ Yes, the site changed</div>
-            <div class="choice" onclick="pick(this,'c3','same')">✗ No, it looks identical</div>
-            <div class="choice" onclick="pick(this,'c3','unsure')">? Hard to tell</div>
-          </div>
-
-          <div class="hidden info green" id="gpc-ok">
-            <strong>Good sign!</strong> Your site appears to respond to the GPC signal, suggesting your CMP is detecting and honoring the opt-out.
-          </div>
-          <div class="hidden info red" id="gpc-bad">
-            <strong>Potential violation:</strong> Your site appears identical with and without the GPC signal. Third-party services may be ignoring the opt-out request.
-          </div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn btn-s" onclick="go(2)">← Back</button>
-          <button class="btn btn-p hidden" id="n3" onclick="go(4)">See Results →</button>
-        </div>
-      </div>
-
-      <!-- STEP 4: RESULTS -->
-      <div class="panel-step" id="s4">
-        <div class="step-label">Results</div>
-        <h2>Compliance Summary</h2>
-        <div id="risk-area"></div>
-        <div id="results-rows"></div>
-
-        <div class="cta-box">
-          <h3>Fix this with Cookiebot CMP</h3>
-          <p>Automate CCPA/CPRA compliance across your website.</p>
-          <a href="https://admin.cookiebot.com/signup" target="_blank"><button class="btn">Start free trial</button></a>
-        </div>
-
-        <div class="btn-row" style="justify-content:center;margin-top:16px">
-          <button class="btn btn-s" onclick="go(0)">Start over</button>
-        </div>
-      </div>
-
     </div>
+
+    <!-- SPLIT VIEW -->
+    <div class="split" id="split">
+      <div class="pane pane-left">
+        <div class="pane-bar">
+          <div class="pane-label"><span class="pane-dot" style="background:#94a3b8"></span>NORMAL VIEW</div>
+          <div class="pane-url" id="left-url"></div>
+        </div>
+        <div class="pane-frame">
+          <div class="pane-placeholder" id="left-ph">Loading your website…</div>
+          <iframe id="left-iframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+        </div>
+      </div>
+      <div class="pane pane-right">
+        <div class="pane-bar">
+          <div class="pane-label"><span class="pane-dot" style="background:#4ade80"></span>GPC OPT-OUT VIEW</div>
+          <div class="pane-url" id="right-url"></div>
+        </div>
+        <div class="pane-frame">
+          <div class="pane-placeholder" id="right-ph">Waiting for GPC test…</div>
+          <iframe id="right-iframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+          <div class="pane-overlay" id="right-overlay">
+            <div>
+              <div style="font-size:40px;margin-bottom:12px">🔒</div>
+              GPC comparison will load here in Step 4
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIZARD BAR -->
+  <div class="wizard-bar" id="wizard-bar">
+    <div class="wiz-inner" id="wiz-content"></div>
+  </div>
+
+  <!-- RESULTS BAR -->
+  <div class="results-bar" id="results-bar">
+    <div class="res-inner" id="res-content"></div>
   </div>
 
 </div>
 
 <script>
-var S = { domain:'', url:'', banner:null, dns:null, dnsAction:null, gpc:null };
+var S = {domain:'',url:'',gpcUrl:'',banner:null,dns:null,dnsAction:null,gpc:null,step:0};
 
-var GEO = 'otgeo=US,CA&_sp_geo_override=USCA&country=US&uc_cmp_country=US-06&ketch_region=US-CA&cmplz_user_region=us&framework=CCPA&cmpregulationkey=CCPA&ketch_jurisdiction=CCPA&gclid=xxxxxxxx&utm_email=test@test.com&otreset=true&otpreview=false&cmpdebug&debug_cmp&ketch_show';
-var HASH = '#didomi:notice.ignoreCountry=true&uc_cmp_country=US-06';
+var GEO='otgeo=US,CA&_sp_geo_override=USCA&country=US&uc_cmp_country=US-06&ketch_region=US-CA&cmplz_user_region=us&framework=CCPA&cmpregulationkey=CCPA&ketch_jurisdiction=CCPA&gclid=xxxxxxxx&utm_email=test@test.com&otreset=true&otpreview=false&cmpdebug&debug_cmp&ketch_show';
+var HASH='#didomi:notice.ignoreCountry=true&uc_cmp_country=US-06';
 
-function mkUrl(u, extra) {
-  var sep = u.indexOf('?') < 0 ? '?' : '&';
-  var r = u + sep + GEO;
-  if (extra) r += '&' + extra;
-  return r + HASH;
+function mkUrl(u,extra){
+  var sep=u.indexOf('?')<0?'?':'&';
+  var r=u+sep+GEO;
+  if(extra)r+='&'+extra;
+  return r+HASH;
 }
 
-function doStart() {
-  var v = document.getElementById('urlin').value.trim();
-  if (!v) return;
-  if (v.indexOf('http') !== 0) v = 'https://' + v;
-  S.domain = v.replace(/^https?:\/\//, '').replace(/\/+$/, '');
-  S.url = mkUrl(v);
+function doStart(){
+  var v=document.getElementById('urlin').value.trim();
+  if(!v)return;
+  if(v.indexOf('http')!==0)v='https://'+v;
+  S.domain=v.replace(/^https?:\/\//,'').replace(/\/+$/,'');
+  S.url=mkUrl(v);
+  S.gpcUrl=mkUrl(v,'gpc=1&globalPrivacyControl=1');
 
-  document.getElementById('site-url-bar').textContent = S.domain;
+  document.getElementById('intro').style.display='none';
+  document.getElementById('split').classList.add('on');
+  document.getElementById('wizard-bar').style.display='block';
+  document.getElementById('nav-title').textContent=S.domain;
 
-  // Try iframe first, fallback info
-  var ifr = document.getElementById('site-iframe');
-  ifr.classList.remove('hidden');
-  ifr.src = S.url;
-  document.getElementById('site-placeholder').classList.add('hidden');
+  // Load normal view
+  document.getElementById('left-url').textContent=S.domain;
+  document.getElementById('left-iframe').src=S.url;
+  document.getElementById('left-ph').style.display='none';
 
-  // Also open in new tab as fallback
-  window.open(S.url, 'compcheck');
+  // Right side shows overlay until step 4
+  document.getElementById('right-url').textContent='GPC · '+S.domain;
+  document.getElementById('right-overlay').style.display='flex';
 
-  go(1);
+  // Also open in new tabs as fallback
+  window.open(S.url,'cb_normal');
+
+  goStep(1);
 }
 
-function doGPC() {
-  var v = 'https://' + S.domain;
-  var gpcUrl = mkUrl(v, 'gpc=1&globalPrivacyControl=1');
+function goStep(n){
+  S.step=n;
+  // Update pills
+  for(var i=0;i<5;i++){
+    var p=document.getElementById('np'+i);
+    p.classList.remove('active','done','inactive');
+    if(i<n)p.classList.add('done');
+    else if(i===n)p.classList.add('active');
+    else p.classList.add('inactive');
+  }
 
-  var ifr = document.getElementById('site-iframe');
-  ifr.src = gpcUrl;
+  document.getElementById('results-bar').classList.remove('on');
+  document.getElementById('wizard-bar').style.display=n===5?'none':'block';
+  if(n===5){document.getElementById('results-bar').classList.add('on');renderResults();return;}
 
-  // Also open new tab
-  window.open(gpcUrl, 'compcheck_gpc');
+  var w=document.getElementById('wiz-content');
 
-  document.getElementById('gpc-indicator').style.display = 'flex';
-  document.getElementById('gpc-done').classList.remove('hidden');
-  document.getElementById('gpc-btn').textContent = '↻ Reload GPC tab again';
+  if(n===1){
+    w.innerHTML='<h3>Step 2: Do you see a consent banner?</h3>'+
+      '<p>Your website is loaded on the left as a <strong>California visitor</strong> would see it. Look at the left panel — do you see a consent or privacy banner?</p>'+
+      '<div class="choices" id="cc">'+
+        '<div class="choice" onclick="pick(this,\'banner\',\'yes\')">✓ Yes, I see a banner</div>'+
+        '<div class="choice" onclick="pick(this,\'banner\',\'no\')">✗ No banner</div>'+
+        '<div class="choice" onclick="pick(this,\'banner\',\'unsure\')">Not sure</div>'+
+      '</div>'+
+      '<div class="btn-row"><span id="fb1"></span><button class="btn btn-p hidden" id="n1" onclick="goStep(2)">Next →</button></div>';
+  }
+
+  if(n===2){
+    w.innerHTML='<h3>Step 3: "Do Not Sell or Share" link</h3>'+
+      '<p>Scroll to the <strong>footer</strong> of your website on the left. Look for a link labeled "Do Not Sell or Share My Personal Information" or "Your Privacy Choices".</p>'+
+      '<div class="choices" id="cc">'+
+        '<div class="choice" onclick="pick(this,\'dns\',\'yes\')">✓ Yes, I found it</div>'+
+        '<div class="choice" onclick="pick(this,\'dns\',\'no\')">✗ Not there</div>'+
+      '</div>'+
+      '<div id="dns-extra"></div>'+
+      '<div class="btn-row"><button class="btn btn-s" onclick="goStep(1)">← Back</button><button class="btn btn-p hidden" id="n2" onclick="goStep(3)">Next →</button></div>';
+  }
+
+  if(n===3){
+    w.innerHTML='<h3>Step 4: GPC Signal Comparison</h3>'+
+      '<p>Now we\'ll load your site again with a <strong>GPC opt-out signal</strong> in the right panel. Compare both sides — do you see any differences?</p>'+
+      '<div class="btn-row" style="margin-bottom:14px"><button class="btn btn-g" id="gpc-go" onclick="fireGPC()">▶ Load GPC view on the right</button></div>'+
+      '<div id="gpc-extra"></div>'+
+      '<div class="btn-row"><button class="btn btn-s" onclick="goStep(2)">← Back</button><button class="btn btn-p hidden" id="n3" onclick="goStep(5)">See Results →</button></div>';
+  }
 }
 
-function pick(el, group, val) {
+function fireGPC(){
+  document.getElementById('right-overlay').style.display='none';
+  document.getElementById('right-ph').style.display='none';
+  document.getElementById('right-iframe').src=S.gpcUrl;
+  window.open(S.gpcUrl,'cb_gpc');
+
+  document.getElementById('gpc-go').textContent='↻ Reload GPC view';
+
+  document.getElementById('gpc-extra').innerHTML=
+    '<p style="font-size:13px;color:#4b5563;margin:14px 0 10px">Compare the <strong>left</strong> (normal) with the <strong>right</strong> (GPC opt-out). Notice any differences?</p>'+
+    '<div class="choices">'+
+      '<div class="choice" onclick="pick(this,\'gpc\',\'different\')">✓ Yes, right side is different</div>'+
+      '<div class="choice" onclick="pick(this,\'gpc\',\'same\')">✗ They look identical</div>'+
+      '<div class="choice" onclick="pick(this,\'gpc\',\'unsure\')">Hard to tell</div>'+
+    '</div>'+
+    '<div id="gpc-fb"></div>';
+}
+
+function pick(el,key,val){
   el.parentElement.querySelectorAll('.choice').forEach(function(c){c.classList.remove('selected')});
   el.classList.add('selected');
+  S[key]=val;
 
-  if (group === 'c1') { S.banner = val; document.getElementById('n1').classList.remove('hidden'); }
-  if (group === 'c2') {
-    S.dns = val;
-    document.getElementById('dns-followup').classList.toggle('hidden', val !== 'yes');
-    document.getElementById('dns-fail').classList.toggle('hidden', val !== 'no');
+  if(key==='banner')document.getElementById('n1').classList.remove('hidden');
+
+  if(key==='dns'){
     document.getElementById('n2').classList.remove('hidden');
+    var ex=document.getElementById('dns-extra');
+    if(val==='yes'){
+      ex.innerHTML='<p style="font-size:13px;color:#4b5563;margin:10px 0 8px"><strong>Click that link now</strong> on your site. What happened?</p>'+
+        '<div class="choices">'+
+          '<div class="choice" onclick="pick(this,\'dnsAction\',\'modal\')">Preference center opened</div>'+
+          '<div class="choice" onclick="pick(this,\'dnsAction\',\'redirect\')">Redirected to a page</div>'+
+          '<div class="choice" onclick="pick(this,\'dnsAction\',\'nothing\')">Nothing happened</div>'+
+        '</div>';
+    } else {
+      ex.innerHTML='<div class="info red"><strong>Compliance gap:</strong> CCPA/CPRA requires this link for businesses that sell or share personal information.</div>';
+    }
   }
-  if (group === 'c2b') { S.dnsAction = val; }
-  if (group === 'c3') {
-    S.gpc = val;
-    document.getElementById('gpc-ok').classList.toggle('hidden', val !== 'different');
-    document.getElementById('gpc-bad').classList.toggle('hidden', val !== 'same');
+
+  if(key==='gpc'){
     document.getElementById('n3').classList.remove('hidden');
+    var fb=document.getElementById('gpc-fb');
+    if(val==='different') fb.innerHTML='<div class="info green"><strong>Good sign!</strong> Your site appears to respond to the GPC signal.</div>';
+    else if(val==='same') fb.innerHTML='<div class="info red"><strong>Potential issue:</strong> Your site looks identical with and without GPC. Services may be ignoring the opt-out.</div>';
+    else fb.innerHTML='';
   }
 }
 
-function go(n) {
-  for (var i = 0; i < 5; i++) {
-    document.getElementById('s'+i).classList.toggle('active', i===n);
-    var d = document.getElementById('d'+i);
-    d.classList.remove('active','done');
-    if (i<n){d.classList.add('done');d.innerHTML='✓'}
-    else if(i===n){d.classList.add('active');d.innerHTML=''+(i+1)}
-    else{d.innerHTML=''+(i+1)}
-    if (i < 4) document.getElementById('l'+i).classList.toggle('done', i < n);
-  }
+function renderResults(){
+  var dnsP=S.dns==='yes',dnsF=S.dnsAction!=='nothing',gpcP=S.gpc==='different',gpcU=S.gpc==='unsure',banP=S.banner==='yes';
+  var fails=0;
+  if(!dnsP)fails++;
+  if(!gpcP&&!gpcU)fails++;
+  if(dnsP&&!dnsF)fails++;
 
-  // Reset GPC indicator when going back
-  if (n < 3) document.getElementById('gpc-indicator').style.display = 'none';
-
-  if (n === 4) renderResults();
-  document.querySelector('.panel-body').scrollTo({top:0,behavior:'smooth'});
-}
-
-function renderResults() {
-  var dnsP = S.dns === 'yes';
-  var dnsF = S.dnsAction !== 'nothing';
-  var gpcP = S.gpc === 'different';
-  var gpcU = S.gpc === 'unsure';
-  var banP = S.banner === 'yes';
-
-  var fails = 0;
-  if (!dnsP) fails++;
-  if (!gpcP && !gpcU) fails++;
-  if (dnsP && !dnsF) fails++;
-
-  var rl, rc;
-  if (fails >= 2){rl='High risk';rc='high'}
-  else if (fails===1||gpcU){rl='Medium risk';rc='medium'}
+  var rl,rc;
+  if(fails>=2){rl='High risk';rc='high'}
+  else if(fails===1||gpcU){rl='Medium risk';rc='medium'}
   else{rl='Low risk';rc='low'}
 
-  var cols={high:'#dc2626',medium:'#d97706',low:'#16a34a'};
+  var msgs={high:'You need to take action!',medium:'Some improvements needed.',low:'Your site appears compliant!'};
   var dots={high:'#ef4444',medium:'#f59e0b',low:'#22c55e'};
-  var msgs={high:'You need to take action!',medium:'Some improvements may be needed.',low:'Your site appears compliant!'};
 
-  document.getElementById('risk-area').innerHTML =
-    '<div class="risk-badge risk-'+rc+'"><span style="width:10px;height:10px;border-radius:50%;background:'+dots[rc]+'"></span>'+rl+'</div>'+
-    '<div style="font-size:13px;font-weight:600;color:'+cols[rc]+';margin-bottom:4px">'+msgs[rc]+'</div>'+
-    '<p class="small" style="margin-bottom:16px">Based on a guided compliance check of <strong>'+S.domain+'</strong></p>';
+  function rc2(pass,title,detail){
+    var ico=pass
+      ?'<svg class="r-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="#22c55e"/><path d="M6.5 11.5l3 3 5-5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      :'<svg class="r-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="#ef4444"/><path d="M7.5 7.5l7 7M14.5 7.5l-7 7" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    return '<div class="res-card">'+ico+'<div><div class="r-title">'+title+'</div><div class="r-detail">'+detail+'</div><span class="r-badge '+(pass?'pass':'fail')+'">'+(pass?'Pass':'Fail')+'</span></div></div>';
+  }
 
-  var h = '';
-  h += rr(dnsP,'Do Not Sell / Share link', dnsP ? 'Found in footer.' : 'Not found in the website footer.');
-  if (dnsP) h += rr(dnsF, 'DNS link functionality', dnsF ? 'Link triggered an opt-out mechanism.' : 'Link was present but non-functional.');
-  h += rr(banP, 'CCPA consent banner', banP ? 'Consent banner displayed for California visitor.' : S.banner==='unsure' ? 'Unclear whether a CCPA banner appeared.' : 'No consent banner displayed.');
-  h += rr(gpcP, 'GPC signal response', gpcP ? 'Site behavior changed with GPC signal.' : gpcU ? 'Unclear — further testing recommended.' : 'Site appeared identical with and without GPC.');
+  var cards='';
+  cards+=rc2(banP,'Consent Banner',banP?'CCPA banner displayed.':'No CCPA banner detected.');
+  cards+=rc2(dnsP,'DNS Link',dnsP?(dnsF?'Found and functional.':'Found but non-functional.'):'Not found in footer.');
+  cards+=rc2(gpcP,'GPC Response',gpcP?'Site responds to GPC signal.':gpcU?'Unclear — needs further testing.':'No response to GPC signal.');
 
-  document.getElementById('results-rows').innerHTML = h;
-}
-
-function rr(pass, title, detail) {
-  var ico = pass
-    ? '<svg class="r-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#22c55e"/><path d="M7 12.5l3 3 5.5-5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-    : '<svg class="r-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#ef4444"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>';
-  var b = pass ? '<span class="r-badge pass">Pass</span>' : '<span class="r-badge fail">Fail</span>';
-  return '<div class="r-row">'+ico+'<div class="r-info"><div class="r-title">'+title+'</div><div class="r-detail">'+detail+'</div></div>'+b+'</div>';
+  document.getElementById('res-content').innerHTML=
+    '<div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap">'+
+      '<div><h3>Compliance Results: '+S.domain+'</h3></div>'+
+      '<div class="risk-inline '+rc+'"><span style="width:8px;height:8px;border-radius:50%;background:'+dots[rc]+'"></span>'+rl+' — '+msgs[rc]+'</div>'+
+    '</div>'+
+    '<div class="res-grid">'+cards+'</div>'+
+    '<div class="cta-inline">'+
+      '<div><h4>Fix this with Cookiebot CMP</h4><p>Automate CCPA/CPRA compliance — DNS links, GPC signals, and consent management.</p></div>'+
+      '<a href="https://admin.cookiebot.com/signup" target="_blank"><button class="btn" style="background:#fff;color:#1b2a4a">Start free trial</button></a>'+
+    '</div>';
 }
 
 document.getElementById('urlin').addEventListener('keydown',function(e){if(e.key==='Enter')doStart()});
