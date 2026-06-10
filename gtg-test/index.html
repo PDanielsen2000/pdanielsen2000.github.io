@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GTG Scanner Test Environment</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --accent-a: #ff4d6d;
+      --accent-b: #00d4aa;
+      --text: #e8eaf0;
+      --muted: #7a7f99;
+      --font: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    header { text-align: center; margin-bottom: 3rem; }
+    header h1 { font-size: 1.4rem; letter-spacing: 0.15em; text-transform: uppercase; }
+    header p { color: var(--muted); font-size: 0.8rem; margin-top: 0.5rem; }
+
+    .badge { display: inline-block; font-size: 0.65rem; padding: 0.2rem 0.6rem; border-radius: 2px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: bold; margin-bottom: 0.75rem; }
+    .badge-a { background: rgba(255,77,109,0.15); color: var(--accent-a); border: 1px solid var(--accent-a); }
+    .badge-b { background: rgba(0,212,170,0.15); color: var(--accent-b); border: 1px solid var(--accent-b); }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 1100px; margin: 0 auto 3rem; }
+    @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; }
+    .card h2 { font-size: 0.9rem; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+    .card p { color: var(--muted); font-size: 0.75rem; line-height: 1.6; margin-bottom: 1.2rem; }
+
+    .btn { display: inline-block; padding: 0.6rem 1.2rem; font-family: var(--font); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; border: none; border-radius: 3px; cursor: pointer; transition: opacity 0.15s; }
+    .btn:hover { opacity: 0.85; }
+    .btn-a { background: var(--accent-a); color: #fff; }
+    .btn-b { background: var(--accent-b); color: #0f1117; }
+
+    .log { margin-top: 1rem; background: #0a0c12; border: 1px solid var(--border); border-radius: 4px; padding: 0.75rem; font-size: 0.7rem; color: var(--muted); min-height: 80px; max-height: 160px; overflow-y: auto; line-height: 1.7; }
+    .log .hit  { color: var(--accent-b); }
+    .log .warn { color: #f5a623; }
+    .log .info { color: var(--muted); }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem auto; max-width: 1100px; }
+
+    .cookie-panel { max-width: 1100px; margin: 0 auto 2rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; }
+    .cookie-panel h3 { font-size: 0.85rem; letter-spacing: 0.08em; margin-bottom: 1rem; }
+
+    .cookie-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+    .cookie-table th { text-align: left; color: var(--muted); padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--border); letter-spacing: 0.08em; }
+    .cookie-table td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #1e2130; word-break: break-all; }
+    .cookie-table td.name { color: #f5a623; }
+    .cookie-table td.val  { color: var(--accent-b); }
+    .cookie-table td.domain { color: var(--muted); }
+    .empty-row td { color: var(--muted); font-style: italic; }
+
+    .scroll-area { height: 600px; overflow-y: scroll; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2rem; max-width: 1100px; margin: 0 auto 2rem; }
+    .scroll-area p { color: var(--muted); font-size: 0.8rem; line-height: 2; margin-bottom: 1rem; }
+    .scroll-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); text-align: center; margin-bottom: 0.5rem; max-width: 1100px; margin-left: auto; margin-right: auto; }
+
+    .network-log { max-width: 1100px; margin: 0 auto 2rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; }
+    .network-log h3 { font-size: 0.85rem; letter-spacing: 0.08em; margin-bottom: 1rem; }
+    #net-list { font-size: 0.7rem; line-height: 1.9; color: var(--muted); min-height: 40px; }
+    #net-list .req-third { color: var(--accent-a); }
+    #net-list .req-first  { color: var(--accent-b); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>GTG Scanner · Test Environment</h1>
+  <p>Measurement ID: G-F397NXCTPN &nbsp;|&nbsp; Simulate pre-consent GA firing scenarios</p>
+</header>
+
+<div class="grid">
+  <div class="card">
+    <div class="badge badge-a">Scenario A</div>
+    <h2>Standard GA — No GTG</h2>
+    <p>Fires gtag.js directly from <code>googletagmanager.com</code>. Requests go to <code>google-analytics.com/g/collect</code>. Request is third-party.</p>
+    <button class="btn btn-a" onclick="fireScenarioA()">Fire GA (pre-consent)</button>
+    <div class="log" id="log-a"><span class="info">Waiting for trigger...</span></div>
+  </div>
+
+  <div class="card">
+    <div class="badge badge-b">Scenario B</div>
+    <h2>GTG Simulated — First-party Proxy</h2>
+    <p>Fires GA via <code>/g/collect</code> on this domain — proxied to Google by the Cloudflare Worker. Request sent first-party.</p>
+    <button class="btn btn-b" onclick="fireScenarioB()">Fire GA via proxy (pre-consent)</button>
+    <div class="log" id="log-b"><span class="info">Waiting for trigger...</span></div>
+  </div>
+</div>
+
+<div class="cookie-panel">
+  <h3>🍪 Cookie Inspector</h3>
+  <table class="cookie-table">
+    <thead><tr><th>Name</th><th>Value</th><th>Domain</th></tr></thead>
+    <tbody id="cookie-tbody"><tr class="empty-row"><td colspan="3">No cookies detected yet</td></tr></tbody>
+  </table>
+  <button class="btn" style="margin-top:1rem; background: var(--border); color: var(--text);" onclick="refreshCookies()">Refresh cookies</button>
+</div>
+
+<div class="network-log">
+  <h3>📡 Network Requests</h3>
+  <div id="net-list">Observing...</div>
+</div>
+
+<hr class="divider" />
+
+<p class="scroll-label">↓ Scroll simulation area — Playwright scrolls through this</p>
+<div class="scroll-area" id="scroll-area">
+  <p>This content area simulates a real page for Playwright scroll simulation.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+  <p>Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+  <p>Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.</p>
+  <p>Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis molestie dictum semper.</p>
+  <p>Sed commodo posuere pede. Mauris ut est. Ut quis purus. Sed ac odio. Sed vehicula hendrerit sem.</p>
+  <p>In dui magna, posuere eget, vestibulum et, tempor auctor, justo. In ac felis quis tortor malesuada pretium.</p>
+  <p>Fusce fermentum. Nullam varius nisi. Quisque ornare neque. Nulla facilisi.</p>
+  <p id="scroll-bottom" style="color: var(--accent-b); margin-top: 2rem;">[ Scroll bottom ]</p>
+</div>
+
+<script>
+  const MEASUREMENT_ID = 'G-F397NXCTPN';
+  const CLIENT_ID = Math.random().toString(36).slice(2) + '.' + Date.now();
+
+  function fireScenarioA() {
+    const log = document.getElementById('log-a');
+    log.innerHTML = '<span class="info">Loading gtag.js from googletagmanager.com...</span>';
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', MEASUREMENT_ID, { 'send_page_view': false });
+    const script = document.createElement('script');
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`;
+    script.onload = () => {
+      gtag('event', 'scanner_test_a', { event_category: 'gtg_scanner', event_label: 'third_party_no_gtg' });
+      log.innerHTML = `
+        <span class="warn">⚠ GA fired WITHOUT consent</span><br>
+        <span class="info">Script src: googletagmanager.com/gtag/js</span><br>
+        <span class="info">Collect endpoint: google-analytics.com/g/collect</span><br>
+        <span class="hit">→ _ga cookie set on: ${location.hostname}</span><br>
+        <span class="warn">→ Request destination: THIRD-PARTY</span>
+      `;
+      refreshCookies();
+    };
+    document.head.appendChild(script);
+  }
+
+  function fireScenarioB() {
+    const log = document.getElementById('log-b');
+    log.innerHTML = '<span class="info">Sending via first-party proxy /g/collect...</span>';
+    const params = new URLSearchParams({
+      v: '2', tid: MEASUREMENT_ID, cid: CLIENT_ID,
+      en: 'scanner_test_b',
+      'ep.event_category': 'gtg_scanner',
+      'ep.event_label': 'first_party_gtg_simulated',
+      _dbg: '1'
+    });
+    fetch(`/g/collect?${params.toString()}`, { method: 'POST', keepalive: true })
+      .then(res => {
+        log.innerHTML = `
+          <span class="hit">✓ Request sent via first-party domain</span><br>
+          <span class="info">Endpoint: ${location.origin}/g/collect</span><br>
+          <span class="info">Proxied to: www.google-analytics.com/g/collect</span><br>
+          <span class="info">HTTP status: ${res.status}</span><br>
+          <span class="hit">→ Request destination: FIRST-PARTY ✓</span>
+        `;
+        const gaVal = `GA1.1.${CLIENT_ID}`;
+        document.cookie = `_ga=${gaVal}; path=/; max-age=63072000; SameSite=Lax`;
+        document.cookie = `_ga_${MEASUREMENT_ID.replace('G-','')}=${gaVal}; path=/; max-age=63072000; SameSite=Lax`;
+        refreshCookies();
+      })
+      .catch(err => {
+        log.innerHTML = `<span class="warn">Proxy not configured yet — deploy worker.js first</span><br><span class="info">${err}</span>`;
+      });
+  }
+
+  function refreshCookies() {
+    const tbody = document.getElementById('cookie-tbody');
+    const gaCookies = document.cookie.split(';').map(c => c.trim()).filter(c => c.startsWith('_ga'));
+    if (gaCookies.length === 0) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="3">No _ga cookies detected</td></tr>';
+      return;
+    }
+    tbody.innerHTML = gaCookies.map(c => {
+      const [name, ...rest] = c.split('=');
+      return `<tr><td class="name">${name.trim()}</td><td class="val">${rest.join('=').trim()}</td><td class="domain">${location.hostname}</td></tr>`;
+    }).join('');
+  }
+
+  const netList = document.getElementById('net-list');
+  const seen = new Set();
+  function logRequest(url) {
+    if (seen.has(url)) return;
+    seen.add(url);
+    const isFirst = url.includes(location.hostname) || url.startsWith('/');
+    const cls = isFirst ? 'req-first' : 'req-third';
+    const label = isFirst ? '[FIRST-PARTY]' : '[THIRD-PARTY]';
+    const short = url.length > 80 ? url.slice(0, 80) + '…' : url;
+    const div = document.createElement('div');
+    div.className = cls;
+    div.textContent = `${label} ${short}`;
+    if (netList.textContent === 'Observing...') netList.textContent = '';
+    netList.appendChild(div);
+  }
+
+  const origFetch = window.fetch;
+  window.fetch = function(input, init) {
+    logRequest(typeof input === 'string' ? input : input.url);
+    return origFetch.apply(this, arguments);
+  };
+  const origOpen = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(method, url) {
+    logRequest(url);
+    return origOpen.apply(this, arguments);
+  };
+
+  try {
+    new PerformanceObserver(list => {
+      list.getEntries().forEach(e => {
+        if (e.initiatorType === 'script' || e.name.includes('collect') || e.name.includes('gtag')) logRequest(e.name);
+      });
+    }).observe({ type: 'resource', buffered: true });
+  } catch(e) {}
+
+  refreshCookies();
+
+  document.getElementById('scroll-area').addEventListener('scroll', function() {
+    if (this.scrollHeight - this.scrollTop - this.clientHeight < 10)
+      document.getElementById('scroll-bottom').textContent = '✓ Scroll bottom reached';
+  });
+</script>
+
+</body>
+</html>
