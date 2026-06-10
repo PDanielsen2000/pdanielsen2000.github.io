@@ -1,2 +1,10 @@
-include:
-  - .well-known
+title: PDanielsen2000
+description: My personal site
+url: "https://pdanielsen2000.github.io"
+baseurl: ""
+
+theme: minima
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
