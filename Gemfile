@@ -1,10 +1,10 @@
 source "https://rubygems.org"
 
 gem "jekyll", "~> 4.3"
-gem "webrick"  # needed for Ruby 3+
+gem "minima"
+gem "webrick"
 
 group :jekyll_plugins do
-  # add any Jekyll plugins you use here, e.g.:
-  # gem "jekyll-feed"
-  # gem "jekyll-seo-tag"
+  gem "jekyll-feed"
+  gem "jekyll-seo-tag"
 end
