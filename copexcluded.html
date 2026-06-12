@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CoP Exclusion Rules Test</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    h1 { margin-bottom: 8px; }
+    p { color: #555; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 10px 12px; border: 1px solid #ddd; }
+    th { background: #f5f5f5; }
+    .pass { color: green; font-weight: 600; }
+    .fail { color: red; font-weight: 600; }
+    nav { margin-bottom: 32px; }
+    nav a { margin-right: 16px; }
+  </style>
+</head>
+<body>
+  <nav><a href="index.html">← Home</a><a href="cop-banner.html">CoP Banner →</a></nav>
+  <h1>CoP Exclusion Rules Test</h1>
+  <p>CPD-46 — Test cases for CoP banner exclusion/exception rules.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Rule</th>
+        <th>Description</th>
+        <th>Expected</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Subscriber cookie</td>
+        <td>User has valid subscription token</td>
+        <td>Banner hidden</td>
+        <td class="fail">— not tested</td>
+      </tr>
+      <tr>
+        <td>URL exclusion</td>
+        <td>/privacy, /imprint pages excluded</td>
+        <td>Banner hidden</td>
+        <td class="fail">— not tested</td>
+      </tr>
+      <tr>
+        <td>Logged-in user</td>
+        <td>Authenticated session detected</td>
+        <td>Banner hidden</td>
+        <td class="fail">— not tested</td>
+      </tr>
+      <tr>
+        <td>Default visitor</td>
+        <td>No subscription, no exclusion match</td>
+        <td>Banner shown</td>
+        <td class="fail">— not tested</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- UC Loader — uncomment and set ruleset ID -->
+  <!--
+  <script src="https://web.cmp.usercentrics-sandbox.eu/modules/autoblocker.js"></script>
+  <script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-ruleset-id="YOUR_RULESET_ID" data-sandbox="true" async></script>
+  -->
+
+  <p style="margin-top:40px;color:#aaa;font-size:0.85rem;">PDanielsen · CPD-46 Exclusion Rules Test</p>
+</body>
+</html>
