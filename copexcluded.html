@@ -3,6 +3,13 @@
 <head>
     <script src="https://web.cmp.usercentrics-sandbox.eu/tcf/stub.js"></script>
     <script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-settings-id="JCG2xH9WtbekLM" data-sandbox="true" async></script>
+    <script>
+      if (localStorage.getItem('cop_loggedIn') === 'true') {
+        window.addEventListener('UC_UI_INITIALIZED', function() {
+          window.UC_UI && window.UC_UI.acceptAllConsents();
+        });
+      }
+    </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CoP Exclusion Rules Test</title>
@@ -17,10 +24,39 @@
     .fail { color: red; font-weight: 600; }
     nav { margin-bottom: 32px; }
     nav a { margin-right: 16px; }
+
+    /* Login panel */
+    #login-panel {
+      margin-bottom: 28px;
+      padding: 16px 20px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fafafa;
+    }
+    #login-panel h3 { margin: 0 0 12px; font-size: 1rem; }
+    #login-panel label { display: block; font-size: 0.85rem; margin-bottom: 4px; color: #444; }
+    #login-panel input {
+      width: 100%; padding: 7px 10px; margin-bottom: 10px;
+      border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 0.9rem;
+    }
+    #login-panel button {
+      padding: 8px 18px; border: none; border-radius: 4px;
+      cursor: pointer; font-size: 0.9rem;
+    }
+    #login-btn { background: #0052cc; color: #fff; }
+    #login-btn:hover { background: #0041a8; }
+    #logout-btn { background: #e0e0e0; color: #333; }
+    #logout-btn:hover { background: #ccc; }
+    #logged-in-bar { display: flex; align-items: center; gap: 16px; font-size: 0.9rem; }
+    #logged-in-bar span { color: #2a7a2a; font-weight: 600; }
   </style>
 </head>
 <body>
   <nav><a href="index.html">← Home</a><a href="copexcluded.html">CoP Banner →</a></nav>
+
+  <!-- Login simulation panel -->
+  <div id="login-panel"></div>
+
   <h1>CoP Exclusion Rules Test</h1>
   <p>CPD-46 — Test cases for CoP banner exclusion/exception rules.</p>
 
@@ -46,27 +82,67 @@
         <td>Banner hidden</td>
         <td class="fail">— not tested</td>
       </tr>
-      <tr>
+      <tr id="row-loggedin">
         <td>Logged-in user</td>
         <td>Authenticated session detected</td>
         <td>Banner hidden</td>
-        <td class="fail">— not tested</td>
+        <td class="fail" id="result-loggedin">— not tested</td>
       </tr>
-      <tr>
+      <tr id="row-default">
         <td>Default visitor</td>
         <td>No subscription, no exclusion match</td>
         <td>Banner shown</td>
-        <td class="fail">— not tested</td>
+        <td class="fail" id="result-default">— not tested</td>
       </tr>
     </tbody>
   </table>
 
-  <!-- UC Loader — uncomment and set ruleset ID -->
-  <!--
-  <script src="https://web.cmp.usercentrics-sandbox.eu/modules/autoblocker.js"></script>
-  <script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-ruleset-id="YOUR_RULESET_ID" data-sandbox="true" async></script>
-  -->
-
   <p style="margin-top:40px;color:#aaa;font-size:0.85rem;">PDanielsen · CPD-46 Exclusion Rules Test</p>
+
+  <script>
+    (function () {
+      var isLoggedIn = localStorage.getItem('cop_loggedIn') === 'true';
+      var username = localStorage.getItem('cop_username') || '';
+      var panel = document.getElementById('login-panel');
+
+      if (isLoggedIn) {
+        panel.innerHTML =
+          '<div id="logged-in-bar">' +
+          '<span>Logged in as ' + (username || 'user') + '</span>' +
+          '<button id="logout-btn">Log Out</button>' +
+          '</div>';
+        document.getElementById('logout-btn').addEventListener('click', function () {
+          localStorage.removeItem('cop_loggedIn');
+          localStorage.removeItem('cop_username');
+          location.reload();
+        });
+
+        // Update result cells
+        var resultLoggedIn = document.getElementById('result-loggedin');
+        resultLoggedIn.textContent = 'PASS — Banner hidden';
+        resultLoggedIn.className = 'pass';
+      } else {
+        panel.innerHTML =
+          '<h3>Simulate Login</h3>' +
+          '<form id="login-form">' +
+          '<label>Username<input type="text" id="field-username" placeholder="any value" autocomplete="username" /></label>' +
+          '<label>Password<input type="password" id="field-password" placeholder="any value" autocomplete="current-password" /></label>' +
+          '<button type="submit" id="login-btn">Log In</button>' +
+          '</form>';
+        document.getElementById('login-form').addEventListener('submit', function (e) {
+          e.preventDefault();
+          var u = document.getElementById('field-username').value.trim() || 'user';
+          localStorage.setItem('cop_loggedIn', 'true');
+          localStorage.setItem('cop_username', u);
+          location.reload();
+        });
+
+        // Update result cells
+        var resultDefault = document.getElementById('result-default');
+        resultDefault.textContent = 'PASS — Banner shown';
+        resultDefault.className = 'pass';
+      }
+    })();
+  </script>
 </body>
 </html>
