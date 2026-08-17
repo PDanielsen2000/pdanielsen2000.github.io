@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-    var UC_UI_SUPPRESS_CMP_DISPLAY = localStorage.getItem('cop_loggedIn') === 'true';
-  </script>
-  <script src="https://web.cmp.usercentrics-sandbox.eu/tcf/stub.js"></script>
-  <script id="usercentrics-cmp"
-    src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js"
-    data-settings-id="JCG2xH9WtbekLM"
-    data-sandbox="true"
-    async>
-  </script>
   <script src="https://web.cmp.usercentrics-sandbox.eu/tcf/stub.js"></script>
   <script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-settings-id="JCG2xH9WtbekLM" data-sandbox="true" async></script>
   <meta charset="UTF-8" />
@@ -36,6 +26,10 @@
     .api-value { font-weight: 600; }
     button.reset { margin-top: 16px; padding: 8px 16px; background: #e0e0e0; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
     button.reset:hover { background: #ccc; }
+    #session-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding: 10px 16px; background: #f0faf0; border: 1px solid #b7dfb8; border-radius: 6px; font-size: 0.88rem; }
+    #session-bar span { color: #2a7a2a; font-weight: 600; }
+    #session-bar button { padding: 5px 12px; border: none; border-radius: 4px; background: #e0e0e0; cursor: pointer; font-size: 0.82rem; }
+    #session-bar button:hover { background: #ccc; }
   </style>
 </head>
 <body>
@@ -43,6 +37,7 @@
     <a href="index.html">← Home</a>
     <a href="copexclusion-rules.html">Exclusion Rules →</a>
   </nav>
+  <div id="session-bar" style="display:none"></div>
   <h1>CoP Banner Test</h1>
   <p class="subtitle">CPD-46 — Consent or Pay banner display and consent API.</p>
 
@@ -137,6 +132,21 @@
       setResult('result-required', required, 'false — accept all to verify');
       setResult('result-all', all, 'false — accept all to verify');
     });
+
+    // Session bar
+    (function () {
+      var username = localStorage.getItem('cop_username');
+      if (localStorage.getItem('cop_loggedIn') === 'true') {
+        var bar = document.getElementById('session-bar');
+        bar.style.display = 'flex';
+        bar.innerHTML = '<span>Logged in as ' + (username || 'user') + '</span><button id="btn-logout">Log Out</button>';
+        document.getElementById('btn-logout').addEventListener('click', function () {
+          localStorage.removeItem('cop_loggedIn');
+          localStorage.removeItem('cop_username');
+          location.reload();
+        });
+      }
+    })();
 
     document.getElementById('btn-reset').addEventListener('click', function () {
       if (window.UC_UI && typeof window.UC_UI.clearAllConsents === 'function') {
