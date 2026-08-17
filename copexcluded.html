@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Subscriber check — must run before CMP scripts -->
+    <script>
+      var UC_UI_SUPPRESS_CMP_DISPLAY = localStorage.getItem('cop_loggedIn') === 'true';
+    </script>
     <script src="https://web.cmp.usercentrics-sandbox.eu/tcf/stub.js"></script>
     <script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-settings-id="JCG2xH9WtbekLM" data-sandbox="true" async></script>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CoP Exclusion Rules Test</title>
