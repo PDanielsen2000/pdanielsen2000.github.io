@@ -10,7 +10,6 @@
     data-settings-id="JCG2xH9WtbekLM"
     data-sandbox="true"
     async>
-  </script>
   <script src="https://web.cmp.usercentrics-sandbox.eu/tcf/stub.js"></script>
   <script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-settings-id="JCG2xH9WtbekLM" data-sandbox="true" async></script>
   <meta charset="UTF-8" />
@@ -40,6 +39,13 @@
     #session-bar span { color: #2a7a2a; font-weight: 600; }
     #session-bar button { padding: 5px 12px; border: none; border-radius: 4px; background: #e0e0e0; cursor: pointer; font-size: 0.82rem; }
     #session-bar button:hover { background: #ccc; }
+    #tcf-panel { background: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; padding: 16px 20px; margin-bottom: 28px; }
+    #tcf-panel h2 { margin: 0 0 12px; font-size: 1rem; }
+    #tcf-string { width: 100%; font-family: monospace; font-size: 0.78rem; background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 8px; resize: vertical; word-break: break-all; box-sizing: border-box; }
+    #tcf-panel button, #tcf-panel a { padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.82rem; text-decoration: none; }
+    #btn-copy { background: #e0e0e0; color: #333; }
+    #btn-copy:hover { background: #ccc; }
+    #btn-decode { background: #0052cc; color: #fff; }
   </style>
 </head>
 <body>
@@ -62,6 +68,19 @@
       <span class="api-value pending" id="val-all">waiting for UC_UI…</span>
     </div>
     <button class="reset" id="btn-reset">Reset consent &amp; reload</button>
+  </div>
+
+  <div id="tcf-panel">
+    <h2>TC String</h2>
+    <div id="tcf-status" class="pending">waiting for __tcfapi…</div>
+    <div id="tcf-string-wrap" style="display:none">
+      <textarea id="tcf-string" readonly rows="3"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+        <button id="btn-copy">Copy</button>
+        <a id="btn-decode" href="#" target="_blank" rel="noopener">Decode on iabtcf.com</a>
+        <span id="copy-confirm" style="display:none;color:green;font-size:0.82rem;align-self:center;">Copied!</span>
+      </div>
+    </div>
   </div>
 
   <table>
@@ -142,6 +161,37 @@
       setResult('result-required', required, 'false — accept all to verify');
       setResult('result-all', all, 'false — accept all to verify');
     });
+
+    // TC String
+    (function pollTCF() {
+      if (typeof __tcfapi === 'undefined') {
+        setTimeout(pollTCF, 500);
+        return;
+      }
+      __tcfapi('getTCData', 2, function (tcData, success) {
+        var statusEl = document.getElementById('tcf-status');
+        var wrapEl   = document.getElementById('tcf-string-wrap');
+        if (!success || !tcData || !tcData.tcString) {
+          statusEl.textContent = 'No TC string yet — interact with the banner first.';
+          return;
+        }
+        statusEl.style.display = 'none';
+        wrapEl.style.display = 'block';
+        var ta = document.getElementById('tcf-string');
+        ta.value = tcData.tcString;
+
+        document.getElementById('btn-copy').addEventListener('click', function () {
+          navigator.clipboard.writeText(tcData.tcString).then(function () {
+            var c = document.getElementById('copy-confirm');
+            c.style.display = 'inline';
+            setTimeout(function () { c.style.display = 'none'; }, 2000);
+          });
+        });
+
+        document.getElementById('btn-decode').href =
+          'https://www.iabtcf.com/#/decode?tcString=' + encodeURIComponent(tcData.tcString);
+      });
+    })();
 
     // Session bar
     (function () {
