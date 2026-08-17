@@ -1,41 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!--<script src="https://web.cmp.usercentrics-sandbox.eu/modules/autoblocker.js"></script>-->
-<!--<script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-ruleset-id="_d5CvnHvaxwQHf" data-sandbox="true" async></script>-->
-
-  
   <script src="https://web.cmp.usercentrics-sandbox.eu/tcf/stub.js"></script>
-    <script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-settings-id="JCG2xH9WtbekLM" data-sandbox="true" async></script>
-
-  
+  <script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-settings-id="JCG2xH9WtbekLM" data-sandbox="true" async></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CoP Banner Test</title>
   <style>
     body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
     h1 { margin-bottom: 8px; }
-    p { color: #555; margin-bottom: 24px; }
-    .note { background: #fff8e1; border: 1px solid #f0c040; border-radius: 6px; padding: 12px 16px; font-size: 0.9rem; }
+    p.subtitle { color: #555; margin-bottom: 24px; }
     nav { margin-bottom: 32px; }
     nav a { margin-right: 16px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 24px; }
+    th, td { text-align: left; padding: 10px 12px; border: 1px solid #ddd; }
+    th { background: #f5f5f5; }
+    .pass { color: green; font-weight: 600; }
+    .fail { color: red; font-weight: 600; }
+    .pending { color: #888; }
+    #api-panel { background: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; padding: 16px 20px; margin-bottom: 28px; }
+    #api-panel h2 { margin: 0 0 12px; font-size: 1rem; }
+    .api-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e8e8e8; font-size: 0.9rem; }
+    .api-row:last-of-type { border-bottom: none; }
+    .api-label { font-family: monospace; color: #333; }
+    .api-value { font-weight: 600; }
+    button.reset { margin-top: 16px; padding: 8px 16px; background: #e0e0e0; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+    button.reset:hover { background: #ccc; }
   </style>
 </head>
 <body>
-  <nav><a href="index.html">← Home</a><a href="copexclusion-rules.html">Exclusion Rules →</a></nav>
+  <nav>
+    <a href="index.html">← Home</a>
+    <a href="copexclusion-rules.html">Exclusion Rules →</a>
+  </nav>
   <h1>CoP Banner Test</h1>
-  <p>CPD-46 — Consent or Pay banner implementation test page.</p>
+  <p class="subtitle">CPD-46 — Consent or Pay banner display and consent API.</p>
 
-  <div class="note">
-    ⚠️ Activate the UC loader below with your CoP-enabled ruleset ID to trigger the banner.
+  <div id="api-panel">
+    <h2>Consent API</h2>
+    <div class="api-row">
+      <span class="api-label">UC_UI.AreAllRequiredConsentsAccepted()</span>
+      <span class="api-value pending" id="val-required">waiting for UC_UI…</span>
+    </div>
+    <div class="api-row">
+      <span class="api-label">UC_UI.areAllConsentsAccepted()</span>
+      <span class="api-value pending" id="val-all">waiting for UC_UI…</span>
+    </div>
+    <button class="reset" id="btn-reset">Reset consent &amp; reload</button>
   </div>
 
-  <!-- UC Loader — uncomment and set ruleset ID -->
-  <!--
-  <script src="https://web.cmp.usercentrics-sandbox.eu/modules/autoblocker.js"></script>
-  <script id="usercentrics-cmp" src="https://web.cmp.usercentrics-sandbox.eu/ui/loader.js" data-ruleset-id="YOUR_RULESET_ID" data-sandbox="true" async></script>
-  -->
+  <table>
+    <thead>
+      <tr>
+        <th>Test</th>
+        <th>Expected</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Banner shown for non-subscriber</td>
+        <td>Banner visible</td>
+        <td class="pending" id="result-banner">waiting…</td>
+      </tr>
+      <tr>
+        <td>AreAllRequiredConsentsAccepted — after Accept All</td>
+        <td>true</td>
+        <td class="pending" id="result-required">waiting…</td>
+      </tr>
+      <tr>
+        <td>areAllConsentsAccepted — after Accept All</td>
+        <td>true</td>
+        <td class="pending" id="result-all">waiting…</td>
+      </tr>
+    </tbody>
+  </table>
 
   <p style="margin-top:40px;color:#aaa;font-size:0.85rem;">PDanielsen · CPD-46 CoP Banner Test</p>
+
+  <script>
+    window.addEventListener('UC_UI_INITIALIZED', function () {
+      var required = null;
+      var all = null;
+
+      if (window.UC_UI) {
+        if (typeof window.UC_UI.AreAllRequiredConsentsAccepted === 'function') {
+          required = window.UC_UI.AreAllRequiredConsentsAccepted();
+        }
+        if (typeof window.UC_UI.areAllConsentsAccepted === 'function') {
+          all = window.UC_UI.areAllConsentsAccepted();
+        }
+      }
+
+      function setVal(id, value) {
+        var el = document.getElementById(id);
+        if (value === null) {
+          el.textContent = 'API not available';
+          el.className = 'api-value fail';
+        } else {
+          el.textContent = String(value);
+          el.className = 'api-value ' + (value ? 'pass' : 'fail');
+        }
+      }
+
+      function setResult(id, value, label) {
+        var el = document.getElementById(id);
+        if (value === null) {
+          el.textContent = 'API not available';
+          el.className = 'fail';
+        } else if (value === true) {
+          el.textContent = 'PASS — true';
+          el.className = 'pass';
+        } else {
+          el.textContent = label || 'false — interact with banner to test';
+          el.className = 'pending';
+        }
+      }
+
+      setVal('val-required', required);
+      setVal('val-all', all);
+
+      var resultBanner = document.getElementById('result-banner');
+      resultBanner.textContent = 'PASS — banner initialised';
+      resultBanner.className = 'pass';
+
+      setResult('result-required', required, 'false — accept all to verify');
+      setResult('result-all', all, 'false — accept all to verify');
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', function () {
+      if (window.UC_UI && typeof window.UC_UI.clearAllConsents === 'function') {
+        window.UC_UI.clearAllConsents().then(function () { location.reload(); });
+      } else {
+        ['uc_settings', 'uc_user_interaction', 'uc_consent'].forEach(function (k) {
+          localStorage.removeItem(k);
+        });
+        location.reload();
+      }
+    });
+  </script>
 </body>
 </html>
