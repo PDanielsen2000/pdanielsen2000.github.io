@@ -35,6 +35,8 @@
     .api-value { font-weight: 600; }
     button.reset { margin-top: 16px; padding: 8px 16px; background: #e0e0e0; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
     button.reset:hover { background: #ccc; }
+    #btn-show-cmp { padding: 10px 22px; background: #0052cc; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95rem; }
+    #btn-show-cmp:hover { background: #0041a8; }
     #session-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding: 10px 16px; background: #f0faf0; border: 1px solid #b7dfb8; border-radius: 6px; font-size: 0.88rem; }
     #session-bar span { color: #2a7a2a; font-weight: 600; }
     #session-bar button { padding: 5px 12px; border: none; border-radius: 4px; background: #e0e0e0; cursor: pointer; font-size: 0.82rem; }
@@ -110,7 +112,11 @@
     </tbody>
   </table>
 
-  <p style="margin-top:40px;color:#aaa;font-size:0.85rem;">PDanielsen · CPD-46 CoP Banner Test</p>
+  <div style="margin-top:40px;margin-bottom:16px;">
+    <button id="btn-show-cmp">Show CMP Banner</button>
+  </div>
+
+  <p style="color:#aaa;font-size:0.85rem;">PDanielsen · CPD-46 CoP Banner Test</p>
 
   <script>
     window.addEventListener('UC_UI_INITIALIZED', function () {
@@ -160,6 +166,17 @@
 
       setResult('result-required', required, 'false — accept all to verify');
       setResult('result-all', all, 'false — accept all to verify');
+    });
+
+    // Show CMP button
+    document.getElementById('btn-show-cmp').addEventListener('click', function () {
+      if (window.__ucCmp && typeof window.__ucCmp.showFirstLayer === 'function') {
+        window.__ucCmp.showFirstLayer();
+      } else if (window.UC_UI && typeof window.UC_UI.showFirstLayer === 'function') {
+        window.UC_UI.showFirstLayer();
+      } else {
+        alert('CMP not ready yet — wait for the page to fully load.');
+      }
     });
 
     // TC String
