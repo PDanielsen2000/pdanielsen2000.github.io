@@ -43,7 +43,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
+<!-- Query param detector -->
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    if ([...params].length > 0) {
+      const value = window.location.search.slice(1); // full query string, no leading "?"
+      localStorage.setItem('query_param_detected', value);
+    }
+  })();
+</script>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: var(--bg);
